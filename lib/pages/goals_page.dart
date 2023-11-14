@@ -10,13 +10,13 @@ class GoalsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var goalsList = [
       Task(
-        model: GoalModel(id: 1, completed: false, name: 'Исправить режим сна', description: '', deadline: DateTime(2023, 12, 1)),
+        model: GoalModel(id: 1, completed: false, name: 'Исправить режим сна', description: '', deadline: DateTime(2023, 12, 1), checkpoints: []),
       ),
       Task(
-        model: GoalModel(id: 2, completed: false, name: 'Разработать приложение', description: '', deadline: DateTime(2023, 12, 15)),
+        model: GoalModel(id: 2, completed: false, name: 'Разработать приложение', description: '', deadline: DateTime(2023, 12, 15), checkpoints: []),
       ),
       Task(
-        model: GoalModel(id: 3, completed: false, name: 'Пройти Alan Wake 2', description: '', deadline: DateTime(2024, 1, 1)),
+        model: GoalModel(id: 3, completed: false, name: 'Пройти Alan Wake 2', description: '', deadline: DateTime(2024, 1, 1), checkpoints: []),
       ),
     ];
 

@@ -43,47 +43,17 @@ class TaskDetailsPage extends StatelessWidget {
         name: 'Сделать проект',
         description:
             'Короче проект называется Taskudy, очень клёвое приложение для учёбы, достижения целей и концентрации... да',
-        deadline: DateTime(2023, 11, 21));
+        deadline: DateTime(2023, 11, 21),
+        checkpoints: [
+          CheckpointModel(id: 1, value: false, text: 'Тест 01'),
+          CheckpointModel(id: 2, value: false, text: 'Тест 02'),
+          CheckpointModel(id: 3, value: true, text: 'Тест 03'),
+          CheckpointModel(id: 4, value: true, text: 'Тест 04'),
+          CheckpointModel(id: 5, value: true, text: 'Тест 05'),
+        ]
+    );
 
     int timeLeft = model.deadline.difference(DateTime.now()).inDays;
-    List checkpoints = <Widget>[
-      Row(
-        children: [
-          Checkbox(
-            value: false,
-            onChanged: (value) {},
-          ),
-          Text(
-            'Тест 01',
-            style: AppTexts.body,
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          Checkbox(
-            value: false,
-            onChanged: (value) {},
-          ),
-          Text(
-            'Тест 02',
-            style: AppTexts.body,
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          Checkbox(
-            value: true,
-            onChanged: (value) {},
-          ),
-          Text(
-            'Тест 03',
-            style: AppTexts.body,
-          ),
-        ],
-      ),
-    ];
 
     return Container(
       decoration: const BoxDecoration(
@@ -174,11 +144,22 @@ class TaskDetailsPage extends StatelessWidget {
               ),
               Flexible(
                   child: ListView.separated(
-                      itemBuilder: (context, index) => const SizedBox(
-                            height: 10,
-                          ),
-                      separatorBuilder: (context, index) => checkpoints[index],
-                      itemCount: checkpoints.length + 1))
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            Checkbox(
+                              value: model.checkpoints[index].value,
+                              onChanged: (value) {},
+                            ),
+                            Text(
+                              model.checkpoints[index].text,
+                              style: AppTexts.body,
+                            ),
+                          ],
+                        );
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      itemCount: model.checkpoints.length))
             ],
           ),
         ),
