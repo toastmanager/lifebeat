@@ -7,6 +7,14 @@ class AppColors {
   static const Color purple = Color(0xffb8b17e5);
   static const Color purpleDark = Color(0xffb5d0f99);
   static const Color white = Color(0xffbdadde5);
+
+  static const LinearGradient backgroundGradient = LinearGradient(
+      begin: Alignment(0.00, -9.00),
+      end: Alignment.bottomCenter,
+      colors: <Color>[
+        AppColors.purple,
+        AppColors.grayBlueDark,
+      ]);
 }
 
 class AppTexts {
@@ -16,25 +24,22 @@ class AppTexts {
   static const Color textColor = AppColors.white;
 
   static final body = appFontStyle(
-    textStyle: const TextStyle(
-      fontSize: bodyFontSize,
-      color: textColor,
-    )
-  );
+      textStyle: const TextStyle(
+    fontSize: bodyFontSize,
+    color: textColor,
+  ));
 
   static final bodyBold = appFontStyle(
-    textStyle: const TextStyle(
-      fontSize: bodyFontSize,
-      fontWeight: FontWeight.bold,
-      color: textColor,
-    )
-  );
-  
+      textStyle: const TextStyle(
+    fontSize: bodyFontSize,
+    fontWeight: FontWeight.bold,
+    color: textColor,
+  ));
+
   static final headingBold = appFontStyle(
-    textStyle: const TextStyle(
-      fontSize: headingFontSize,
-      fontWeight: FontWeight.bold,
-      color: textColor,
-    )
-  );
+      textStyle: const TextStyle(
+    fontSize: headingFontSize,
+    fontWeight: FontWeight.bold,
+    color: textColor,
+  ));
 }

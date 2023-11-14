@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/progressCircle.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
@@ -21,7 +22,7 @@ class Task extends StatelessWidget {
     DateTime deadline = model.deadline;
     double progress = model.progress;
     int timeLeft = deadline.difference(DateTime.now()).inDays;
-    
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -31,29 +32,7 @@ class Task extends StatelessWidget {
         padding: const EdgeInsets.all(11.0),
         child: Row(
           children: [
-            SizedBox(
-              height: 52,
-              width: 52,
-              child: Stack(
-                children: [
-                  Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: AppColors.purpleDark,
-                      color: AppColors.purple,
-                      strokeAlign: 2.5,
-                      strokeWidth: 5,
-                      value: progress / 100,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      '${progress.toInt()}%',
-                      style: AppTexts.bodyBold,
-                    ),
-                  )
-                ],
-              ),
-            ),
+            ProgressCircle(progress: progress),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +65,7 @@ class Task extends StatelessWidget {
                     Text(
                       '${deadline.day}.${deadline.month}.${deadline.year}',
                       style: AppTexts.body,
-                    )
+                    ),
                   ],
                 ),
               ],

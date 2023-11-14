@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/goals_page.dart';
+import 'pages/task_details.dart';
 
 void main() {
   runApp(const App());
@@ -16,7 +17,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const GoalsPage(),
+      home: const SafeArea(child: TaskDetailsPage()),
     );
   }
 }

@@ -20,49 +20,40 @@ class GoalsPage extends StatelessWidget {
       ),
     ];
 
-    return SafeArea(
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment(0.00, -9.00),
-            end: Alignment.bottomCenter,
-            colors: <Color>[
-              AppColors.purple,
-              AppColors.grayBlueDark,
-            ]
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: AppColors.backgroundGradient
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: AppColors.purple,
+          shape: const OvalBorder(),
+          child: Text(
+            '+',
+            style: AppTexts.headingBold,
+          )
         ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            backgroundColor: AppColors.purple,
-            shape: const OvalBorder(),
-            child: Text(
-              '+',
-              style: AppTexts.headingBold,
-            )
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Text(
-                  'Цели',
-                  style: AppTexts.headingBold,
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Text(
+                'Цели',
+                style: AppTexts.headingBold,
+              ),
+              const SizedBox(height: 25),
+              Flexible(
+                child: ListView.separated(
+                  itemCount: goalsList.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 25,),
+                  itemBuilder: (context, index) {
+                    return goalsList[index];
+                  }
                 ),
-                const SizedBox(height: 25),
-                Flexible(
-                  child: ListView.separated(
-                    itemCount: goalsList.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 25,),
-                    itemBuilder: (context, index) {
-                      return goalsList[index];
-                    }
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
