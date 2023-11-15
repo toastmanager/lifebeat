@@ -64,9 +64,11 @@ class TaskDetailsPage extends StatelessWidget {
                     color: AppColors.white,
                   ),
                   const SizedBox(width: 10),
-                  Text(
-                    model.name,
-                    style: AppTexts.headingBold,
+                  Flexible(
+                    child: Text(
+                      model.name,
+                      style: AppTexts.headingBold,
+                    ),
                   )
                 ],
               ),

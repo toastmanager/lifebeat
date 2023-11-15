@@ -11,16 +11,18 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Lifebeat',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
+    return SafeArea(
+      child: MaterialApp(
+        title: 'Lifebeat',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => GoalsPage(),
+        },
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => GoalsPage(),
-      },
     );
   }
 }
