@@ -24,6 +24,11 @@ class GoalModel {
 
   double getProgress() {
     int finished = 0;
+
+    if (checkpoints.isEmpty) {
+      return 0;
+    }
+
     for (int i = 0; i < checkpoints.length; i++) {
       if (checkpoints[i].value == true) {
         finished++;
