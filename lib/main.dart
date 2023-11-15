@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/goals_page.dart';
-import 'pages/task_details.dart';
 
 void main() {
   runApp(const App());
