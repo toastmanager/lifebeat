@@ -33,26 +33,15 @@ class DetailsButton extends StatelessWidget {
 }
 
 class TaskDetailsPage extends StatelessWidget {
-  const TaskDetailsPage({super.key});
+  TaskDetailsPage({
+    super.key,
+    required this.model,
+  });
+
+  GoalModel model;
 
   @override
   Widget build(BuildContext context) {
-    GoalModel model = GoalModel(
-        id: 1,
-        completed: false,
-        name: 'Сделать проект',
-        description:
-            'Короче проект называется Taskudy, очень клёвое приложение для учёбы, достижения целей и концентрации... да',
-        deadline: DateTime(2023, 11, 21),
-        checkpoints: [
-          CheckpointModel(id: 1, value: false, text: 'Тест 01'),
-          CheckpointModel(id: 2, value: false, text: 'Тест 02'),
-          CheckpointModel(id: 3, value: true, text: 'Тест 03'),
-          CheckpointModel(id: 4, value: true, text: 'Тест 04'),
-          CheckpointModel(id: 5, value: true, text: 'Тест 05'),
-        ]
-    );
-
     int timeLeft = model.deadline.difference(DateTime.now()).inDays;
 
     return Container(
@@ -68,7 +57,9 @@ class TaskDetailsPage extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                        Navigator.of(context).pop();
+                    },
                     icon: const Icon(Icons.arrow_back_ios_new_rounded),
                     color: AppColors.white,
                   ),
@@ -158,7 +149,8 @@ class TaskDetailsPage extends StatelessWidget {
                           ],
                         );
                       },
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
                       itemCount: model.checkpoints.length))
             ],
           ),

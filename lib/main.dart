@@ -17,7 +17,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const SafeArea(child: TaskDetailsPage()),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => GoalsPage(),
+      },
     );
   }
 }
