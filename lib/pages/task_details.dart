@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/progressCircle.dart';
 import 'package:lifebeat/scripts/vars.dart';
