@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-
 class GoalModel {
   final int id;
   final bool completed;
   late final int duration;
   late final double progress;
+  late final int daysLeft;
   final String name;
   final String description;
   final DateTime deadline;
@@ -19,7 +18,18 @@ class GoalModel {
     required this.checkpoints,
   }) { 
     duration = getDateDurations();
-    progress = 50;
+    progress = getProgress();
+    daysLeft = deadline.difference(DateTime.now()).inDays;
+  }
+
+  double getProgress() {
+    int finished = 0;
+    for (int i = 0; i < checkpoints.length; i++) {
+      if (checkpoints[i].value == true) {
+        finished++;
+      }
+    }
+    return finished / checkpoints.length * 100;
   }
 
   int getDateDurations() {

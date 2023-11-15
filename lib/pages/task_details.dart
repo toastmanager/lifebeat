@@ -25,7 +25,7 @@ class DetailsButton extends StatelessWidget {
               color: AppColors.grayBlueLight,
               borderRadius: buttonBorderRadius,
             ),
-            height: 30,
+            height: 40,
             child: Center(child: child)),
       ),
     );
