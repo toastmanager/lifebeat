@@ -20,7 +20,7 @@ class App extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => GoalsPage(),
+          '/': (context) => const GoalsPage(),
         },
       ),
     );
