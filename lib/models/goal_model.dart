@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class GoalModel {
   final int id;
   final bool completed;
@@ -39,6 +41,20 @@ class GoalModel {
 
   int getDateDurations() {
     return deadline.difference(DateTime.now()).inDays;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'completed': completed ? 1 : 0,
+      'duration': duration,
+      'progress': progress,
+      'daysLeft': daysLeft,
+      'name': name,
+      'description': description,
+      'deadline': deadline.toIso8601String(),
+      'checkpoints': jsonEncode(checkpoints),
+    };
   }
 }
 

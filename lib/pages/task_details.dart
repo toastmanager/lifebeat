@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/components/progressCircle.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/models/goal_model.dart';
+import 'package:path/path.dart';
 
 class DetailsButton extends StatelessWidget {
   DetailsButton({
