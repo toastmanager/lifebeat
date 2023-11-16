@@ -18,7 +18,7 @@ class DBHelper {
     );
   }
 
-  static Future<void> insertPerson(GoalModel goal) async {
+  static Future<void> insertGoal(GoalModel goal) async {
     final db = await database();
     await db.insert('goals', goal.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);

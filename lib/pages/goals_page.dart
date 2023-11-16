@@ -17,7 +17,7 @@ class GoalsPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            DBHelper.insertPerson(
+            DBHelper.insertGoal(
               GoalModel(id: 2, completed: false, name: 'Разработать приложение', description: 'Короче проект называется Taskudy, очень клёвое приложение для учёбы, достижения целей и концентрации... да', deadline: DateTime(2023, 11, 20), checkpoints: [
                 CheckpointModel(id: 1, value: false, text: 'Настроить базу данных'),
                 CheckpointModel(id: 2, value: false, text: 'Сделать страницу добавления цели'),
