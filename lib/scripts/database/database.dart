@@ -3,17 +3,57 @@ import 'package:path/path.dart';
 import 'package:lifebeat/models/goal_model.dart';
 
 class DBHelper {
+  static Future createDB(Database db, int version) async {
+    await db.execute('CREATE TABLE IF NOT EXISTS goals(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, daysLeft INT, name TEXT, description TEXT, deadline TEXT)');
+    await db.execute('CREATE TABLE IF NOT EXISTS checkpoints(id INTEGER PRIMARY KEY, value BOOL, text TEXT)');
+  }
+
   static Future<Database> database() async {
     final path = join(await getDatabasesPath(), 'database.db');
 
     return openDatabase(
       path,
       version: 1,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE IF NOT EXISTS goals(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, daysLeft INT, name TEXT, description TEXT, deadline TEXT)',
-        );
-      },
+      onCreate: (db, version) => createDB(db, version),
     );
   }
+
+  static Future<void> insertPerson(GoalModel goal) async {
+    final db = await database();
+    await db.insert('goals', goal.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static Future<List<GoalModel>> goals() async {
+    final db = await database();
+
+    final List<Map<String, dynamic>> goalsMap = await db.query('goals');
+    final List<Map<String, dynamic>> checkpointsMap = await db.query('checkpoints');
+
+    return List.generate(goalsMap.length, (i) {
+      DateTime deadline = DateTime.parse(goalsMap[i]['deadline'] as String);
+      List<int> checkpointIds = goalsMap[i]['checkpoints'] as List<int>;
+      List<CheckpointModel> checkpoints = [];
+
+      for (int j = 0; j < checkpointIds.length; j++) {
+        checkpoints.add(
+          CheckpointModel(
+            id: checkpointsMap[j]['id'] as int,
+            value: checkpointsMap[j]['value'] as int == 1 ? true : false,
+            text: checkpointsMap[j]['text'] as String,
+          )
+        );
+      }
+
+      return GoalModel(
+        id: goalsMap[i]['id'] as int,
+        completed: goalsMap[i]['completed'] as int == 1 ? true : false,
+        name: goalsMap[i]['name'] as String,
+        description: goalsMap[i]['description'] as String,
+        deadline: deadline,
+        checkpoints: checkpoints,
+      );
+    });
+  }
+
 }

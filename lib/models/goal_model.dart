@@ -53,7 +53,7 @@ class GoalModel {
       'name': name,
       'description': description,
       'deadline': deadline.toIso8601String(),
-      'checkpoints': jsonEncode(checkpoints),
+      'checkpoints': jsonEncode(checkpoints.map((e) => e.id).toList()),
     };
   }
 }
@@ -68,4 +68,12 @@ class CheckpointModel {
     required this.value,
     required this.text,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'value': value ? 1 : 0,
+      'text': text,
+    };
+  }
 }
