@@ -38,41 +38,44 @@ class Task extends StatelessWidget {
             children: [
               ProgressCircle(progress: progress),
               const SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    name,
-                    style: AppTexts.bodyBold,
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.timer_rounded,
-                        color: AppColors.white,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        '$timeLeft дней',
-                        style: AppTexts.body,
-                      ),
-                      const SizedBox(width: 10),
-                      const Icon(
-                        Icons.calendar_month_rounded,
-                        size: 16,
-                        color: AppColors.white,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        '${deadline.day}.${deadline.month}.${deadline.year}',
-                        style: AppTexts.body,
-                      ),
-                    ],
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      name,
+                      style: AppTexts.bodyBold,
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.timer_rounded,
+                          color: AppColors.white,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          '$timeLeft дней',
+                          style: AppTexts.body,
+                        ),
+                        const SizedBox(width: 10),
+                        const Icon(
+                          Icons.calendar_month_rounded,
+                          size: 16,
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          '${deadline.day}.${deadline.month}.${deadline.year}',
+                          style: AppTexts.body,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               )
             ],
           ),

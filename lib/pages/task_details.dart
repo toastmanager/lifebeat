@@ -60,7 +60,7 @@ class TaskDetailsPage extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                        Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                     },
                     icon: const Icon(Icons.arrow_back_ios_new_rounded),
                     color: AppColors.white,
@@ -132,7 +132,7 @@ class TaskDetailsPage extends StatelessWidget {
                       '+',
                       style: AppTexts.bodyBold,
                     ),
-                    action: () {},
+                    action: () => _newCheckpointMenu(context),
                   ),
                 ],
               ),
@@ -162,6 +162,45 @@ class TaskDetailsPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _newCheckpointMenu(BuildContext context) {
+    TextEditingController name = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.grayBlueDark,
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Новый чекпоинт', style: AppTexts.bodyBold),
+              const SizedBox(
+                height: 20,
+              ),
+              Flexible(
+                  child: TextField(
+                controller: name,
+                decoration: const InputDecoration(
+                    hintText: 'Чекпоинт', border: OutlineInputBorder()),
+              )),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  // ElevatedButton(
+                  //   child: Text(),
+                  // )
+                ],
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
