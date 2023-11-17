@@ -7,7 +7,7 @@ import 'package:lifebeat/models/goal_model.dart';
 class DBHelper {
   static Future createDB(Database db, int version) async {
     await db.execute('CREATE TABLE IF NOT EXISTS goals(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, daysLeft INT, name TEXT, description TEXT, deadline TEXT, checkpoints TEXT)');
-    await db.execute('CREATE TABLE IF NOT EXISTS checkpoints(id INTEGER PRIMARY KEY, value BOOL, text TEXT)');
+    await db.execute('CREATE TABLE IF NOT EXISTS checkpoints(id INTEGER PRIMARY KEY, goalId INT, value BOOL, text TEXT)');
   }
 
   static Future<Database> database() async {
