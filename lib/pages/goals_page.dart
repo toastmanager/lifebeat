@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lifebeat/models/goal_model.dart';
+import 'package:lifebeat/pages/task_details.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 
-class GoalsPage extends StatelessWidget {
+class GoalsPage extends StatefulWidget {
   const GoalsPage({super.key});
 
+  @override
+  State<GoalsPage> createState() => _GoalsPageState();
+}
+
+class _GoalsPageState extends State<GoalsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +63,7 @@ class GoalsPage extends StatelessWidget {
                           }),
                     );
                   } else {
-                    return Placeholder();
+                    return const Placeholder();
                   }
                 },
               ),
@@ -76,14 +81,14 @@ class GoalsPage extends StatelessWidget {
         initialDate: selectedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null) {
-      selectedDate = picked;
-    }
-    return selectedDate;
+    return picked ?? selectedDate;
   }
 
   Future<void> _newGoalMenu(BuildContext context) {
     DateTime deadline = DateTime.now();
+    String deadlineText = '${deadline.year}-${deadline.month}-${deadline.day}';
+    TextEditingController name = TextEditingController();
+    TextEditingController description = TextEditingController();
 
     return showDialog(
       context: context,
@@ -104,24 +109,28 @@ class GoalsPage extends StatelessWidget {
                   const SizedBox(height: 20),
                   Flexible(
                       child: TextField(
-                    decoration: InputDecoration(
+                    controller: name,
+                    decoration: const InputDecoration(
                         hintText: 'Название', border: OutlineInputBorder()),
                   )),
                   const SizedBox(height: 20),
                   Flexible(
                       child: TextField(
-                    decoration: InputDecoration(
+                    controller: description,
+                    decoration: const InputDecoration(
                         hintText: 'Описание', border: OutlineInputBorder()),
                   )),
                   const SizedBox(height: 20),
                   Flexible(
                     child: InkWell(
-                      onTap: () => _selectDate(context, deadline)
-                          .then((value) => deadline = value),
-                      child: Container(
-                        child: Text(
-                            '${deadline.year}-${deadline.month}-${deadline.day}'),
-                      ),
+                      onTap: () async {
+                        deadline = await _selectDate(context, deadline);
+                        setState(() {
+                          deadlineText =
+                              '${deadline.year}-${deadline.month}-${deadline.day}';
+                        });
+                      },
+                      child: Text(deadlineText),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -132,7 +141,19 @@ class GoalsPage extends StatelessWidget {
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('Назад')),
                       ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () async {
+                            var goals = await DBHelper.goals();
+                            var model = GoalModel(
+                                id: goals.length + 1,
+                                completed: false,
+                                name: name.text,
+                                description: description.text,
+                                deadline: deadline,
+                                checkpoints: []);
+                            DBHelper.insertGoal(model);
+                            setState(() {});
+                            Navigator.of(context).pop();
+                          },
                           child: const Text('Продолжить')),
                     ],
                   ),

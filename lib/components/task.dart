@@ -7,10 +7,6 @@ import 'package:lifebeat/pages/task_details.dart';
 class Task extends StatelessWidget {
   Task({
     super.key,
-    // required this.heading,
-    // required this.completed,
-    // required this.deadline,
-    // required this.progress,
     required this.model,
   });
 
