@@ -47,7 +47,7 @@ class GoalModel {
     return {
       'id': id,
       'completed': completed ? 1 : 0,
-      'duration': duration,
+      // 'duration': duration,
       'progress': progress,
       'daysLeft': daysLeft,
       'name': name,

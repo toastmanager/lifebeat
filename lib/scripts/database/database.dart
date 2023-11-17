@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:lifebeat/models/goal_model.dart';
 
 class DBHelper {
   static Future createDB(Database db, int version) async {
-    await db.execute('CREATE TABLE IF NOT EXISTS goals(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, daysLeft INT, name TEXT, description TEXT, deadline TEXT)');
+    await db.execute('CREATE TABLE IF NOT EXISTS goals(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, daysLeft INT, name TEXT, description TEXT, deadline TEXT, checkpoints TEXT)');
     await db.execute('CREATE TABLE IF NOT EXISTS checkpoints(id INTEGER PRIMARY KEY, value BOOL, text TEXT)');
   }
 
@@ -32,7 +34,7 @@ class DBHelper {
 
     return List.generate(goalsMap.length, (i) {
       DateTime deadline = DateTime.parse(goalsMap[i]['deadline'] as String);
-      List<int> checkpointIds = goalsMap[i]['checkpoints'] as List<int>;
+      List<int> checkpointIds = jsonDecode(goalsMap[i]['checkpoints']).cast<int>().toList();
       List<CheckpointModel> checkpoints = [];
 
       for (int j = 0; j < checkpointIds.length; j++) {

@@ -19,11 +19,11 @@ class GoalsPage extends StatelessWidget {
           onPressed: () {
             DBHelper.insertGoal(
               GoalModel(id: 2, completed: false, name: 'Разработать приложение', description: 'Короче проект называется Taskudy, очень клёвое приложение для учёбы, достижения целей и концентрации... да', deadline: DateTime(2023, 11, 20), checkpoints: [
-                CheckpointModel(id: 1, value: false, text: 'Настроить базу данных'),
-                CheckpointModel(id: 2, value: false, text: 'Сделать страницу добавления цели'),
-                CheckpointModel(id: 3, value: true, text: 'Подготовить тезисы'),
-                CheckpointModel(id: 4, value: true, text: 'Подготовить презентацию'),
-                CheckpointModel(id: 5, value: true, text: 'Подготовить дизайн'),
+                // CheckpointModel(id: 1, value: false, text: 'Настроить базу данных'),
+                // CheckpointModel(id: 2, value: false, text: 'Сделать страницу добавления цели'),
+                // CheckpointModel(id: 3, value: true, text: 'Подготовить тезисы'),
+                // CheckpointModel(id: 4, value: true, text: 'Подготовить презентацию'),
+                // CheckpointModel(id: 5, value: true, text: 'Подготовить дизайн'),
               ]),
             );
           },
