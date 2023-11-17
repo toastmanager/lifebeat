@@ -8,9 +8,11 @@ class DetailsButton extends StatelessWidget {
   DetailsButton({
     super.key,
     required this.child,
+    required this.action,
   });
 
   Widget child;
+  Function action;
   BorderRadius buttonBorderRadius = BorderRadius.circular(8);
 
   @override
@@ -18,7 +20,7 @@ class DetailsButton extends StatelessWidget {
     return Flexible(
       fit: FlexFit.tight,
       child: InkWell(
-        onTap: () {},
+        onTap: () => action(),
         borderRadius: buttonBorderRadius,
         child: Container(
             decoration: BoxDecoration(
@@ -122,6 +124,7 @@ class TaskDetailsPage extends StatelessWidget {
                       color: AppColors.white,
                       size: 16,
                     ),
+                    action: () {},
                   ),
                   const SizedBox(width: 10),
                   DetailsButton(
@@ -129,6 +132,7 @@ class TaskDetailsPage extends StatelessWidget {
                       '+',
                       style: AppTexts.bodyBold,
                     ),
+                    action: () {},
                   ),
                 ],
               ),

@@ -20,6 +20,37 @@ class DBHelper {
     );
   }
 
+  static CheckpointModel parseCheckpoint(int i, List<Map<String, dynamic>> checkpointsMap) {
+    return CheckpointModel(
+        id: checkpointsMap[i]['id'] as int,
+        goalId: checkpointsMap[i]['goalID'] as int,
+        text: checkpointsMap[i]['text'] as String,
+        value: checkpointsMap[i]['value'] as int == 1 ? true : false,
+      );
+  }
+
+  static GoalModel parseGoal(int i, List<Map<String, dynamic>> goalsMap, List<Map<String, dynamic>> checkpointsMap) {
+
+    DateTime deadline = DateTime.parse(goalsMap[i]['deadline'] as String);
+    List<int> checkpointIds = jsonDecode(goalsMap[i]['checkpoints']).cast<int>().toList();
+    List<CheckpointModel> checkpoints = [];
+
+    for (int j = 0; j < checkpointIds.length; j++) {
+      checkpoints.add(
+        parseCheckpoint(i, checkpointsMap)
+      );
+    }
+
+    return GoalModel(
+        id: goalsMap[i]['id'] as int,
+        completed: goalsMap[i]['completed'] as int == 1 ? true : false,
+        name: goalsMap[i]['name'] as String,
+        description: goalsMap[i]['description'] as String,
+        deadline: deadline,
+        checkpoints: checkpoints,
+      );
+  }
+  
   static Future<void> insertGoal(GoalModel goal) async {
     final db = await database();
     await db.insert('goals', goal.toMap(),
@@ -37,13 +68,10 @@ class DBHelper {
     final List<Map<String, dynamic>> checkpointsMap = await db.query('checkpoints');
 
     return List.generate(checkpointsMap.length, (i) {
-      return CheckpointModel(
-        id: checkpointsMap[i]['id'] as int,
-        text: checkpointsMap[i]['text'] as String,
-        value: checkpointsMap[i]['value'] as int == 1 ? true : false,
-      );
+      return parseCheckpoint(i, checkpointsMap);
     });
   }
+
 
   static Future<List<GoalModel>> goals() async {
     final db = await database();
@@ -52,28 +80,8 @@ class DBHelper {
     final List<Map<String, dynamic>> checkpointsMap = await db.query('checkpoints');
 
     return List.generate(goalsMap.length, (i) {
-      DateTime deadline = DateTime.parse(goalsMap[i]['deadline'] as String);
-      List<int> checkpointIds = jsonDecode(goalsMap[i]['checkpoints']).cast<int>().toList();
-      List<CheckpointModel> checkpoints = [];
-
-      for (int j = 0; j < checkpointIds.length; j++) {
-        checkpoints.add(
-          CheckpointModel(
-            id: checkpointsMap[j]['id'] as int,
-            value: checkpointsMap[j]['value'] as int == 1 ? true : false,
-            text: checkpointsMap[j]['text'] as String,
-          )
-        );
-      }
-
-      return GoalModel(
-        id: goalsMap[i]['id'] as int,
-        completed: goalsMap[i]['completed'] as int == 1 ? true : false,
-        name: goalsMap[i]['name'] as String,
-        description: goalsMap[i]['description'] as String,
-        deadline: deadline,
-        checkpoints: checkpoints,
-      );
+      GoalModel goal = parseGoal(i, goalsMap, checkpointsMap);
+      return goal;
     });
   }
 
