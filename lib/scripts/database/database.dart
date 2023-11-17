@@ -26,6 +26,25 @@ class DBHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
+  static Future<void> insertCheckpoint(CheckpointModel checkpoint) async {
+    final db = await database();
+    await db.insert('checkpoint', checkpoint.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static Future<List<CheckpointModel>> checkpoints() async {
+    final db = await database();
+    final List<Map<String, dynamic>> checkpointsMap = await db.query('checkpoints');
+
+    return List.generate(checkpointsMap.length, (i) {
+      return CheckpointModel(
+        id: checkpointsMap[i]['id'] as int,
+        text: checkpointsMap[i]['text'] as String,
+        value: checkpointsMap[i]['value'] as int == 1 ? true : false,
+      );
+    });
+  }
+
   static Future<List<GoalModel>> goals() async {
     final db = await database();
 

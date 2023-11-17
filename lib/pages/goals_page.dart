@@ -97,70 +97,68 @@ class _GoalsPageState extends State<GoalsPage> {
             backgroundColor: AppColors.grayBlueDark,
             content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setLocalState) {
-                return SizedBox(
-                  height: 300,
-                  width: 100,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Новая цель',
-                        style: AppTexts.bodyBold,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Новая цель',
+                      style: AppTexts.bodyBold,
+                    ),
+                    const SizedBox(height: 20),
+                    Flexible(
+                        child: TextField(
+                      controller: name,
+                      decoration: const InputDecoration(
+                          hintText: 'Название', border: OutlineInputBorder()),
+                    )),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: description,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                      hintText: 'Описание', border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(height: 20),
+                    Flexible(
+                      child: InkWell(
+                        onTap: () async {
+                          deadline = await _selectDate(context, deadline);
+                          setLocalState(() {
+                            deadlineText =
+                                '${deadline.year}-${deadline.month}-${deadline.day}';
+                          });
+                        },
+                        child: Text(deadlineText),
                       ),
-                      const SizedBox(height: 20),
-                      Flexible(
-                          child: TextField(
-                        controller: name,
-                        decoration: const InputDecoration(
-                            hintText: 'Название', border: OutlineInputBorder()),
-                      )),
-                      const SizedBox(height: 20),
-                      Flexible(
-                          child: TextField(
-                        controller: description,
-                        decoration: const InputDecoration(
-                            hintText: 'Описание', border: OutlineInputBorder()),
-                      )),
-                      const SizedBox(height: 20),
-                      Flexible(
-                        child: InkWell(
-                          onTap: () async {
-                            deadline = await _selectDate(context, deadline);
-                            setLocalState(() {
-                              deadlineText =
-                                  '${deadline.year}-${deadline.month}-${deadline.day}';
-                            });
-                          },
-                          child: Text(deadlineText),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('Назад')),
-                          ElevatedButton(
-                              onPressed: () async {
-                                var goals = await DBHelper.goals();
-                                var model = GoalModel(
-                                    id: goals.length + 1,
-                                    completed: false,
-                                    name: name.text,
-                                    description: description.text,
-                                    deadline: deadline,
-                                    checkpoints: []);
-                                DBHelper.insertGoal(model);
-                                setState(() {});
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Продолжить')),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Назад')),
+                        ElevatedButton(
+                            onPressed: () async {
+                              var goals = await DBHelper.goals();
+                              var model = GoalModel(
+                                  id: goals.length + 1,
+                                  completed: false,
+                                  name: name.text,
+                                  description: description.text,
+                                  deadline: deadline,
+                                  checkpoints: []);
+                              DBHelper.insertGoal(model);
+                              setState(() {});
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Продолжить')),
+                      ],
+                    ),
+                  ],
                 );
               }
             ));
