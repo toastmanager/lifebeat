@@ -85,18 +85,18 @@ class _GoalsPageState extends State<GoalsPage> {
   }
 
   Future<void> _newGoalMenu(BuildContext context) {
+    DateTime deadline = DateTime.now();
+    String deadlineText = '${deadline.year}-${deadline.month}-${deadline.day}';
+    TextEditingController name = TextEditingController();
+    TextEditingController description = TextEditingController();
 
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        DateTime deadline = DateTime.now();
-        String deadlineText = '${deadline.year}-${deadline.month}-${deadline.day}';
-        TextEditingController name = TextEditingController();
-        TextEditingController description = TextEditingController();
         return AlertDialog(
             backgroundColor: AppColors.grayBlueDark,
             content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
+              builder: (BuildContext context, StateSetter setLocalState) {
                 return SizedBox(
                   height: 300,
                   width: 100,
@@ -127,7 +127,7 @@ class _GoalsPageState extends State<GoalsPage> {
                         child: InkWell(
                           onTap: () async {
                             deadline = await _selectDate(context, deadline);
-                            setState(() {
+                            setLocalState(() {
                               deadlineText =
                                   '${deadline.year}-${deadline.month}-${deadline.day}';
                             });
