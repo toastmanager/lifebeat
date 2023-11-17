@@ -18,7 +18,7 @@ class GoalModel {
     required this.description,
     required this.deadline,
     required this.checkpoints,
-  }) { 
+  }) {
     duration = getDateDurations();
     progress = getProgress();
     daysLeft = deadline.difference(DateTime.now()).inDays;
