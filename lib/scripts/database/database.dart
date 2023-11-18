@@ -59,7 +59,7 @@ class DBHelper {
 
   static Future<void> insertCheckpoint(CheckpointModel checkpoint) async {
     final db = await database();
-    await db.insert('checkpoint', checkpoint.toMap(),
+    await db.insert('checkpoints', checkpoint.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 

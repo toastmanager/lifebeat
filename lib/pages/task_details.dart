@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/progressCircle.dart';
+import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:path/path.dart';
@@ -192,9 +193,21 @@ class TaskDetailsPage extends StatelessWidget {
               ),
               Row(
                 children: [
-                  // ElevatedButton(
-                  //   child: Text(),
-                  // )
+                  ElevatedButton(
+                    child: const Text('назад'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  ElevatedButton(
+                    child: const Text('подтвердить'),
+                    onPressed: () async {
+                      var checkpoints = await DBHelper.checkpoints();
+                      DBHelper.insertCheckpoint(
+                        CheckpointModel(id: checkpoints.length + 1, goalId: model.id, value: false, text: name.text)
+                      );
+                      print(checkpoints);
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ],
               )
             ],
