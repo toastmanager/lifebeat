@@ -9,7 +9,7 @@ class GoalModel {
   final String name;
   final String description;
   final DateTime deadline;
-  final List<CheckpointModel> checkpoints;
+  List<CheckpointModel> checkpoints;
 
   GoalModel({
     required this.id,
@@ -47,7 +47,6 @@ class GoalModel {
     return {
       'id': id,
       'completed': completed ? 1 : 0,
-      // 'duration': duration,
       'progress': progress,
       'daysLeft': daysLeft,
       'name': name,
@@ -60,13 +59,11 @@ class GoalModel {
 
 class CheckpointModel {
   final int id;
-  final int goalId;
   final bool value;
   final String text;
 
   CheckpointModel({
     required this.id,
-    required this.goalId,
     required this.value,
     required this.text,
   });
@@ -74,7 +71,6 @@ class CheckpointModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'goalId': goalId,
       'value': value ? 1 : 0,
       'text': text,
     };

@@ -201,10 +201,11 @@ class TaskDetailsPage extends StatelessWidget {
                     child: const Text('подтвердить'),
                     onPressed: () async {
                       var checkpoints = await DBHelper.checkpoints();
+                      var checkpoint = CheckpointModel(id: checkpoints.length, value: false, text: name.text);
                       DBHelper.insertCheckpoint(
-                        CheckpointModel(id: checkpoints.length + 1, goalId: model.id, value: false, text: name.text)
+                        checkpoint,
+                        model.id
                       );
-                      print(checkpoints);
                       Navigator.of(context).pop();
                     },
                   ),

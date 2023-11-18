@@ -20,18 +20,7 @@ class _GoalsPageState extends State<GoalsPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // DBHelper.insertGoal(
-              //   GoalModel(id: 2, completed: false, name: 'Разработать приложение', description: 'Короче проект называется Taskudy, очень клёвое приложение для учёбы, достижения целей и концентрации... да', deadline: DateTime(2023, 11, 20), checkpoints: [
-              //     // CheckpointModel(id: 1, value: false, text: 'Настроить базу данных'),
-              //     // CheckpointModel(id: 2, value: false, text: 'Сделать страницу добавления цели'),
-              //     // CheckpointModel(id: 3, value: true, text: 'Подготовить тезисы'),
-              //     // CheckpointModel(id: 4, value: true, text: 'Подготовить презентацию'),
-              //     // CheckpointModel(id: 5, value: true, text: 'Подготовить дизайн'),
-              //   ]),
-              // );
-              _newGoalMenu(context);
-            },
+            onPressed: () => _newGoalMenu(context),
             backgroundColor: AppColors.purple,
             shape: const OvalBorder(),
             child: Text(
@@ -96,72 +85,71 @@ class _GoalsPageState extends State<GoalsPage> {
         return AlertDialog(
             backgroundColor: AppColors.grayBlueDark,
             content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setLocalState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Новая цель',
-                      style: AppTexts.bodyBold,
+                builder: (BuildContext context, StateSetter setLocalState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Новая цель',
+                    style: AppTexts.bodyBold,
+                  ),
+                  const SizedBox(height: 20),
+                  Flexible(
+                      child: TextField(
+                    controller: name,
+                    decoration: const InputDecoration(
+                        hintText: 'Название', border: OutlineInputBorder()),
+                  )),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: description,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                        hintText: 'Описание', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 20),
+                  Flexible(
+                    child: InkWell(
+                      onTap: () async {
+                        deadline = await _selectDate(context, deadline);
+                        setLocalState(() {
+                          deadlineText =
+                              '${deadline.year}-${deadline.month}-${deadline.day}';
+                        });
+                      },
+                      child: Text(deadlineText),
                     ),
-                    const SizedBox(height: 20),
-                    Flexible(
-                        child: TextField(
-                      controller: name,
-                      decoration: const InputDecoration(
-                          hintText: 'Название', border: OutlineInputBorder()),
-                    )),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: description,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                      hintText: 'Описание', border: OutlineInputBorder()),
-                    ),
-                    const SizedBox(height: 20),
-                    Flexible(
-                      child: InkWell(
-                        onTap: () async {
-                          deadline = await _selectDate(context, deadline);
-                          setLocalState(() {
-                            deadlineText =
-                                '${deadline.year}-${deadline.month}-${deadline.day}';
-                          });
-                        },
-                        child: Text(deadlineText),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('Назад')),
-                        ElevatedButton(
-                            onPressed: () async {
-                              var goals = await DBHelper.goals();
-                              var model = GoalModel(
-                                  id: goals.length + 1,
-                                  completed: false,
-                                  name: name.text,
-                                  description: description.text,
-                                  deadline: deadline,
-                                  checkpoints: []);
-                              DBHelper.insertGoal(model);
-                              setState(() {});
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Продолжить')),
-                      ],
-                    ),
-                  ],
-                );
-              }
-            ));
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Назад')),
+                      ElevatedButton(
+                          onPressed: () async {
+                            var goals = await DBHelper.goals();
+                            var model = GoalModel(
+                                id: goals.length,
+                                completed: false,
+                                name: name.text,
+                                description: description.text,
+                                deadline: deadline,
+                                checkpoints: []);
+                            DBHelper.insertGoal(model);
+                            setState(() {});
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Продолжить')),
+                    ],
+                  ),
+                ],
+              );
+            }));
       },
     );
   }
