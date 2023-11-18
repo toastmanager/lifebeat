@@ -59,7 +59,7 @@ class GoalModel {
 
 class CheckpointModel {
   final int id;
-  final bool value;
+  bool value;
   final String text;
 
   CheckpointModel({

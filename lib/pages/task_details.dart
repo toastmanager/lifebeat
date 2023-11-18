@@ -3,7 +3,6 @@ import 'package:lifebeat/components/progressCircle.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/models/goal_model.dart';
-import 'package:path/path.dart';
 
 class DetailsButton extends StatelessWidget {
   DetailsButton({
@@ -35,16 +34,19 @@ class DetailsButton extends StatelessWidget {
   }
 }
 
-class TaskDetailsPage extends StatelessWidget {
-  TaskDetailsPage({
-    super.key,
-    required this.model,
-  });
+class TaskDetailsPage extends StatefulWidget {
+  TaskDetailsPage({super.key, required this.model});
 
   GoalModel model;
 
   @override
+  State<TaskDetailsPage> createState() => _TaskDetailsPageState();
+}
+
+class _TaskDetailsPageState extends State<TaskDetailsPage> {
+  @override
   Widget build(BuildContext context) {
+    GoalModel model = widget.model;
     int timeLeft = model.deadline.difference(DateTime.now()).inDays;
 
     return Container(
@@ -147,7 +149,11 @@ class TaskDetailsPage extends StatelessWidget {
                           children: [
                             Checkbox(
                               value: model.checkpoints[index].value,
-                              onChanged: (value) {},
+                              onChanged: (value) {
+                                setState(() {
+                                  model.checkpoints[index].value = true;
+                                });
+                              },
                             ),
                             Text(
                               model.checkpoints[index].text,
@@ -201,11 +207,11 @@ class TaskDetailsPage extends StatelessWidget {
                     child: const Text('подтвердить'),
                     onPressed: () async {
                       var checkpoints = await DBHelper.checkpoints();
-                      var checkpoint = CheckpointModel(id: checkpoints.length, value: false, text: name.text);
-                      DBHelper.insertCheckpoint(
-                        checkpoint,
-                        model.id
-                      );
+                      var checkpoint = CheckpointModel(
+                          id: checkpoints.length,
+                          value: false,
+                          text: name.text);
+                      DBHelper.insertCheckpoint(checkpoint, widget.model.id);
                       Navigator.of(context).pop();
                     },
                   ),
