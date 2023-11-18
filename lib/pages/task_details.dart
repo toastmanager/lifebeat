@@ -151,7 +151,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                               value: model.checkpoints[index].value,
                               onChanged: (value) {
                                 setState(() {
-                                  model.checkpoints[index].value = true;
+                                  model.checkpoints[index].value = model.checkpoints[index].value == true ? false : true;
                                 });
                               },
                             ),
