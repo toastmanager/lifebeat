@@ -4,7 +4,7 @@ class GoalModel {
   final int id;
   final bool completed;
   late final int duration;
-  late final double progress;
+  late double progress;
   late final int daysLeft;
   final String name;
   final String description;

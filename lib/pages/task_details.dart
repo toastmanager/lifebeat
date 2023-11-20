@@ -149,10 +149,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           children: [
                             Checkbox(
                               value: model.checkpoints[index].value,
-                              onChanged: (value) {
+                              onChanged: (value) async {
                                 setState(() {
-                                  model.checkpoints[index].value = model.checkpoints[index].value == true ? false : true;
-                                  DBHelper.insertCheckpoint(model.checkpoints[index], model.id);
+                                  model.checkpoints[index].value =
+                                      model.checkpoints[index].value == true
+                                          ? false
+                                          : true;
+                                  DBHelper.insertCheckpoint(
+                                      model.checkpoints[index], model.id);
+                                  model.progress = model.getProgress();
                                 });
                               },
                             ),
@@ -201,7 +206,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               Row(
                 children: [
                   ElevatedButton(
-                    child: const Text('добавить'),
+                    child: const Text('отмена'),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   ElevatedButton(
@@ -212,7 +217,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           id: checkpoints.length + 1,
                           value: false,
                           text: newCheckpointname.text);
-                      await DBHelper.insertCheckpoint(checkpoint, widget.model.id);
+                      await DBHelper.insertCheckpoint(
+                          checkpoint, widget.model.id);
+                      List<GoalModel> goalsList = await DBHelper.goals();
+                      setState(() {
+                        widget.model = goalsList[widget.model.id];
+                      });
                       Navigator.of(context).pop();
                     },
                   ),
