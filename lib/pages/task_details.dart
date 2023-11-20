@@ -214,7 +214,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     onPressed: () async {
                       var checkpoints = await DBHelper.checkpoints();
                       var checkpoint = CheckpointModel(
-                          id: checkpoints.length + 1,
+                          id: checkpoints.length,
                           value: false,
                           text: newCheckpointname.text);
                       await DBHelper.insertCheckpoint(

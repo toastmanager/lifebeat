@@ -34,12 +34,13 @@ class DBHelper {
   static GoalModel parseGoal(int i, List<Map<String, dynamic>> goalsMap,
       List<Map<String, dynamic>> checkpointsMap) {
     DateTime deadline = DateTime.parse(goalsMap[i]['deadline'] as String);
-    List<int> checkpointIds =
+    List<int> goalsCheckpoints =
         jsonDecode(goalsMap[i]['checkpoints']).cast<int>().toList();
     List<CheckpointModel> checkpoints = [];
 
-    for (int j = 0; j < checkpointIds.length; j++) {
-      checkpoints.add(parseCheckpoint(j, checkpointsMap));
+    for (int j = 0; j < goalsCheckpoints.length; j++) {
+      int checkpointId = goalsCheckpoints[j];
+      checkpoints.add(parseCheckpoint(checkpointId, checkpointsMap));
     }
 
     return GoalModel(
@@ -92,10 +93,10 @@ class DBHelper {
     final goalsList = await goals();
     final goal = goalsList[goalId];
 
-    var checkpointIds = goal.checkpoints.map((e) => e.id).toList();
+    var goalsCheckpoints = goal.checkpoints.map((e) => e.id).toList();
     bool inList = false;
-    for (int j = 0; j < checkpointIds.length; j++) {
-      if (checkpointIds[j] == checkpoint.id) {
+    for (int j = 0; j < goalsCheckpoints.length; j++) {
+      if (goalsCheckpoints[j] == checkpoint.id) {
         inList = true;
         break;
       }
