@@ -39,7 +39,7 @@ class DBHelper {
     List<CheckpointModel> checkpoints = [];
 
     for (int j = 0; j < checkpointIds.length; j++) {
-      checkpoints.add(parseCheckpoint(i, checkpointsMap));
+      checkpoints.add(parseCheckpoint(j, checkpointsMap));
     }
 
     return GoalModel(
