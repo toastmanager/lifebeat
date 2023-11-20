@@ -14,6 +14,12 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
+  void updateTaskComponent(GoalModel newModel) {
+    setState(() {
+      widget.model = newModel;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     String name = widget.model.name;
@@ -22,12 +28,13 @@ class _TaskState extends State<Task> {
     double progress = widget.model.progress;
     int timeLeft = deadline.difference(DateTime.now()).inDays;
 
+
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => TaskDetailsPage(model: widget.model)))
+                builder: (context) => TaskDetailsPage(model: widget.model, updateTaskComponent: updateTaskComponent,)))
             .then((value) => setState(() {}));
       },
       child: Container(

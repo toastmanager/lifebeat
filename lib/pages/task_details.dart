@@ -35,9 +35,10 @@ class DetailsButton extends StatelessWidget {
 }
 
 class TaskDetailsPage extends StatefulWidget {
-  TaskDetailsPage({super.key, required this.model});
+  TaskDetailsPage({super.key, required this.model, required this.updateTaskComponent});
 
   GoalModel model;
+  Function updateTaskComponent;
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
@@ -178,12 +179,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     );
   }
 
-  Future<void> _newCheckpointMenu(BuildContext context) {
+  Future<void> _newCheckpointMenu(BuildContext checkpointMenuContext) {
     TextEditingController newCheckpointname = TextEditingController();
 
     return showDialog(
       context: context,
-      builder: (context) {
+      builder: (checkpointMenuContext) {
         return AlertDialog(
           backgroundColor: AppColors.grayBlueDark,
           content: Column(
@@ -207,7 +208,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                 children: [
                   ElevatedButton(
                     child: const Text('отмена'),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(checkpointMenuContext).pop(),
                   ),
                   ElevatedButton(
                     child: const Text('добавить'),
@@ -223,7 +224,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       setState(() {
                         widget.model = goalsList[widget.model.id];
                       });
-                      Navigator.of(context).pop();
+                      widget.updateTaskComponent(widget.model);
+                      Navigator.of(checkpointMenuContext).pop();
                     },
                   ),
                 ],
