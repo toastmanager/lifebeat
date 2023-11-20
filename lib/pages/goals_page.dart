@@ -29,34 +29,41 @@ class _GoalsPageState extends State<GoalsPage> {
             )),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Text(
-                'Цели',
-                style: AppTexts.headingBold,
-              ),
-              const SizedBox(height: 25),
-              FutureBuilder<List<GoalModel>>(
-                future: DBHelper.goals(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<GoalModel> goalsList = snapshot.data!;
-                    return Flexible(
-                      child: ListView.separated(
-                          itemCount: goalsList.length,
-                          separatorBuilder: (context, index) => const SizedBox(
-                                height: 25,
-                              ),
-                          itemBuilder: (context, index) {
-                            return Task(model: goalsList[index]);
-                          }),
-                    );
-                  } else {
-                    return const Placeholder();
-                  }
-                },
-              ),
-            ],
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  'Цели',
+                  style: AppTexts.headingBold,
+                ),
+                const SizedBox(height: 25),
+                FutureBuilder<List<GoalModel>>(
+                  future: DBHelper.goals(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.isEmpty) {
+                        return const Text('Цели отсутствуют');
+                      } else {
+                        List<GoalModel> goalsList = snapshot.data!;
+                        return Flexible(
+                          child: ListView.separated(
+                              itemCount: goalsList.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                              itemBuilder: (context, index) {
+                                return Task(model: goalsList[index]);
+                              }),
+                        );
+                      }
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

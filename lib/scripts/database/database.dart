@@ -52,25 +52,6 @@ class DBHelper {
     );
   }
 
-  static Future<void> insertGoal(GoalModel goal) async {
-    final db = await database();
-    await db.insert('goals', goal.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  static Future<void> insertCheckpoint(CheckpointModel checkpoint, int goalId) async {
-    final db = await database();
-
-    await db.insert('checkpoints', checkpoint.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-    
-    final goalsList = await goals();
-    final goal = goalsList[goalId];
-    goal.checkpoints.add(checkpoint);
-    
-    await db.insert('goals', goal.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-  }
 
   static Future<List<CheckpointModel>> checkpoints() async {
     final db = await database();
@@ -93,5 +74,34 @@ class DBHelper {
       GoalModel goal = parseGoal(i, goalsMap, checkpointsMap);
       return goal;
     });
+  }
+
+  static Future<void> insertGoal(GoalModel goal) async {
+    final db = await database();
+    await db.insert('goals', goal.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static Future<void> insertCheckpoint(
+      CheckpointModel checkpoint, int goalId) async {
+    final db = await database();
+
+    await db.insert('checkpoints', checkpoint.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+
+    final goalsList = await goals();
+    final goal = goalsList[goalId];
+
+    var checkpointIds = goal.checkpoints.map((e) => e.id).toList();
+    bool inList = false;
+    for (int j = 0; j < checkpointIds.length; j++) {
+      if (checkpointIds[j] == checkpoint.id) {
+        inList = true;
+        break;
+      }
+    }
+    if (inList == false) {
+      insertGoal(GoalModel(id: goalId, completed: goal.completed, name: goal.name, description: goal.description, deadline: goal.deadline, checkpoints: goal.checkpoints + [checkpoint]));
+    }
   }
 }

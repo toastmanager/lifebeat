@@ -152,6 +152,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                               onChanged: (value) {
                                 setState(() {
                                   model.checkpoints[index].value = model.checkpoints[index].value == true ? false : true;
+                                  DBHelper.insertCheckpoint(model.checkpoints[index], model.id);
                                 });
                               },
                             ),
@@ -173,7 +174,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Future<void> _newCheckpointMenu(BuildContext context) {
-    TextEditingController name = TextEditingController();
+    TextEditingController newCheckpointname = TextEditingController();
 
     return showDialog(
       context: context,
@@ -190,7 +191,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               ),
               Flexible(
                   child: TextField(
-                controller: name,
+                controller: newCheckpointname,
                 decoration: const InputDecoration(
                     hintText: 'Чекпоинт', border: OutlineInputBorder()),
               )),
@@ -200,18 +201,18 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               Row(
                 children: [
                   ElevatedButton(
-                    child: const Text('назад'),
+                    child: const Text('добавить'),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   ElevatedButton(
-                    child: const Text('подтвердить'),
+                    child: const Text('добавить'),
                     onPressed: () async {
                       var checkpoints = await DBHelper.checkpoints();
                       var checkpoint = CheckpointModel(
-                          id: checkpoints.length,
+                          id: checkpoints.length + 1,
                           value: false,
-                          text: name.text);
-                      DBHelper.insertCheckpoint(checkpoint, widget.model.id);
+                          text: newCheckpointname.text);
+                      await DBHelper.insertCheckpoint(checkpoint, widget.model.id);
                       Navigator.of(context).pop();
                     },
                   ),
