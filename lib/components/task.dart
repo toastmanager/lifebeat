@@ -4,28 +4,31 @@ import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/pages/task_details.dart';
 
-class Task extends StatelessWidget {
-  Task({
-    super.key,
-    required this.model,
-  });
+class Task extends StatefulWidget {
+  Task({super.key, required this.model});
 
   GoalModel model;
 
   @override
+  State<Task> createState() => _TaskState();
+}
+
+class _TaskState extends State<Task> {
+  @override
   Widget build(BuildContext context) {
-    String name = model.name;
-    bool completed = model.completed;
-    DateTime deadline = model.deadline;
-    double progress = model.progress;
+    String name = widget.model.name;
+    bool completed = widget.model.completed;
+    DateTime deadline = widget.model.deadline;
+    double progress = widget.model.progress;
     int timeLeft = deadline.difference(DateTime.now()).inDays;
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => TaskDetailsPage(model: model))
-        );
+        Navigator.of(context)
+            .push(MaterialPageRoute(
+                builder: (context) => TaskDetailsPage(model: widget.model)))
+            .then((value) => setState(() {}));
       },
       child: Container(
         decoration: BoxDecoration(
