@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/models/goal_model.dart';
-import 'package:lifebeat/pages/task_details.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/scripts/database/database.dart';
