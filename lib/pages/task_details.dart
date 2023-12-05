@@ -35,7 +35,8 @@ class DetailsButton extends StatelessWidget {
 }
 
 class TaskDetailsPage extends StatefulWidget {
-  TaskDetailsPage({super.key, required this.model, required this.updateTaskComponent});
+  TaskDetailsPage(
+      {super.key, required this.model, required this.updateTaskComponent});
 
   GoalModel model;
   Function updateTaskComponent;
@@ -63,20 +64,39 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             children: [
               Row(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                    color: AppColors.white,
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: Text(
-                      model.name,
-                      style: AppTexts.headingBold,
+                  Expanded(
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            model.name,
+                            style: AppTexts.headingBold,
+                          ),
+                        ),
+                      ],
                     ),
-                  )
+                  ),
+                  PopupMenuButton(
+                      onSelected: (item) {
+                        switch (item) {
+                          case 0:
+                            break;
+                          case 1:
+                            break;
+                        }
+                      },
+                      itemBuilder: (context) => [
+                            const PopupMenuItem<int>(
+                                value: 0, child: Text('Удалить'))
+                          ]),
                 ],
               ),
               const SizedBox(height: 20),
