@@ -22,8 +22,10 @@ class DBHelper {
     );
   }
 
-  static CheckpointModel parseCheckpoint(
-      int i, List<Map<String, dynamic>> checkpointsMap) {
+  static Future<CheckpointModel> parseCheckpoint(int i) async {
+    final db = await database();
+    final List<Map<String, dynamic>> checkpointsMap =
+        await db.query('checkpoints');
     return CheckpointModel(
       id: checkpointsMap[i]['id'] as int,
       text: checkpointsMap[i]['text'] as String,
@@ -31,8 +33,8 @@ class DBHelper {
     );
   }
 
-  static GoalModel parseGoal(int i, List<Map<String, dynamic>> goalsMap,
-      List<Map<String, dynamic>> checkpointsMap) {
+  static Future<GoalModel> parseGoal(
+      int i, List<Map<String, dynamic>> goalsMap) async {
     DateTime deadline = DateTime.parse(goalsMap[i]['deadline'] as String);
     List<int> goalsCheckpoints =
         jsonDecode(goalsMap[i]['checkpoints']).cast<int>().toList();
@@ -40,7 +42,7 @@ class DBHelper {
 
     for (int j = 0; j < goalsCheckpoints.length; j++) {
       int checkpointId = goalsCheckpoints[j];
-      checkpoints.add(parseCheckpoint(checkpointId, checkpointsMap));
+      checkpoints.add(await parseCheckpoint(checkpointId));
     }
 
     return GoalModel(
@@ -53,28 +55,34 @@ class DBHelper {
     );
   }
 
-
   static Future<List<CheckpointModel>> checkpoints() async {
     final db = await database();
     final List<Map<String, dynamic>> checkpointsMap =
         await db.query('checkpoints');
 
-    return List.generate(checkpointsMap.length, (i) {
-      return parseCheckpoint(i, checkpointsMap); // There is error
-    });
+    List<CheckpointModel> checkpointsList = [];
+
+    for (var i = 0; i < checkpointsMap.length; i++) {
+      CheckpointModel checkpoint = await parseCheckpoint(i);
+      checkpointsList.add(checkpoint);
+    }
+
+    return checkpointsList;
   }
 
   static Future<List<GoalModel>> goals() async {
     final db = await database();
 
     final List<Map<String, dynamic>> goalsMap = await db.query('goals');
-    final List<Map<String, dynamic>> checkpointsMap =
-        await db.query('checkpoints');
 
-    return List.generate(goalsMap.length, (i) {
-      GoalModel goal = parseGoal(i, goalsMap, checkpointsMap);
-      return goal;
-    });
+    List<GoalModel> goalsList = [];
+
+    for (var i = 0; i < goalsMap.length; i++) {
+      GoalModel goal = await parseGoal(i, goalsMap);
+      goalsList.add(goal);
+    }
+
+    return goalsList;
   }
 
   static Future<void> insertGoal(GoalModel goal) async {
@@ -102,7 +110,13 @@ class DBHelper {
       }
     }
     if (inList == false) {
-      insertGoal(GoalModel(id: goalId, completed: goal.completed, name: goal.name, description: goal.description, deadline: goal.deadline, checkpoints: goal.checkpoints + [checkpoint]));
+      insertGoal(GoalModel(
+          id: goalId,
+          completed: goal.completed,
+          name: goal.name,
+          description: goal.description,
+          deadline: goal.deadline,
+          checkpoints: goal.checkpoints + [checkpoint]));
     }
   }
 
