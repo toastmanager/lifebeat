@@ -162,9 +162,11 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                                 });
                               },
                             ),
-                            Text(
-                              model.checkpoints[index].text,
-                              style: AppTexts.body,
+                            Expanded(
+                              child: Text(
+                                model.checkpoints[index].text,
+                                style: AppTexts.body,
+                              ),
                             ),
                           ],
                         );
