@@ -5,10 +5,10 @@ import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/pages/task_details.dart';
 
 class Task extends StatefulWidget {
-  Task({super.key, required this.model, required this.deleteGoal});
+  Task({super.key, required this.model, required this.updateGoals});
 
   GoalModel model;
-  Function deleteGoal;
+  Function updateGoals;
 
   @override
   State<Task> createState() => _TaskState();
@@ -35,7 +35,7 @@ class _TaskState extends State<Task> {
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => TaskDetailsPage(model: widget.model, updateTaskComponent: updateTaskComponent, deleteGoal: widget.deleteGoal,)))
+                builder: (context) => TaskDetailsPage(model: widget.model, updateTaskComponent: updateTaskComponent, updateGoals: widget.updateGoals,)))
             .then((value) => setState(() {}));
       },
       child: Container(

@@ -27,7 +27,8 @@ class DBHelper {
     final List<Map<String, dynamic>> checkpointsMap =
         await db.query('checkpoints');
 
-    final Map<String, dynamic> checkpoint = checkpointsMap.firstWhere((element) => element['id'] == id);
+    final Map<String, dynamic> checkpoint =
+        checkpointsMap.firstWhere((element) => element['id'] == id);
 
     return CheckpointModel(
       id: checkpoint['id'] as int,
@@ -36,11 +37,15 @@ class DBHelper {
     );
   }
 
-  static Future<GoalModel> parseGoal(
-      int i, List<Map<String, dynamic>> goalsMap) async {
-    DateTime deadline = DateTime.parse(goalsMap[i]['deadline'] as String);
+  static Future<GoalModel> parseGoal(int id) async {
+    final db = await database();
+    final List<Map<String, dynamic>> goalsMap = await db.query('goals');
+    final Map<String, dynamic> goalMap =
+        goalsMap.firstWhere((element) => element['id'] == id);
+
+    DateTime deadline = DateTime.parse(goalMap['deadline'] as String);
     List<int> goalsCheckpoints =
-        jsonDecode(goalsMap[i]['checkpoints']).cast<int>().toList();
+        jsonDecode(goalMap['checkpoints']).cast<int>().toList();
     List<CheckpointModel> checkpoints = [];
 
     for (int j = 0; j < goalsCheckpoints.length; j++) {
@@ -49,10 +54,10 @@ class DBHelper {
     }
 
     return GoalModel(
-      id: goalsMap[i]['id'] as int,
-      completed: goalsMap[i]['completed'] as int == 1 ? true : false,
-      name: goalsMap[i]['name'] as String,
-      description: goalsMap[i]['description'] as String,
+      id: goalMap['id'] as int,
+      completed: goalMap['completed'] as int == 1 ? true : false,
+      name: goalMap['name'] as String,
+      description: goalMap['description'] as String,
       deadline: deadline,
       checkpoints: checkpoints,
     );
@@ -66,7 +71,8 @@ class DBHelper {
     List<CheckpointModel> checkpointsList = [];
 
     for (var i = 0; i < checkpointsMap.length; i++) {
-      CheckpointModel checkpoint = await parseCheckpoint(i);
+      CheckpointModel checkpoint =
+          await parseCheckpoint(checkpointsMap[i]['id']);
       checkpointsList.add(checkpoint);
     }
 
@@ -81,7 +87,7 @@ class DBHelper {
     List<GoalModel> goalsList = [];
 
     for (var i = 0; i < goalsMap.length; i++) {
-      GoalModel goal = await parseGoal(i, goalsMap);
+      GoalModel goal = await parseGoal(goalsMap[i]['id']);
       goalsList.add(goal);
     }
 
@@ -102,12 +108,12 @@ class DBHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
 
     final goalsList = await goals();
-    final goal = goalsList[goalId];
+    final goal = goalsList.firstWhere((element) => element.id == goalId);
 
-    var goalsCheckpoints = goal.checkpoints.map((e) => e.id).toList();
+    var goalCheckpoints = goal.checkpoints.map((e) => e.id).toList();
     bool inList = false;
-    for (int j = 0; j < goalsCheckpoints.length; j++) {
-      if (goalsCheckpoints[j] == checkpoint.id) {
+    for (int j = 0; j < goalCheckpoints.length; j++) {
+      if (goalCheckpoints[j] == checkpoint.id) {
         inList = true;
         break;
       }
@@ -121,6 +127,34 @@ class DBHelper {
           deadline: goal.deadline,
           checkpoints: goal.checkpoints + [checkpoint]));
     }
+  }
+
+  static Future addCheckpoint(bool value, String text, int goalId) async {
+    final List<CheckpointModel> checkpointsList = await checkpoints();
+    final int checkpointId =
+        checkpointsList.isEmpty ? 0 : checkpointsList.last.id + 1;
+    final CheckpointModel checkpoint =
+        CheckpointModel(id: checkpointId, value: value, text: text);
+    await insertCheckpoint(checkpoint, goalId);
+    return 0;
+  }
+
+  static Future addGoal(
+    String name,
+    String description,
+    DateTime deadline,
+  ) async {
+    final List<GoalModel> goalsList = await goals();
+    final int goalId = goalsList.isEmpty ? 0 : goalsList.last.id + 1;
+    final GoalModel goal = GoalModel(
+        id: goalId,
+        completed: false,
+        name: name,
+        description: description,
+        deadline: deadline,
+        checkpoints: []);
+    await insertGoal(goal);
+    return 0;
   }
 
   static Future<int> deleteCheckpoint(int checkpointId) async {

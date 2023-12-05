@@ -36,11 +36,14 @@ class DetailsButton extends StatelessWidget {
 
 class TaskDetailsPage extends StatefulWidget {
   TaskDetailsPage(
-      {super.key, required this.model, required this.updateTaskComponent, required this.deleteGoal});
+      {super.key,
+      required this.model,
+      required this.updateTaskComponent,
+      required this.updateGoals});
 
   GoalModel model;
   Function updateTaskComponent;
-  Function deleteGoal;
+  Function updateGoals;
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
@@ -86,12 +89,13 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     ),
                   ),
                   PopupMenuButton(
-                      onSelected: (item) {
+                      onSelected: (item) async {
                         switch (item) {
                           case 0:
-                            DBHelper.deleteGoal(model.id);
-                            widget.deleteGoal();
+                            await DBHelper.deleteGoal(model.id);
+                            await widget.updateGoals();
                             Navigator.of(context).pop();
+                            break;
                           case 1:
                             break;
                         }
@@ -239,16 +243,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   ElevatedButton(
                     child: const Text('добавить'),
                     onPressed: () async {
-                      var checkpoints = await DBHelper.checkpoints();
-                      var checkpoint = CheckpointModel(
-                          id: checkpoints.length,
-                          value: false,
-                          text: newCheckpointname.text);
-                      await DBHelper.insertCheckpoint(
-                          checkpoint, widget.model.id);
+                      await DBHelper.addCheckpoint(
+                          false, newCheckpointname.text, widget.model.id);
                       List<GoalModel> goalsList = await DBHelper.goals();
                       setState(() {
-                        widget.model = goalsList[widget.model.id];
+                        widget.model = goalsList.firstWhere(
+                            (element) => element.id == widget.model.id);
                       });
                       widget.updateTaskComponent(widget.model);
                       Navigator.of(checkpointMenuContext).pop();

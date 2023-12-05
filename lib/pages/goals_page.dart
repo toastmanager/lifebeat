@@ -39,6 +39,10 @@ class _GoalsPageState extends State<GoalsPage> {
                 FutureBuilder<List<GoalModel>>(
                   future: DBHelper.goals(),
                   builder: (context, snapshot) {
+                    updateGoals() {
+                      setState(() {});
+                    }
+
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
                         return const Text('Цели отсутствуют');
@@ -53,11 +57,9 @@ class _GoalsPageState extends State<GoalsPage> {
                                     height: 25,
                                   ),
                               itemBuilder: (context, index) {
-                                return Task(model: goalsList[index], deleteGoal: () {
-                                  setState(() {
-                                    goalsList.removeAt(index);
-                                  });
-                                });
+                                return Task(
+                                    model: goalsList[index],
+                                    updateGoals: () => updateGoals());
                               }),
                         );
                       }
@@ -143,15 +145,11 @@ class _GoalsPageState extends State<GoalsPage> {
                           child: const Text('Назад')),
                       ElevatedButton(
                           onPressed: () async {
-                            var goals = await DBHelper.goals();
-                            var model = GoalModel(
-                                id: goals.length,
-                                completed: false,
-                                name: name.text,
-                                description: description.text,
-                                deadline: deadline,
-                                checkpoints: []);
-                            DBHelper.insertGoal(model);
+                            await DBHelper.addGoal(
+                              name.text,
+                              description.text,
+                              deadline,
+                            );
                             setState(() {});
                             Navigator.of(context).pop();
                           },
