@@ -43,7 +43,8 @@ class _GoalsPageState extends State<GoalsPage> {
                       if (snapshot.data!.isEmpty) {
                         return const Text('Цели отсутствуют');
                       } else {
-                        List<GoalModel> goalsList = snapshot.data!.reversed.toList();
+                        List<GoalModel> goalsList =
+                            snapshot.data!.reversed.toList();
                         return Flexible(
                           child: ListView.separated(
                               itemCount: goalsList.length,
