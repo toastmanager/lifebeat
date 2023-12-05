@@ -36,10 +36,11 @@ class DetailsButton extends StatelessWidget {
 
 class TaskDetailsPage extends StatefulWidget {
   TaskDetailsPage(
-      {super.key, required this.model, required this.updateTaskComponent});
+      {super.key, required this.model, required this.updateTaskComponent, required this.deleteGoal});
 
   GoalModel model;
   Function updateTaskComponent;
+  Function deleteGoal;
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
@@ -89,6 +90,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         switch (item) {
                           case 0:
                             DBHelper.deleteGoal(model);
+                            widget.deleteGoal();
                             Navigator.of(context).pop();
                           case 1:
                             break;

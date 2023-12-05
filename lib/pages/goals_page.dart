@@ -53,7 +53,11 @@ class _GoalsPageState extends State<GoalsPage> {
                                     height: 25,
                                   ),
                               itemBuilder: (context, index) {
-                                return Task(model: goalsList[index]);
+                                return Task(model: goalsList[index], deleteGoal: () {
+                                  setState(() {
+                                    goalsList.removeAt(index);
+                                  });
+                                });
                               }),
                         );
                       }
