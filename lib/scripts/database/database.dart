@@ -105,4 +105,13 @@ class DBHelper {
       insertGoal(GoalModel(id: goalId, completed: goal.completed, name: goal.name, description: goal.description, deadline: goal.deadline, checkpoints: goal.checkpoints + [checkpoint]));
     }
   }
+
+  static Future<int> deleteGoal(GoalModel goal) async {
+    final db = await database();
+    return db.delete(
+      'goals',
+      where: "id = ?",
+      whereArgs: [goal.id],
+    );
+  }
 }

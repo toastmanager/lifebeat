@@ -88,7 +88,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       onSelected: (item) {
                         switch (item) {
                           case 0:
-                            break;
+                            DBHelper.deleteGoal(model);
+                            Navigator.of(context).pop();
                           case 1:
                             break;
                         }
