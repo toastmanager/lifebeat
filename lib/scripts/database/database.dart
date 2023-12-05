@@ -22,14 +22,17 @@ class DBHelper {
     );
   }
 
-  static Future<CheckpointModel> parseCheckpoint(int i) async {
+  static Future<CheckpointModel> parseCheckpoint(int id) async {
     final db = await database();
     final List<Map<String, dynamic>> checkpointsMap =
         await db.query('checkpoints');
+
+    final Map<String, dynamic> checkpoint = checkpointsMap.firstWhere((element) => element['id'] == id);
+
     return CheckpointModel(
-      id: checkpointsMap[i]['id'] as int,
-      text: checkpointsMap[i]['text'] as String,
-      value: checkpointsMap[i]['value'] as int == 1 ? true : false,
+      id: checkpoint['id'] as int,
+      text: checkpoint['text'] as String,
+      value: checkpoint['value'] as int == 1 ? true : false,
     );
   }
 
@@ -120,12 +123,30 @@ class DBHelper {
     }
   }
 
-  static Future<int> deleteGoal(GoalModel goal) async {
+  static Future<int> deleteCheckpoint(int checkpointId) async {
     final db = await database();
+    return db.delete(
+      'checkpoints',
+      where: "id = ?",
+      whereArgs: [checkpointId],
+    );
+  }
+
+  static Future<int> deleteGoal(int goalId) async {
+    final db = await database();
+
+    List<GoalModel> goalsList = await goals();
+    GoalModel goal = goalsList.firstWhere((element) => element.id == goalId);
+    List<int> goalCheckpointsIds = goal.checkpoints.map((e) => e.id).toList();
+
+    for (var i = 0; i < goalCheckpointsIds.length; i++) {
+      await deleteCheckpoint(goalCheckpointsIds[i]);
+    }
+
     return db.delete(
       'goals',
       where: "id = ?",
-      whereArgs: [goal.id],
+      whereArgs: [goalId],
     );
   }
 }
