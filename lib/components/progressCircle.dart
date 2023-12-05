@@ -17,12 +17,18 @@ class ProgressCircle extends StatelessWidget {
       child: Stack(
         children: [
           Center(
-            child: CircularProgressIndicator(
-              backgroundColor: AppColors.purpleDark,
-              color: AppColors.purple,
-              strokeAlign: 2.5,
-              strokeWidth: 5,
-              value: progress / 100,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: progress / 100, end: progress / 100),
+              duration: const Duration(milliseconds: 500),
+              builder: (context, value, _) {
+                return CircularProgressIndicator(
+                  backgroundColor: AppColors.purpleDark,
+                  color: AppColors.purple,
+                  strokeAlign: 2.5,
+                  strokeWidth: 5,
+                  value: value,
+                );
+              }
             ),
           ),
           Center(
