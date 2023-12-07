@@ -49,6 +49,10 @@ class TaskModel {
   }
 
   String getTimeLeft() {
+    print(progress);
+    if (startTime.difference(DateTime.now()).inMinutes > 0) {
+      return "Ожидание";
+    }
     if (minutesLeft > 60 && minutesLeft < 1440) {
       int hours = (minutesLeft/60).truncate();
       int minutes = minutesLeft - (hours * 60);
@@ -56,6 +60,13 @@ class TaskModel {
     }
     if (minutesLeft > 1440) {
       return "${endTime.difference(DateTime.now()).inDays} дней";
+    }
+    if (minutesLeft < 0) {
+      if (progress == 100.0) {
+        return "Завершено";
+      } else {
+        return "Просрочено";
+      }
     }
     return "${minutesLeft.toString()} минут";
   }
