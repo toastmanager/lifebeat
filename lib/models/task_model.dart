@@ -1,28 +1,32 @@
 import 'dart:convert';
 import 'package:lifebeat/models/checkpoint_model.dart';
 
-class GoalModel {
+class TaskModel {
   final int id;
   final bool completed;
-  late final int duration;
+  late final Duration duration;
   late double progress;
-  late final int daysLeft;
+  late final int minutesLeft;
+  late final String timeLeft;
   final String name;
   final String description;
-  final DateTime deadline;
+  final DateTime startTime;
+  final DateTime endTime;
   List<CheckpointModel> checkpoints;
 
-  GoalModel({
+  TaskModel({
     required this.id,
     required this.completed,
     required this.name,
     required this.description,
-    required this.deadline,
+    required this.startTime,
+    required this.endTime,
     required this.checkpoints,
   }) {
-    duration = getDateDurations();
+    duration = getDuration();
     progress = getProgress();
-    daysLeft = deadline.difference(DateTime.now()).inDays;
+    minutesLeft = endTime.difference(DateTime.now()).inMinutes;
+    timeLeft = getTimeLeft();
   }
 
   double getProgress() {
@@ -40,8 +44,20 @@ class GoalModel {
     return finished / checkpoints.length * 100;
   }
 
-  int getDateDurations() {
-    return deadline.difference(DateTime.now()).inDays;
+  Duration getDuration() {
+    return endTime.difference(startTime);
+  }
+
+  String getTimeLeft() {
+    if (minutesLeft > 60 && minutesLeft < 1440) {
+      int hours = (minutesLeft/60).truncate();
+      int minutes = minutesLeft - (hours * 60);
+      return "$hours часов и $minutes минут";
+    }
+    if (minutesLeft > 1440) {
+      return "${endTime.difference(DateTime.now()).inDays} дней";
+    }
+    return "${minutesLeft.toString()} минут";
   }
 
   Map<String, dynamic> toMap() {
@@ -49,10 +65,10 @@ class GoalModel {
       'id': id,
       'completed': completed ? 1 : 0,
       'progress': progress,
-      'daysLeft': daysLeft,
       'name': name,
       'description': description,
-      'deadline': deadline.toIso8601String(),
+      'start_time': startTime.toIso8601String(),
+      'end_time': endTime.toIso8601String(),
       'checkpoints': jsonEncode(checkpoints.map((e) => e.id).toList()),
     };
   }

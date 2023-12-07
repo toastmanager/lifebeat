@@ -48,23 +48,22 @@ class _GoalsPageState extends State<GoalsPage> {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
                         return const Text('Цели отсутствуют');
-                      } else {
-                        List<GoalModel> goalsList =
-                            snapshot.data!.reversed.toList();
-                        return Flexible(
-                          child: ListView.separated(
-                              itemCount: goalsList.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                              itemBuilder: (context, index) {
-                                return Goal(
-                                    model: goalsList[index],
-                                    updateGoals: () => updateGoals());
-                              }),
-                        );
                       }
+                      List<GoalModel> goalsList =
+                          snapshot.data!.reversed.toList();
+                      return Flexible(
+                        child: ListView.separated(
+                            itemCount: goalsList.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                            itemBuilder: (context, index) {
+                              return Goal(
+                                  model: goalsList[index],
+                                  updateGoals: () => updateGoals());
+                            }),
+                      );
                     } else {
                       return const CircularProgressIndicator();
                     }

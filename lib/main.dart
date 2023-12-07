@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'pages/goals_page.dart';
-import 'pages/schedule_page.dart';
+import 'package:lifebeat/pages/goals_page.dart';
+import 'package:lifebeat/pages/schedules_page.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io' show Platform;
+import 'dart:io';
 
 void main() {
   if (Platform.isWindows | Platform.isLinux | Platform.isMacOS) {
@@ -20,6 +20,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: MaterialApp(
+        restorationScopeId: "lifebeat",
         title: 'Lifebeat',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

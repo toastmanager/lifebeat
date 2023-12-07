@@ -50,5 +50,5 @@ class Routes {
 }
 
 class AppInfo {
-  static const version = '0.2.1';
+  static const version = '0.2.3';
 }
