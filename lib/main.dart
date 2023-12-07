@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/goals_page.dart';
+import 'pages/schedule_page.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' show Platform;
 
@@ -25,9 +26,10 @@ class App extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        initialRoute: '/',
+        initialRoute: '/goals',
         routes: {
-          '/': (context) => const GoalsPage(),
+          '/goals': (context) => const GoalsPage(),
+          '/schedule': (context) => const SchedulePage(),
         },
       ),
     );

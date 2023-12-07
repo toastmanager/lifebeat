@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/components/task.dart';
@@ -17,6 +18,7 @@ class _GoalsPageState extends State<GoalsPage> {
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
+        bottomNavigationBar: const Navbar(),
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
             onPressed: () => _newGoalMenu(context),

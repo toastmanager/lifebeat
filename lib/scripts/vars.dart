@@ -43,3 +43,12 @@ class AppTexts {
     color: textColor,
   ));
 }
+
+class Routes {
+  static const goals = '/goals';
+  static const schedule = '/schedule';
+}
+
+class AppInfo {
+  static const version = '0.2.0';
+}
