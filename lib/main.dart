@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/pages/goals_page.dart';
-import 'package:lifebeat/pages/schedules_page.dart';
+import 'package:lifebeat/pages/schedule_page.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
 

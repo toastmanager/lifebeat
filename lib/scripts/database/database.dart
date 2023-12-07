@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:lifebeat/scripts/vars.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:lifebeat/models/goal_model.dart';
@@ -126,6 +127,16 @@ class DBHelper {
     return goalsList;
   }
 
+  static Future<GoalModel> getGoalById(int goalId) async {
+    final List<GoalModel> goalsList = await goals();
+    return goalsList.firstWhere((element) => element.id == goalId);
+  }
+
+  static Future<TaskModel> getTaskById(int taskId) async {
+    final List<TaskModel> tasksList = await tasks();
+    return tasksList.firstWhere((task) => task.id == taskId);
+  }
+
   static Future<List<TaskModel>> tasks() async {
     final db = await database();
 
@@ -154,41 +165,60 @@ class DBHelper {
   }
 
   static Future<void> insertCheckpoint(
-      CheckpointModel checkpoint, int goalId) async {
+      CheckpointModel checkpoint, int itemId, String type) async {
     final db = await database();
+    bool isGoal = type == ItemType.goal;
 
     await db.insert('checkpoints', checkpoint.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
 
-    final goalsList = await goals();
-    final goal = goalsList.firstWhere((element) => element.id == goalId);
+    late final List itemsList;
+    if (isGoal) {
+      itemsList = await goals();
+    } else {
+      itemsList = await tasks();
+    }
+    final item = itemsList.firstWhere((element) => element.id == itemId);
 
-    var goalCheckpoints = goal.checkpoints.map((e) => e.id).toList();
+    var itemCheckpoints = item.checkpoints.map((e) => e.id).toList();
     bool inList = false;
-    for (int j = 0; j < goalCheckpoints.length; j++) {
-      if (goalCheckpoints[j] == checkpoint.id) {
+    for (int j = 0; j < itemCheckpoints.length; j++) {
+      if (itemCheckpoints[j] == checkpoint.id) {
         inList = true;
         break;
       }
     }
+
     if (inList == false) {
-      insertGoal(GoalModel(
-          id: goalId,
-          completed: goal.completed,
-          name: goal.name,
-          description: goal.description,
-          deadline: goal.deadline,
-          checkpoints: goal.checkpoints + [checkpoint]));
+      if (isGoal) {
+        insertGoal(GoalModel(
+            id: itemId,
+            completed: item.completed,
+            name: item.name,
+            description: item.description,
+            deadline: item.deadline,
+            checkpoints: item.checkpoints + [checkpoint]));
+      } else {
+        insertTask(TaskModel(
+            id: itemId,
+            completed: item.completed,
+            name: item.name,
+            description: item.description,
+            startTime: item.startTime,
+            endTime: item.endTime,
+            checkpoints: item.checkpoints + [checkpoint]));
+      }
     }
   }
 
-  static Future addCheckpoint(bool value, String text, int goalId) async {
+  static Future addCheckpoint(
+      bool value, String text, int goalId, String type) async {
     final List<CheckpointModel> checkpointsList = await checkpoints();
     final int checkpointId =
         checkpointsList.isEmpty ? 0 : checkpointsList.last.id + 1;
     final CheckpointModel checkpoint =
         CheckpointModel(id: checkpointId, value: value, text: text);
-    await insertCheckpoint(checkpoint, goalId);
+    await insertCheckpoint(checkpoint, goalId, type);
     return 0;
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppColors {
+abstract final class AppColors {
   static const Color grayBlueLight = Color(0xffb232d33);
   static const Color grayBlueDark = Color(0xffb12171a);
   static const Color purple = Color(0xffb8b17e5);
@@ -17,7 +17,7 @@ class AppColors {
       ]);
 }
 
-class AppTexts {
+abstract final class AppTexts {
   static const appFontStyle = GoogleFonts.openSans;
   static const double bodyFontSize = 14;
   static const double headingFontSize = 24;
@@ -44,11 +44,16 @@ class AppTexts {
   ));
 }
 
-class Routes {
+abstract final class Routes {
   static const goals = '/goals';
   static const schedule = '/schedule';
 }
 
-class AppInfo {
-  static const version = '0.2.4';
+abstract final class AppInfo {
+  static const version = '0.2.5';
+}
+
+abstract final class ItemType {
+  static const goal = 'goal';
+  static const task = 'task';
 }

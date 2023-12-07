@@ -185,7 +185,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                                           ? false
                                           : true;
                                   DBHelper.insertCheckpoint(
-                                      model.checkpoints[index], model.id);
+                                      model.checkpoints[index], model.id, ItemType.goal);
                                   model.progress = model.getProgress();
                                 });
                               },
@@ -244,7 +244,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                     child: const Text('добавить'),
                     onPressed: () async {
                       await DBHelper.addCheckpoint(
-                          false, newCheckpointname.text, widget.model.id);
+                          false, newCheckpointname.text, widget.model.id, ItemType.goal);
                       List<GoalModel> goalsList = await DBHelper.goals();
                       setState(() {
                         widget.model = goalsList.firstWhere(

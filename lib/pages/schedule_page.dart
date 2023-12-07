@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 import 'package:lifebeat/components/navbar.dart';
+import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/vars.dart';
@@ -41,6 +42,10 @@ class _SchedulePageState extends State<SchedulePage> {
               FutureBuilder<List<TaskModel>>(
                 future: DBHelper.tasks(),
                 builder: (context, snapshot) {
+                  updateTasks() {
+                    setState(() {});
+                  }
+
                   if (snapshot.hasData) {
                     if (snapshot.data!.isEmpty) {
                       return const Text('Задачи отсутствуют');
@@ -51,11 +56,14 @@ class _SchedulePageState extends State<SchedulePage> {
                       itemCount: tasksList.length,
                       itemBuilder: (context, index) {
                         final TaskModel task = tasksList[index];
-                        return Text('${task.name} ${task.description} ${task.startTime.toIso8601String()} ${task.endTime.toIso8601String()}');
+                        return Task(
+                            taskId: task.id, updateItems: () => updateTasks());
+                        // return Text(
+                        //     '${task.name} ${task.description} ${task.startTime.toIso8601String()} ${task.endTime.toIso8601String()}');
                       },
                     ));
                   } else {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
                 },
               )
@@ -69,16 +77,20 @@ class _SchedulePageState extends State<SchedulePage> {
   Future<void> _newTaskMenu(BuildContext context) {
     DateTime startTime = DateTime.now();
     DateTime endTime = DateTime.now();
-    String startTimeText = '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
-    String endTimeText = '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+    String startTimeText =
+        '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
+    String endTimeText =
+        '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
     TextEditingController name = TextEditingController();
     TextEditingController description = TextEditingController();
 
-    Future<DateTime?> taskDatePicker(Function action) => DatePicker.showDateTimePicker(context,
+    Future<DateTime?> taskDatePicker(Function(DateTime) action) =>
+        DatePicker.showDateTimePicker(context,
             minTime: DateTime(2015, 8),
             maxTime: DateTime(2101),
             currentTime: DateTime.now(),
-            locale: LocaleType.ru, onConfirm: (date) => action);
+            locale: LocaleType.ru,
+            onConfirm: (date) => action(date));
 
     return showDialog(
       context: context,
@@ -115,13 +127,11 @@ class _SchedulePageState extends State<SchedulePage> {
                   Flexible(
                     child: InkWell(
                       onTap: () async {
-                        await taskDatePicker(
-                          (date) => setLocalState(() {
-                            startTime = date;
-                            startTimeText =
-                                '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
-                          })
-                        );
+                        await taskDatePicker((date) => setLocalState(() {
+                              startTime = date;
+                              startTimeText =
+                                  '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
+                            }));
                       },
                       child: Text(startTimeText),
                     ),
@@ -130,13 +140,11 @@ class _SchedulePageState extends State<SchedulePage> {
                   Flexible(
                     child: InkWell(
                       onTap: () async {
-                        await taskDatePicker(
-                          (date) => setLocalState(() {
-                            endTime = date;
-                            endTimeText =
-                                '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
-                          })
-                        );
+                        await taskDatePicker((date) => setLocalState(() {
+                              endTime = date;
+                              endTimeText =
+                                  '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+                            }));
                       },
                       child: Text(endTimeText),
                     ),
@@ -157,7 +165,9 @@ class _SchedulePageState extends State<SchedulePage> {
                               endTime,
                             );
                             setState(() {});
-                            Navigator.of(context).pop();
+                            if (mounted) {
+                              Navigator.of(context).pop();
+                            }
                           },
                           child: const Text('Продолжить')),
                     ],

@@ -8,7 +8,7 @@ class Goal extends StatefulWidget {
   Goal({super.key, required this.model, required this.updateGoals});
 
   GoalModel model;
-  Function updateGoals;
+  final Function updateGoals;
 
   @override
   State<Goal> createState() => _GoalState();
