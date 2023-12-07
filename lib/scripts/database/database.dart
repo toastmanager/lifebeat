@@ -157,7 +157,7 @@ class DBHelper {
     return 0;
   }
 
-  static Future<int> deleteCheckpoint(int checkpointId) async {
+  static Future<int> removeCheckpoint(int checkpointId) async {
     final db = await database();
     return db.delete(
       'checkpoints',
@@ -166,7 +166,7 @@ class DBHelper {
     );
   }
 
-  static Future<int> deleteGoal(int goalId) async {
+  static Future<int> removeGoal(int goalId) async {
     final db = await database();
 
     List<GoalModel> goalsList = await goals();
@@ -174,7 +174,7 @@ class DBHelper {
     List<int> goalCheckpointsIds = goal.checkpoints.map((e) => e.id).toList();
 
     for (var i = 0; i < goalCheckpointsIds.length; i++) {
-      await deleteCheckpoint(goalCheckpointsIds[i]);
+      await removeCheckpoint(goalCheckpointsIds[i]);
     }
 
     return db.delete(

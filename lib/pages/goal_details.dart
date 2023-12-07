@@ -34,22 +34,22 @@ class DetailsButton extends StatelessWidget {
   }
 }
 
-class TaskDetailsPage extends StatefulWidget {
-  TaskDetailsPage(
+class GoalDetailsPage extends StatefulWidget {
+  GoalDetailsPage(
       {super.key,
       required this.model,
-      required this.updateTaskComponent,
+      required this.updateGoalComponent,
       required this.updateGoals});
 
   GoalModel model;
-  Function updateTaskComponent;
+  Function updateGoalComponent;
   Function updateGoals;
 
   @override
-  State<TaskDetailsPage> createState() => _TaskDetailsPageState();
+  State<GoalDetailsPage> createState() => _GoalDetailsPageState();
 }
 
-class _TaskDetailsPageState extends State<TaskDetailsPage> {
+class _GoalDetailsPageState extends State<GoalDetailsPage> {
   @override
   Widget build(BuildContext context) {
     GoalModel model = widget.model;
@@ -92,7 +92,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       onSelected: (item) async {
                         switch (item) {
                           case 0:
-                            await DBHelper.deleteGoal(model.id);
+                            await DBHelper.removeGoal(model.id);
                             await widget.updateGoals();
                             Navigator.of(context).pop();
                             break;
@@ -250,7 +250,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         widget.model = goalsList.firstWhere(
                             (element) => element.id == widget.model.id);
                       });
-                      widget.updateTaskComponent(widget.model);
+                      widget.updateGoalComponent(widget.model);
                       Navigator.of(checkpointMenuContext).pop();
                     },
                   ),

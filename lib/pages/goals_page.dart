@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/scripts/vars.dart';
-import 'package:lifebeat/components/task.dart';
+import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 
 class GoalsPage extends StatefulWidget {
@@ -59,7 +59,7 @@ class _GoalsPageState extends State<GoalsPage> {
                                     height: 25,
                                   ),
                               itemBuilder: (context, index) {
-                                return Task(
+                                return Goal(
                                     model: goalsList[index],
                                     updateGoals: () => updateGoals());
                               }),

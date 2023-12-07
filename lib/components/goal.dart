@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/components/progressCircle.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/scripts/vars.dart';
-import 'package:lifebeat/pages/task_details.dart';
+import 'package:lifebeat/pages/goal_details.dart';
 
-class Task extends StatefulWidget {
-  Task({super.key, required this.model, required this.updateGoals});
+class Goal extends StatefulWidget {
+  Goal({super.key, required this.model, required this.updateGoals});
 
   GoalModel model;
   Function updateGoals;
 
   @override
-  State<Task> createState() => _TaskState();
+  State<Goal> createState() => _GoalState();
 }
 
-class _TaskState extends State<Task> {
-  void updateTaskComponent(GoalModel newModel) {
+class _GoalState extends State<Goal> {
+  void updateGoalComponent(GoalModel newModel) {
     setState(() {
       widget.model = newModel;
     });
@@ -35,7 +35,7 @@ class _TaskState extends State<Task> {
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => TaskDetailsPage(model: widget.model, updateTaskComponent: updateTaskComponent, updateGoals: widget.updateGoals,)))
+                builder: (context) => GoalDetailsPage(model: widget.model, updateGoalComponent: updateGoalComponent, updateGoals: widget.updateGoals,)))
             .then((value) => setState(() {}));
       },
       child: Container(

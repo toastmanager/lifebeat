@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/navbar.dart';
-import 'package:lifebeat/components/task.dart';
+import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
@@ -28,7 +28,7 @@ class _SchedulePageState extends State<SchedulePage> {
                     style: AppTexts.headingBold,
                     textAlign: TextAlign.center)
               ),
-              Task(model: GoalModel(checkpoints: [], completed: false, deadline: DateTime.now(), name: 'Подготовить дизайн', id: 90, description: ''), updateGoals: () {})
+              Goal(model: GoalModel(checkpoints: [], completed: false, deadline: DateTime.now(), name: 'Подготовить дизайн', id: 90, description: ''), updateGoals: () {})
             ],
           ),
         ),
