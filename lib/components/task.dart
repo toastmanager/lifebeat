@@ -77,7 +77,7 @@ class _TaskState extends State<Task> {
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                '$timeLeft дней',
+                                timeLeft,
                                 style: AppTexts.body,
                               ),
                               const SizedBox(width: 10),

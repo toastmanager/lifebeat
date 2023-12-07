@@ -52,7 +52,7 @@ class TaskModel {
     if (minutesLeft > 60 && minutesLeft < 1440) {
       int hours = (minutesLeft/60).truncate();
       int minutes = minutesLeft - (hours * 60);
-      return "$hours часов и $minutes минут";
+      return "$hours ч. $minutes м.";
     }
     if (minutesLeft > 1440) {
       return "${endTime.difference(DateTime.now()).inDays} дней";
