@@ -7,6 +7,7 @@ import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
+import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -120,16 +121,19 @@ class _SchedulePageState extends State<SchedulePage> {
                                 ? freeTimeText =
                                     "${freeTime.inHours} часа $freeTimeText"
                                 : null;
-                            widgets = <Widget>[freeTimeDivider(freeTimeText, () {
-                              _newTaskMenu(
-                                context,
-                                optionalStartTime: tasksList[index-1].endTime,
-                                optionalEndTime: task.startTime);
-                              setState(() {});
-                            })] +
+                            widgets = <Widget>[
+                                  freeTimeDivider(freeTimeText, () {
+                                    _newTaskMenu(context,
+                                        optionalStartTime:
+                                            tasksList[index - 1].endTime,
+                                        optionalEndTime: task.startTime);
+                                    setState(() {});
+                                  })
+                                ] +
                                 widgets;
                           } else {
-                            widgets = <Widget>[const SizedBox(height: 20)] + widgets;
+                            widgets =
+                                <Widget>[const SizedBox(height: 20)] + widgets;
                           }
                         }
 
@@ -150,13 +154,12 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  Future<void> _newTaskMenu(BuildContext context, {DateTime? optionalStartTime, DateTime? optionalEndTime}) {
+  Future<void> _newTaskMenu(BuildContext context,
+      {DateTime? optionalStartTime, DateTime? optionalEndTime}) {
     DateTime startTime = optionalStartTime ?? DateTime.now();
     DateTime endTime = optionalEndTime ?? DateTime.now();
-    String startTimeText =
-        '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
-    String endTimeText =
-        '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+    String startTimeText = readableDateTime(startTime);
+    String endTimeText = readableDateTime(endTime);
     TextEditingController name = TextEditingController();
     TextEditingController description = TextEditingController();
 
@@ -209,10 +212,8 @@ class _SchedulePageState extends State<SchedulePage> {
                             (DateTime date) => setLocalState(() {
                                   startTime = date;
                                   endTime = date;
-                                  endTimeText =
-                                      '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
-                                  startTimeText =
-                                      '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
+                                  endTimeText = readableDateTime(endTime);
+                                  startTimeText = readableDateTime(startTime);
                                 }));
                       },
                       child: Text(startTimeText),
@@ -226,8 +227,7 @@ class _SchedulePageState extends State<SchedulePage> {
                             endTime,
                             (date) => setLocalState(() {
                                   endTime = date;
-                                  endTimeText =
-                                      '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+                                  endTimeText = readableDateTime(endTime);
                                 }));
                       },
                       child: Text(endTimeText),
