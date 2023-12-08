@@ -53,9 +53,9 @@ class TaskModel {
       return "Ожидание";
     }
     if (minutesLeft > 60 && minutesLeft < 1440) {
-      int hours = (minutesLeft/60).truncate();
-      int minutes = minutesLeft - (hours * 60);
-      return "$hours ч. $minutes м.";
+      int hours = (minutesLeft / 60).truncate();
+      String minutes = (minutesLeft - (hours * 60)).toString();
+      return "$hours ч. ${minutes.length == 1 ? "0$minutes" : minutes} м.";
     }
     if (minutesLeft > 1440) {
       return "${endTime.difference(DateTime.now()).inDays} дней";
