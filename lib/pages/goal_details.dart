@@ -11,9 +11,9 @@ class DetailsButton extends StatelessWidget {
     required this.action,
   });
 
-  Widget child;
-  Function action;
-  BorderRadius buttonBorderRadius = BorderRadius.circular(8);
+  final Widget child;
+  final Function action;
+  final BorderRadius buttonBorderRadius = BorderRadius.circular(8);
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class GoalDetailsPage extends StatefulWidget {
       required this.updateGoals});
 
   GoalModel model;
-  Function updateGoalComponent;
-  Function updateGoals;
+  final Function updateGoalComponent;
+  final Function updateGoals;
 
   @override
   State<GoalDetailsPage> createState() => _GoalDetailsPageState();
@@ -94,7 +94,9 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                           case 0:
                             await DBHelper.removeGoal(model.id);
                             await widget.updateGoals();
-                            Navigator.of(context).pop();
+                            if (mounted) {
+                              Navigator.of(context).pop();
+                            }
                             break;
                           case 1:
                             break;
@@ -185,7 +187,9 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                                           ? false
                                           : true;
                                   DBHelper.insertCheckpoint(
-                                      model.checkpoints[index], model.id, ItemType.goal);
+                                      model.checkpoints[index],
+                                      model.id,
+                                      ItemType.goal);
                                   model.progress = model.getProgress();
                                 });
                               },
@@ -244,14 +248,19 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                     child: const Text('добавить'),
                     onPressed: () async {
                       await DBHelper.addCheckpoint(
-                          false, newCheckpointname.text, widget.model.id, ItemType.goal);
+                          false,
+                          newCheckpointname.text,
+                          widget.model.id,
+                          ItemType.goal);
                       List<GoalModel> goalsList = await DBHelper.goals();
                       setState(() {
                         widget.model = goalsList.firstWhere(
                             (element) => element.id == widget.model.id);
                       });
                       widget.updateGoalComponent(widget.model);
-                      Navigator.of(checkpointMenuContext).pop();
+                      if (mounted) {
+                        Navigator.of(checkpointMenuContext).pop();
+                      }
                     },
                   ),
                 ],

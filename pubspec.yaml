@@ -1,5 +1,5 @@
 name: lifebeat
-description: A new Flutter project.
+description: An application that helps you achieve goals and organize your schedule.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -40,6 +40,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.0+3
   path: ^1.8.3
   flutter_datetime_picker_plus: ^2.1.0
+  window_manager: ^0.3.7
 
 dev_dependencies:
   flutter_test:

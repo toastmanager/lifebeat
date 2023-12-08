@@ -24,18 +24,20 @@ class _GoalState extends State<Goal> {
   @override
   Widget build(BuildContext context) {
     String name = widget.model.name;
-    bool completed = widget.model.completed;
     DateTime deadline = widget.model.deadline;
     double progress = widget.model.progress;
     int timeLeft = deadline.difference(DateTime.now()).inDays;
-
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => GoalDetailsPage(model: widget.model, updateGoalComponent: updateGoalComponent, updateGoals: widget.updateGoals,)))
+                builder: (context) => GoalDetailsPage(
+                      model: widget.model,
+                      updateGoalComponent: updateGoalComponent,
+                      updateGoals: widget.updateGoals,
+                    )))
             .then((value) => setState(() {}));
       },
       child: Container(

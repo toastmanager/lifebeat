@@ -1,15 +1,30 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:window_manager/window_manager.dart';
+
 import 'package:lifebeat/pages/goals_page.dart';
 import 'package:lifebeat/pages/schedule_page.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io';
 
-void main() {
+void main() async {
   if (Platform.isWindows | Platform.isLinux | Platform.isMacOS) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
+
+    WidgetsFlutterBinding.ensureInitialized();
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(380, 700),
+      center: true,
+      skipTaskbar: false,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
   }
-  
+
   runApp(const App());
 }
 
