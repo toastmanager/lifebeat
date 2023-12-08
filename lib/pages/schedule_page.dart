@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
@@ -15,8 +16,47 @@ class SchedulePage extends StatefulWidget {
   State<SchedulePage> createState() => _SchedulePageState();
 }
 
-// TODO: Get data only for today 
+// TODO: Get data only for today
 class _SchedulePageState extends State<SchedulePage> {
+  Widget horizontalDivider() {
+    return Expanded(
+      child: Container(
+        height: 2,
+        decoration: BoxDecoration(
+          color: AppColors.lightBlue,
+          borderRadius: BorderRadius.circular(9),
+        ),
+      ),
+    );
+  }
+
+  Widget freeTimeDivider(String freeTime, Function() addTask) {
+    return InkWell(
+      onTap: () => addTask(),
+      hoverColor: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 20,
+          bottom: 20,
+        ),
+        child: Row(
+          children: [
+            horizontalDivider(),
+            const SizedBox(width: 20),
+            Text(freeTime,
+                style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(
+                        fontSize: AppTexts.bodyFontSize,
+                        color: AppColors.lightBlue,
+                        fontWeight: FontWeight.w500))),
+            const SizedBox(width: 20),
+            horizontalDivider(),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,6 +80,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   child: Text('Расписание',
                       style: AppTexts.headingBold,
                       textAlign: TextAlign.center)),
+              const SizedBox(height: 20),
               FutureBuilder<List<TaskModel>>(
                 future: DBHelper.tasks(),
                 builder: (context, snapshot) {
@@ -65,11 +106,23 @@ class _SchedulePageState extends State<SchedulePage> {
                         ];
 
                         if (index > 0) {
-                          Duration freeTime = task.startTime.difference(tasksList[index - 1].endTime);
+                          Duration freeTime = task.startTime
+                              .difference(tasksList[index - 1].endTime);
                           if (freeTime.inMinutes > 0) {
-                            String freeTimeText = "${freeTime.inMinutes - freeTime.inHours * 60} минут";
-                            freeTime.inHours > 0 ? freeTimeText = "${freeTime.inHours} часа $freeTimeText" : null;
-                            widgets = <Widget>[Text(freeTimeText)] + widgets;
+                            String freeTimeText =
+                                "${freeTime.inMinutes - freeTime.inHours * 60} минут";
+                            freeTime.inHours > 0
+                                ? freeTimeText =
+                                    "${freeTime.inHours} часа $freeTimeText"
+                                : null;
+                            widgets = <Widget>[freeTimeDivider(freeTimeText, () {
+                              _newTaskMenu(
+                                context,
+                                optionalStartTime: tasksList[index-1].endTime,
+                                optionalEndTime: task.startTime);
+                              setState(() {});
+                            })] +
+                                widgets;
                           }
                         }
 
@@ -90,9 +143,9 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  Future<void> _newTaskMenu(BuildContext context) {
-    DateTime startTime = DateTime.now();
-    DateTime endTime = DateTime.now();
+  Future<void> _newTaskMenu(BuildContext context, {DateTime? optionalStartTime, DateTime? optionalEndTime}) {
+    DateTime startTime = optionalStartTime ?? DateTime.now();
+    DateTime endTime = optionalEndTime ?? DateTime.now();
     String startTimeText =
         '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
     String endTimeText =
@@ -100,7 +153,8 @@ class _SchedulePageState extends State<SchedulePage> {
     TextEditingController name = TextEditingController();
     TextEditingController description = TextEditingController();
 
-    Future<DateTime?> taskDatePicker(DateTime initialTime, Function(DateTime) action) =>
+    Future<DateTime?> taskDatePicker(
+            DateTime initialTime, Function(DateTime) action) =>
         DatePicker.showDateTimePicker(context,
             minTime: DateTime(2015, 8),
             maxTime: DateTime(2101),
@@ -143,14 +197,16 @@ class _SchedulePageState extends State<SchedulePage> {
                   Flexible(
                     child: InkWell(
                       onTap: () async {
-                        await taskDatePicker(startTime, (date) => setLocalState(() {
-                              startTime = date;
-                              endTime = date;
-                              endTimeText =
-                                  '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
-                              startTimeText =
-                                  '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
-                            }));
+                        await taskDatePicker(
+                            startTime,
+                            (DateTime date) => setLocalState(() {
+                                  startTime = date;
+                                  endTime = date;
+                                  endTimeText =
+                                      '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+                                  startTimeText =
+                                      '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
+                                }));
                       },
                       child: Text(startTimeText),
                     ),
@@ -159,11 +215,13 @@ class _SchedulePageState extends State<SchedulePage> {
                   Flexible(
                     child: InkWell(
                       onTap: () async {
-                        await taskDatePicker(endTime, (date) => setLocalState(() {
-                              endTime = date;
-                              endTimeText =
-                                  '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
-                            }));
+                        await taskDatePicker(
+                            endTime,
+                            (date) => setLocalState(() {
+                                  endTime = date;
+                                  endTimeText =
+                                      '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+                                }));
                       },
                       child: Text(endTimeText),
                     ),

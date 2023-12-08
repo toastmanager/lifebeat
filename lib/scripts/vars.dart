@@ -7,6 +7,7 @@ abstract final class AppColors {
   static const Color purple = Color(0xffb8b17e5);
   static const Color purpleDark = Color(0xffb5d0f99);
   static const Color white = Color(0xffbdadde5);
+  static const Color lightBlue = Color(0xff5A6780);
 
   static const LinearGradient backgroundGradient = LinearGradient(
       begin: Alignment(0.00, -9.00),
