@@ -106,7 +106,9 @@ class _SchedulePageState extends State<SchedulePage> {
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
-        bottomNavigationBar: const Navbar(),
+        bottomNavigationBar: const Navbar(
+          currentPage: Routes.schedule,
+        ),
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
             onPressed: () => _newTaskMenu(context),
