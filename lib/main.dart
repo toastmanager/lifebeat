@@ -1,14 +1,30 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'pages/goals_page.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io' show Platform;
 
-void main() {
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:window_manager/window_manager.dart';
+
+import 'package:lifebeat/pages/goals_page.dart';
+import 'package:lifebeat/pages/schedule_page.dart';
+
+void main() async {
   if (Platform.isWindows | Platform.isLinux | Platform.isMacOS) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
+
+    WidgetsFlutterBinding.ensureInitialized();
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(380, 700),
+      center: true,
+      skipTaskbar: false,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
   }
-  
+
   runApp(const App());
 }
 
@@ -19,15 +35,17 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: MaterialApp(
+        restorationScopeId: "lifebeat",
         title: 'Lifebeat',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        initialRoute: '/',
+        initialRoute: '/goals',
         routes: {
-          '/': (context) => const GoalsPage(),
+          '/goals': (context) => const GoalsPage(),
+          '/schedule': (context) => const SchedulePage(),
         },
       ),
     );

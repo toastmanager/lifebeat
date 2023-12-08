@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/progressCircle.dart';
+import 'package:lifebeat/models/checkpoint_model.dart';
+import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/vars.dart';
-import 'package:lifebeat/models/goal_model.dart';
 
 class DetailsButton extends StatelessWidget {
   DetailsButton({
@@ -11,9 +12,9 @@ class DetailsButton extends StatelessWidget {
     required this.action,
   });
 
-  Widget child;
-  Function action;
-  BorderRadius buttonBorderRadius = BorderRadius.circular(8);
+  final Widget child;
+  final Function action;
+  final BorderRadius buttonBorderRadius = BorderRadius.circular(8);
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +36,17 @@ class DetailsButton extends StatelessWidget {
 }
 
 class TaskDetailsPage extends StatefulWidget {
-  TaskDetailsPage(
-      {super.key,
-      required this.model,
-      required this.updateTaskComponent,
-      required this.updateGoals});
+  const TaskDetailsPage({
+    super.key,
+    required this.taskId,
+    required this.updateItemComponent,
+    required this.updateItems,
+  });
 
-  GoalModel model;
-  Function updateTaskComponent;
-  Function updateGoals;
+  final int taskId;
+  final Function() updateItemComponent;
+  final Function() updateItems;
+  Future<int> removeItem() => DBHelper.removeTask(taskId);
 
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
@@ -52,21 +55,21 @@ class TaskDetailsPage extends StatefulWidget {
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
   @override
   Widget build(BuildContext context) {
-    GoalModel model = widget.model;
-    int timeLeft = model.deadline.difference(DateTime.now()).inDays;
+    return FutureBuilder(
+        future: DBHelper.getTaskById(widget.taskId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            TaskModel model = snapshot.data!;
+            String name = model.name;
+            String description = model.description;
+            double progress = model.progress;
+            String timeLeft = model.timeLeft;
+            DateTime startTime = model.startTime;
+            DateTime endTime = model.endTime;
+            List<CheckpointModel> checkpointsList = model.checkpoints;
 
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.backgroundGradient,
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+            Row _itemHeading(context) {
+              return Row(
                 children: [
                   Expanded(
                     child: Row(
@@ -81,7 +84,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            model.name,
+                            name,
                             style: AppTexts.headingBold,
                           ),
                         ),
@@ -92,11 +95,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       onSelected: (item) async {
                         switch (item) {
                           case 0:
-                            await DBHelper.deleteGoal(model.id);
-                            await widget.updateGoals();
+                            await widget.removeItem();
+                            await widget.updateItems();
                             Navigator.of(context).pop();
-                            break;
-                          case 1:
                             break;
                         }
                       },
@@ -105,50 +106,121 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                                 value: 0, child: Text('Удалить'))
                           ]),
                 ],
-              ),
-              const SizedBox(height: 20),
-              Row(
+              );
+            }
+
+            Column _itemInfo() {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ProgressCircle(progress: model.progress),
-                  const SizedBox(width: 10),
-                  const Icon(
-                    Icons.timer_rounded,
-                    color: AppColors.white,
-                    size: 16,
+                  Row(
+                    children: [
+                      ProgressCircle(progress: progress),
+                      const SizedBox(width: 10),
+                      const Icon(
+                        Icons.timer_rounded,
+                        color: AppColors.white,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        timeLeft,
+                        style: AppTexts.body,
+                      ),
+                      const SizedBox(width: 10),
+                      const Icon(
+                        Icons.calendar_month_rounded,
+                        size: 16,
+                        color: AppColors.white,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        '${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}',
+                        style: AppTexts.body,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(height: 20),
                   Text(
-                    '$timeLeft дней',
-                    style: AppTexts.body,
-                  ),
-                  const SizedBox(width: 10),
-                  const Icon(
-                    Icons.calendar_month_rounded,
-                    size: 16,
-                    color: AppColors.white,
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    '${model.deadline.day}.${model.deadline.month}.${model.deadline.year}',
+                    description,
                     style: AppTexts.body,
                   ),
                 ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                model.description,
-                style: AppTexts.body,
-              ),
-              const SizedBox(height: 20),
-              Container(
+              );
+            }
+
+            Container _horizontalDivider() {
+              return Container(
                 height: 4,
                 decoration: BoxDecoration(
                   color: AppColors.grayBlueLight,
                   borderRadius: BorderRadius.circular(9),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
+              );
+            }
+
+            Future<void> _newCheckpointMenu(
+                BuildContext checkpointMenuContext) {
+              TextEditingController newCheckpointname = TextEditingController();
+
+              return showDialog(
+                context: context,
+                builder: (checkpointMenuContext) {
+                  return AlertDialog(
+                    backgroundColor: AppColors.grayBlueDark,
+                    content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Новый чекпоинт', style: AppTexts.bodyBold),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Flexible(
+                            child: TextField(
+                          controller: newCheckpointname,
+                          decoration: const InputDecoration(
+                              hintText: 'Чекпоинт',
+                              border: OutlineInputBorder()),
+                        )),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              child: const Text('отмена'),
+                              onPressed: () =>
+                                  Navigator.of(checkpointMenuContext).pop(),
+                            ),
+                            ElevatedButton(
+                              child: const Text('добавить'),
+                              onPressed: () async {
+                                await DBHelper.addCheckpoint(
+                                    false,
+                                    newCheckpointname.text,
+                                    widget.taskId,
+                                    ItemType.task);
+                                model =
+                                    await DBHelper.getTaskById(widget.taskId);
+                                setState(() {});
+                                widget.updateItemComponent();
+                                if (mounted) {
+                                  Navigator.of(checkpointMenuContext).pop();
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+
+            Row _itemAction() {
+              return Row(
                 children: [
                   DetailsButton(
                     child: const Icon(
@@ -167,32 +239,34 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     action: () => _newCheckpointMenu(context),
                   ),
                 ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Flexible(
+              );
+            }
+
+            Flexible _checkpointsList() {
+              return Flexible(
                   child: ListView.separated(
                       itemBuilder: (context, index) {
                         return Row(
                           children: [
                             Checkbox(
-                              value: model.checkpoints[index].value,
+                              value: checkpointsList[index].value,
                               onChanged: (value) async {
                                 setState(() {
-                                  model.checkpoints[index].value =
-                                      model.checkpoints[index].value == true
+                                  checkpointsList[index].value =
+                                      checkpointsList[index].value == true
                                           ? false
                                           : true;
                                   DBHelper.insertCheckpoint(
-                                      model.checkpoints[index], model.id);
+                                      checkpointsList[index],
+                                      widget.taskId,
+                                      ItemType.task);
                                   model.progress = model.getProgress();
                                 });
                               },
                             ),
                             Expanded(
                               child: Text(
-                                model.checkpoints[index].text,
+                                checkpointsList[index].text,
                                 style: AppTexts.body,
                               ),
                             ),
@@ -201,65 +275,36 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       },
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 10),
-                      itemCount: model.checkpoints.length))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+                      itemCount: checkpointsList.length));
+            }
 
-  Future<void> _newCheckpointMenu(BuildContext checkpointMenuContext) {
-    TextEditingController newCheckpointname = TextEditingController();
-
-    return showDialog(
-      context: context,
-      builder: (checkpointMenuContext) {
-        return AlertDialog(
-          backgroundColor: AppColors.grayBlueDark,
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Новый чекпоинт', style: AppTexts.bodyBold),
-              const SizedBox(
-                height: 20,
+            return Container(
+              decoration: const BoxDecoration(
+                gradient: AppColors.backgroundGradient,
               ),
-              Flexible(
-                  child: TextField(
-                controller: newCheckpointname,
-                decoration: const InputDecoration(
-                    hintText: 'Чекпоинт', border: OutlineInputBorder()),
-              )),
-              const SizedBox(
-                height: 20,
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                body: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _itemHeading(context),
+                        const SizedBox(height: 20),
+                        _itemInfo(),
+                        const SizedBox(height: 20),
+                        _horizontalDivider(),
+                        const SizedBox(height: 20),
+                        _itemAction(),
+                        const SizedBox(height: 20),
+                        _checkpointsList()
+                      ],
+                    )),
               ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    child: const Text('отмена'),
-                    onPressed: () => Navigator.of(checkpointMenuContext).pop(),
-                  ),
-                  ElevatedButton(
-                    child: const Text('добавить'),
-                    onPressed: () async {
-                      await DBHelper.addCheckpoint(
-                          false, newCheckpointname.text, widget.model.id);
-                      List<GoalModel> goalsList = await DBHelper.goals();
-                      setState(() {
-                        widget.model = goalsList.firstWhere(
-                            (element) => element.id == widget.model.id);
-                      });
-                      widget.updateTaskComponent(widget.model);
-                      Navigator.of(checkpointMenuContext).pop();
-                    },
-                  ),
-                ],
-              )
-            ],
-          ),
-        );
-      },
-    );
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 }

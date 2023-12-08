@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/scripts/vars.dart';
-import 'package:lifebeat/components/task.dart';
+import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 
 class GoalsPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _GoalsPageState extends State<GoalsPage> {
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
+        bottomNavigationBar: const Navbar(),
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
             onPressed: () => _newGoalMenu(context),
@@ -46,23 +48,22 @@ class _GoalsPageState extends State<GoalsPage> {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
                         return const Text('Цели отсутствуют');
-                      } else {
-                        List<GoalModel> goalsList =
-                            snapshot.data!.reversed.toList();
-                        return Flexible(
-                          child: ListView.separated(
-                              itemCount: goalsList.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                              itemBuilder: (context, index) {
-                                return Task(
-                                    model: goalsList[index],
-                                    updateGoals: () => updateGoals());
-                              }),
-                        );
                       }
+                      List<GoalModel> goalsList =
+                          snapshot.data!.reversed.toList();
+                      return Flexible(
+                        child: ListView.separated(
+                            itemCount: goalsList.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                            itemBuilder: (context, index) {
+                              return Goal(
+                                  model: goalsList[index],
+                                  updateGoals: () => updateGoals());
+                            }),
+                      );
                     } else {
                       return const CircularProgressIndicator();
                     }

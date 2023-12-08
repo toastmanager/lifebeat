@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:lifebeat/models/checkpoint_model.dart';
 
 class GoalModel {
   final int id;
@@ -53,26 +54,6 @@ class GoalModel {
       'description': description,
       'deadline': deadline.toIso8601String(),
       'checkpoints': jsonEncode(checkpoints.map((e) => e.id).toList()),
-    };
-  }
-}
-
-class CheckpointModel {
-  final int id;
-  bool value;
-  final String text;
-
-  CheckpointModel({
-    required this.id,
-    required this.value,
-    required this.text,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'value': value ? 1 : 0,
-      'text': text,
     };
   }
 }
