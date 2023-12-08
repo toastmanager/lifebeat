@@ -50,7 +50,7 @@ abstract final class Routes {
 }
 
 abstract final class AppInfo {
-  static const version = '0.2.5';
+  static const version = '0.2.6';
 }
 
 abstract final class ItemType {

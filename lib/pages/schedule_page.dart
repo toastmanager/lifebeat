@@ -15,6 +15,7 @@ class SchedulePage extends StatefulWidget {
   State<SchedulePage> createState() => _SchedulePageState();
 }
 
+// TODO: Get data only for today 
 class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
@@ -50,16 +51,31 @@ class _SchedulePageState extends State<SchedulePage> {
                     if (snapshot.data!.isEmpty) {
                       return const Text('Задачи отсутствуют');
                     }
+                    // TODO: add sorting by startTime
                     List<TaskModel> tasksList = snapshot.data!;
                     return Flexible(
                         child: ListView.builder(
                       itemCount: tasksList.length,
                       itemBuilder: (context, index) {
                         final TaskModel task = tasksList[index];
-                        return Task(
-                            taskId: task.id, updateItems: () => updateTasks());
-                        // return Text(
-                        //     '${task.name} ${task.description} ${task.startTime.toIso8601String()} ${task.endTime.toIso8601String()}');
+                        List<Widget> widgets = [
+                          Task(
+                              taskId: task.id,
+                              updateItems: () => updateTasks()),
+                        ];
+
+                        if (index > 0) {
+                          Duration freeTime = task.startTime.difference(tasksList[index - 1].endTime);
+                          if (freeTime.inMinutes > 0) {
+                            String freeTimeText = "${freeTime.inMinutes - freeTime.inHours * 60} минут";
+                            freeTime.inHours > 0 ? freeTimeText = "${freeTime.inHours} часа $freeTimeText" : null;
+                            widgets = <Widget>[Text(freeTimeText)] + widgets;
+                          }
+                        }
+
+                        return Column(
+                          children: widgets,
+                        );
                       },
                     ));
                   } else {
@@ -84,11 +100,11 @@ class _SchedulePageState extends State<SchedulePage> {
     TextEditingController name = TextEditingController();
     TextEditingController description = TextEditingController();
 
-    Future<DateTime?> taskDatePicker(Function(DateTime) action) =>
+    Future<DateTime?> taskDatePicker(DateTime initialTime, Function(DateTime) action) =>
         DatePicker.showDateTimePicker(context,
             minTime: DateTime(2015, 8),
             maxTime: DateTime(2101),
-            currentTime: DateTime.now(),
+            currentTime: initialTime,
             locale: LocaleType.ru,
             onConfirm: (date) => action(date));
 
@@ -127,8 +143,11 @@ class _SchedulePageState extends State<SchedulePage> {
                   Flexible(
                     child: InkWell(
                       onTap: () async {
-                        await taskDatePicker((date) => setLocalState(() {
+                        await taskDatePicker(startTime, (date) => setLocalState(() {
                               startTime = date;
+                              endTime = date;
+                              endTimeText =
+                                  '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
                               startTimeText =
                                   '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
                             }));
@@ -140,7 +159,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   Flexible(
                     child: InkWell(
                       onTap: () async {
-                        await taskDatePicker((date) => setLocalState(() {
+                        await taskDatePicker(endTime, (date) => setLocalState(() {
                               endTime = date;
                               endTimeText =
                                   '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';

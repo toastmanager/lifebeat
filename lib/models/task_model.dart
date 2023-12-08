@@ -49,7 +49,6 @@ class TaskModel {
   }
 
   String getTimeLeft() {
-    print(progress);
     if (startTime.difference(DateTime.now()).inMinutes > 0) {
       return "Ожидание";
     }
