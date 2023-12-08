@@ -42,7 +42,7 @@ class App extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        initialRoute: '/goals',
+        initialRoute: '/schedule',
         routes: {
           '/goals': (context) => const GoalsPage(),
           '/schedule': (context) => const SchedulePage(),

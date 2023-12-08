@@ -64,7 +64,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
             onChanged: (value) async {
               setState(() {
                 checkpoint.value = checkpoint.value == true ? false : true;
-                DBHelper.insertGoal(model);
+                DBHelper.insertCheckpoint(checkpoint, model.id, ItemType.goal);
                 model.progress = model.getProgress();
               });
             },
