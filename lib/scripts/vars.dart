@@ -50,10 +50,6 @@ abstract final class Routes {
   static const schedule = '/schedule';
 }
 
-abstract final class AppInfo {
-  static const version = '0.2.6';
-}
-
 abstract final class ItemType {
   static const goal = 'goal';
   static const task = 'task';
