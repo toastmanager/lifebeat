@@ -141,11 +141,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    description,
-                    style: AppTexts.body,
-                  ),
+                  if (description.isNotEmpty) const SizedBox(height: 20),
+                  if (description.isNotEmpty)
+                    Text(
+                      description,
+                      style: AppTexts.body,
+                    ),
                 ],
               );
             }

@@ -193,11 +193,12 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Text(
-                model.description,
-                style: AppTexts.body,
-              ),
+              if (model.description.isNotEmpty) const SizedBox(height: 20),
+              if (model.description.isNotEmpty)
+                Text(
+                  model.description,
+                  style: AppTexts.body,
+                ),
               const SizedBox(height: 20),
               Container(
                 height: 4,
