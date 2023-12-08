@@ -57,6 +57,12 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
+  List<TaskModel> sortTasks(List<TaskModel> tasksList) {
+    // sort tasks by start time
+    tasksList.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return tasksList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,8 +98,7 @@ class _SchedulePageState extends State<SchedulePage> {
                     if (snapshot.data!.isEmpty) {
                       return const Text('Задачи отсутствуют');
                     }
-                    // TODO: add sorting by startTime
-                    List<TaskModel> tasksList = snapshot.data!;
+                    List<TaskModel> tasksList = sortTasks(snapshot.data!);
                     return Flexible(
                         child: ListView.builder(
                       itemCount: tasksList.length,
@@ -123,6 +128,8 @@ class _SchedulePageState extends State<SchedulePage> {
                               setState(() {});
                             })] +
                                 widgets;
+                          } else {
+                            widgets = <Widget>[const SizedBox(height: 20)] + widgets;
                           }
                         }
 
