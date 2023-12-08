@@ -30,6 +30,20 @@ abstract final class AppTexts {
     color: textColor,
   ));
 
+  static final scheduleMain = appFontStyle(
+      textStyle: const TextStyle(
+    fontSize: bodyFontSize + 4,
+    fontWeight: FontWeight.bold,
+    color: textColor,
+  ));
+
+  static final scheduleSecondary = appFontStyle(
+      textStyle: const TextStyle(
+    fontSize: bodyFontSize,
+    fontWeight: FontWeight.bold,
+    color: AppColors.lightBlue,
+  ));
+
   static final bodyBold = appFontStyle(
       textStyle: const TextStyle(
     fontSize: bodyFontSize,
