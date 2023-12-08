@@ -52,10 +52,30 @@ class GoalDetailsPage extends StatefulWidget {
 }
 
 class _GoalDetailsPageState extends State<GoalDetailsPage> {
+  bool isEditMode = false;
+
   @override
   Widget build(BuildContext context) {
     GoalModel model = widget.model;
     int timeLeft = model.deadline.difference(DateTime.now()).inDays;
+
+    void switchEditMode() {
+      setState(() {
+        if (isEditMode) {
+          isEditMode = false;
+        } else {
+          isEditMode = true;
+        }
+      });
+    }
+
+    void deleteCheckpoint(int checkpointId) async {
+      setState(() {
+        widget.model.checkpoints.removeAt(widget.model.checkpoints
+            .indexWhere((element) => element.id == checkpointId));
+      });
+      await DBHelper.removeCheckpoint(checkpointId, model.id, ItemType.goal);
+    }
 
     Widget checkpointWidget(CheckpointModel checkpoint) {
       return Row(
@@ -76,6 +96,10 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
               style: AppTexts.body,
             ),
           ),
+          if (isEditMode)
+            IconButton(
+                onPressed: () => deleteCheckpoint(checkpoint.id),
+                icon: const Icon(Icons.delete_rounded))
         ],
       );
     }
@@ -212,7 +236,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                       color: AppColors.white,
                       size: 16,
                     ),
-                    action: () {},
+                    action: () => switchEditMode(),
                   ),
                   const SizedBox(width: 10),
                   DetailsButton(
