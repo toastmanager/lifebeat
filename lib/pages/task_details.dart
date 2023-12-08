@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/components/progressCircle.dart';
+import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
