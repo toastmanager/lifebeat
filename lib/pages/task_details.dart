@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/models/task_model.dart';
@@ -11,11 +12,13 @@ class DetailsButton extends StatelessWidget {
     super.key,
     required this.child,
     required this.action,
+    this.color = AppColors.grayBlueLight,
   });
 
   final Widget child;
-  final Function action;
+  final Function() action;
   final BorderRadius buttonBorderRadius = BorderRadius.circular(8);
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class DetailsButton extends StatelessWidget {
         borderRadius: buttonBorderRadius,
         child: Container(
             decoration: BoxDecoration(
-              color: AppColors.grayBlueLight,
+              color: color,
               borderRadius: buttonBorderRadius,
             ),
             height: 40,
@@ -54,6 +57,8 @@ class TaskDetailsPage extends StatefulWidget {
 }
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
+  bool isEditMode = false;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -68,6 +73,25 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             DateTime startTime = model.startTime;
             DateTime endTime = model.endTime;
             List<CheckpointModel> checkpointsList = model.checkpoints;
+
+            void switchEditMode() {
+              setState(() {
+                if (isEditMode) {
+                  isEditMode = false;
+                } else {
+                  isEditMode = true;
+                }
+              });
+            }
+
+            void deleteCheckpoint(int checkpointId) async {
+              setState(() {
+                checkpointsList.removeAt(checkpointsList
+                    .indexWhere((element) => element.id == checkpointId));
+              });
+              await DBHelper.removeCheckpoint(
+                  checkpointId, model.id, ItemType.task);
+            }
 
             Row itemHeading(context) {
               return Row(
@@ -141,12 +165,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       ),
                     ],
                   ),
-                  if (description.isNotEmpty) const SizedBox(height: 20),
-                  if (description.isNotEmpty)
-                    Text(
-                      description,
-                      style: AppTexts.body,
-                    ),
+                  ItemDescription(description: description)
                 ],
               );
             }
@@ -220,17 +239,28 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             }
 
-            Row itemAction() {
+            Row itemActions() {
               return Row(
                 children: [
-                  DetailsButton(
-                    child: const Icon(
-                      Icons.edit_rounded,
-                      color: AppColors.white,
-                      size: 16,
+                  if (!isEditMode)
+                    DetailsButton(
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        color: AppColors.white,
+                        size: 16,
+                      ),
+                      action: () => switchEditMode(),
                     ),
-                    action: () {},
-                  ),
+                  if (isEditMode)
+                    DetailsButton(
+                      color: AppColors.accentBlue,
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        color: AppColors.white,
+                        size: 16,
+                      ),
+                      action: () => switchEditMode(),
+                    ),
                   const SizedBox(width: 10),
                   DetailsButton(
                     child: Text(
@@ -264,11 +294,27 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       style: AppTexts.body,
                     ),
                   ),
+                  if (isEditMode)
+                    IconButton(
+                        onPressed: () => deleteCheckpoint(checkpoint.id),
+                        icon: const Icon(Icons.delete_rounded))
                 ],
               );
             }
 
-            Flexible _checkpointsList() {
+            Flexible checkpointsListWidget() {
+              Widget checkpoint(int index) {
+                return Column(
+                  key: Key("${checkpointsList[index].id}"),
+                  children: [
+                    checkpointWidget(checkpointsList[index]),
+                    const SizedBox(
+                      height: 5,
+                    )
+                  ],
+                );
+              }
+
               return Flexible(
                   child: ReorderableListView(
                 buildDefaultDragHandles: false,
@@ -285,18 +331,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   await DBHelper.insertTask(model);
                 },
                 children: [
-                  for (var index = 0; index < checkpointsList.length; index++)
-                    ReorderableDragStartListener(
-                        key: Key("${checkpointsList[index].id}"),
-                        index: index,
-                        child: Column(
-                          children: [
-                            checkpointWidget(checkpointsList[index]),
-                            const SizedBox(
-                              height: 5,
-                            )
-                          ],
-                        )),
+                  if (isEditMode)
+                    for (var index = 0; index < checkpointsList.length; index++)
+                      ReorderableDragStartListener(
+                          key: Key("${checkpointsList[index].id}"),
+                          index: index,
+                          child: checkpoint(index)),
+                  if (!isEditMode)
+                    for (var index = 0; index < checkpointsList.length; index++)
+                      checkpoint(index)
                 ],
               ));
             }
@@ -318,9 +361,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         const SizedBox(height: 20),
                         horizontalDivider(),
                         const SizedBox(height: 20),
-                        itemAction(),
+                        itemActions(),
                         const SizedBox(height: 20),
-                        _checkpointsList(),
+                        checkpointsListWidget(),
                       ],
                     )),
               ),

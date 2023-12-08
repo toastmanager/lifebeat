@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -260,8 +261,21 @@ class DBHelper {
     return 0;
   }
 
-  static Future<int> removeCheckpoint(int checkpointId) async {
+  static Future<int> removeCheckpoint(
+      int checkpointId, int itemId, String type) async {
     final db = await database();
+
+    if (type == ItemType.goal) {
+      GoalModel goal = await getGoalById(itemId);
+      goal.checkpoints.removeWhere((element) => element.id == checkpointId);
+      insertGoal(goal);
+    }
+    if (type == ItemType.task) {
+      TaskModel task = await getTaskById(itemId);
+      task.checkpoints.removeWhere((element) => element.id == checkpointId);
+      insertTask(task);
+    }
+
     return db.delete(
       'checkpoints',
       where: "id = ?",
@@ -277,7 +291,7 @@ class DBHelper {
     List<int> goalCheckpointsIds = goal.checkpoints.map((e) => e.id).toList();
 
     for (var i = 0; i < goalCheckpointsIds.length; i++) {
-      await removeCheckpoint(goalCheckpointsIds[i]);
+      await removeCheckpoint(goalCheckpointsIds[i], goalId, ItemType.goal);
     }
 
     return db.delete(
@@ -295,7 +309,7 @@ class DBHelper {
     List<int> taskCheckpointsIds = task.checkpoints.map((e) => e.id).toList();
 
     for (var i = 0; i < taskCheckpointsIds.length; i++) {
-      await removeCheckpoint(taskCheckpointsIds[i]);
+      await removeCheckpoint(taskCheckpointsIds[i], taskId, ItemType.task);
     }
 
     return db.delete(

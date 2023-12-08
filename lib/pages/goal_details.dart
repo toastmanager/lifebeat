@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
@@ -193,12 +194,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                   ),
                 ],
               ),
-              if (model.description.isNotEmpty) const SizedBox(height: 20),
-              if (model.description.isNotEmpty)
-                Text(
-                  model.description,
-                  style: AppTexts.body,
-                ),
+              ItemDescription(description: widget.model.description),
               const SizedBox(height: 20),
               Container(
                 height: 4,
