@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/components/progressCircle.dart';
+import 'package:lifebeat/components/progress_circle.dart';
+import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/models/goal_model.dart';
@@ -54,6 +55,62 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
   Widget build(BuildContext context) {
     GoalModel model = widget.model;
     int timeLeft = model.deadline.difference(DateTime.now()).inDays;
+
+    Widget checkpointWidget(CheckpointModel checkpoint) {
+      return Row(
+        children: [
+          Checkbox(
+            value: checkpoint.value,
+            onChanged: (value) async {
+              setState(() {
+                checkpoint.value = checkpoint.value == true ? false : true;
+                DBHelper.insertGoal(model);
+                model.progress = model.getProgress();
+              });
+            },
+          ),
+          Expanded(
+            child: Text(
+              checkpoint.text,
+              style: AppTexts.body,
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget checkpointsList() {
+      List<CheckpointModel> checkpointsList = model.checkpoints;
+      return Flexible(
+          child: ReorderableListView(
+        buildDefaultDragHandles: false,
+        onReorder: (oldIndex, newIndex) async {
+          setState(() {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            final CheckpointModel item = checkpointsList.removeAt(oldIndex);
+            checkpointsList.insert(newIndex, item);
+          });
+          model.checkpoints = checkpointsList;
+          await DBHelper.insertGoal(model);
+        },
+        children: [
+          for (var index = 0; index < checkpointsList.length; index++)
+            ReorderableDragStartListener(
+                key: Key("${checkpointsList[index].id}"),
+                index: index,
+                child: Column(
+                  children: [
+                    checkpointWidget(checkpointsList[index]),
+                    const SizedBox(
+                      height: 5,
+                    )
+                  ],
+                )),
+        ],
+      ));
+    }
 
     return Container(
       decoration: const BoxDecoration(
@@ -173,39 +230,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
               const SizedBox(
                 height: 20,
               ),
-              Flexible(
-                  child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        return Row(
-                          children: [
-                            Checkbox(
-                              value: model.checkpoints[index].value,
-                              onChanged: (value) async {
-                                setState(() {
-                                  model.checkpoints[index].value =
-                                      model.checkpoints[index].value == true
-                                          ? false
-                                          : true;
-                                  DBHelper.insertCheckpoint(
-                                      model.checkpoints[index],
-                                      model.id,
-                                      ItemType.goal);
-                                  model.progress = model.getProgress();
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: Text(
-                                model.checkpoints[index].text,
-                                style: AppTexts.body,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
-                      itemCount: model.checkpoints.length))
+              checkpointsList(),
             ],
           ),
         ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/components/progressCircle.dart';
+import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
+import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 class DetailsButton extends StatelessWidget {
@@ -68,7 +69,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             DateTime endTime = model.endTime;
             List<CheckpointModel> checkpointsList = model.checkpoints;
 
-            Row _itemHeading(context) {
+            Row itemHeading(context) {
               return Row(
                 children: [
                   Expanded(
@@ -109,7 +110,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             }
 
-            Column _itemInfo() {
+            Column itemInfo() {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -135,7 +136,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        '${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}',
+                        '${readableTime(startTime.hour, startTime.minute)} - ${readableTime(endTime.hour, endTime.minute)}',
                         style: AppTexts.body,
                       ),
                     ],
@@ -149,7 +150,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             }
 
-            Container _horizontalDivider() {
+            Container horizontalDivider() {
               return Container(
                 height: 4,
                 decoration: BoxDecoration(
@@ -159,8 +160,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             }
 
-            Future<void> _newCheckpointMenu(
-                BuildContext checkpointMenuContext) {
+            Future<void> newCheckpointMenu(BuildContext checkpointMenuContext) {
               TextEditingController newCheckpointname = TextEditingController();
 
               return showDialog(
@@ -219,7 +219,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             }
 
-            Row _itemAction() {
+            Row itemAction() {
               return Row(
                 children: [
                   DetailsButton(
@@ -236,7 +236,32 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       '+',
                       style: AppTexts.bodyBold,
                     ),
-                    action: () => _newCheckpointMenu(context),
+                    action: () => newCheckpointMenu(context),
+                  ),
+                ],
+              );
+            }
+
+            Widget checkpointWidget(CheckpointModel checkpoint) {
+              return Row(
+                children: [
+                  Checkbox(
+                    value: checkpoint.value,
+                    onChanged: (value) async {
+                      setState(() {
+                        checkpoint.value =
+                            checkpoint.value == true ? false : true;
+                        DBHelper.insertCheckpoint(
+                            checkpoint, widget.taskId, ItemType.task);
+                        model.progress = model.getProgress();
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: Text(
+                      checkpoint.text,
+                      style: AppTexts.body,
+                    ),
                   ),
                 ],
               );
@@ -244,38 +269,35 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
 
             Flexible _checkpointsList() {
               return Flexible(
-                  child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        return Row(
+                  child: ReorderableListView(
+                buildDefaultDragHandles: false,
+                onReorder: (oldIndex, newIndex) async {
+                  setState(() {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final CheckpointModel item =
+                        checkpointsList.removeAt(oldIndex);
+                    checkpointsList.insert(newIndex, item);
+                  });
+                  model.checkpoints = checkpointsList;
+                  await DBHelper.insertTask(model);
+                },
+                children: [
+                  for (var index = 0; index < checkpointsList.length; index++)
+                    ReorderableDragStartListener(
+                        key: Key("${checkpointsList[index].id}"),
+                        index: index,
+                        child: Column(
                           children: [
-                            Checkbox(
-                              value: checkpointsList[index].value,
-                              onChanged: (value) async {
-                                setState(() {
-                                  checkpointsList[index].value =
-                                      checkpointsList[index].value == true
-                                          ? false
-                                          : true;
-                                  DBHelper.insertCheckpoint(
-                                      checkpointsList[index],
-                                      widget.taskId,
-                                      ItemType.task);
-                                  model.progress = model.getProgress();
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: Text(
-                                checkpointsList[index].text,
-                                style: AppTexts.body,
-                              ),
-                            ),
+                            checkpointWidget(checkpointsList[index]),
+                            const SizedBox(
+                              height: 5,
+                            )
                           ],
-                        );
-                      },
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
-                      itemCount: checkpointsList.length));
+                        )),
+                ],
+              ));
             }
 
             return Container(
@@ -289,15 +311,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _itemHeading(context),
+                        itemHeading(context),
                         const SizedBox(height: 20),
-                        _itemInfo(),
+                        itemInfo(),
                         const SizedBox(height: 20),
-                        _horizontalDivider(),
+                        horizontalDivider(),
                         const SizedBox(height: 20),
-                        _itemAction(),
+                        itemAction(),
                         const SizedBox(height: 20),
-                        _checkpointsList()
+                        _checkpointsList(),
                       ],
                     )),
               ),

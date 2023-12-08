@@ -304,4 +304,15 @@ class DBHelper {
       whereArgs: [taskId],
     );
   }
+
+  static Future<List<TaskModel>> certainDayTasks(DateTime day) async {
+    List<TaskModel> tasksList = await tasks();
+    List<TaskModel> todayTasksList = tasksList.where((task) {
+      DateTime startTime = task.startTime;
+      return startTime.year == day.year &&
+          startTime.month == day.month &&
+          startTime.day == day.day;
+    }).toList();
+    return todayTasksList;
+  }
 }

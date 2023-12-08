@@ -15,10 +15,10 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(380, 700),
-      center: true,
-      skipTaskbar: false,
-    );
+        size: Size(380, 700),
+        center: true,
+        skipTaskbar: false,
+        title: "Lifebeat");
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
@@ -36,7 +36,7 @@ class App extends StatelessWidget {
     return SafeArea(
       child: MaterialApp(
         restorationScopeId: "lifebeat",
-        title: 'Lifebeat',
+        title: 'LifeBeat',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,

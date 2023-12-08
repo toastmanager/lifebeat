@@ -35,6 +35,11 @@ class _NavbarState extends State<Navbar> {
             onPressed: () => Navigator.pushNamed(context, Routes.goals),
             icon: const Icon(Icons.flag_rounded),
           ),
+          const SizedBox(width: 10),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.settings_rounded),
+          ),
         ],
       ),
     );

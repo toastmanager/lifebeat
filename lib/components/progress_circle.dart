@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 class ProgressCircle extends StatelessWidget {
-  ProgressCircle({
+  const ProgressCircle({
     super.key,
     required this.progress,
   });
 
-  double progress;
+  final double progress;
 
   @override
   Widget build(BuildContext context) {
@@ -18,18 +18,17 @@ class ProgressCircle extends StatelessWidget {
         children: [
           Center(
             child: TweenAnimationBuilder<double>(
-              tween: Tween(begin: progress / 100, end: progress / 100),
-              duration: const Duration(milliseconds: 500),
-              builder: (context, value, _) {
-                return CircularProgressIndicator(
-                  backgroundColor: AppColors.purpleDark,
-                  color: AppColors.purple,
-                  strokeAlign: 2.5,
-                  strokeWidth: 5,
-                  value: value,
-                );
-              }
-            ),
+                tween: Tween(begin: progress / 100, end: progress / 100),
+                duration: const Duration(milliseconds: 500),
+                builder: (context, value, _) {
+                  return CircularProgressIndicator(
+                    backgroundColor: AppColors.purpleDark,
+                    color: AppColors.purple,
+                    strokeAlign: 2.5,
+                    strokeWidth: 5,
+                    value: value,
+                  );
+                }),
           ),
           Center(
             child: Text(

@@ -7,6 +7,7 @@ import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
+import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -16,8 +17,9 @@ class SchedulePage extends StatefulWidget {
   State<SchedulePage> createState() => _SchedulePageState();
 }
 
-// TODO: Get data only for today
 class _SchedulePageState extends State<SchedulePage> {
+  DateTime currentDay = DateTime.now();
+
   Widget horizontalDivider() {
     return Expanded(
       child: Container(
@@ -63,6 +65,42 @@ class _SchedulePageState extends State<SchedulePage> {
     return tasksList;
   }
 
+  Widget scheduleDayPicker(Function() updateState) {
+    DateTime lastDay = currentDay.subtract(const Duration(days: 1));
+    DateTime nextDay = currentDay.add(const Duration(days: 1));
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+            onPressed: () {
+              currentDay = lastDay;
+              updateState();
+            },
+            icon: const Icon(Icons.arrow_back_ios_rounded, size: 20)),
+        Text(
+          lastDay.day.toString(),
+          style: AppTexts.scheduleSecondary,
+        ),
+        const SizedBox(width: 5),
+        Text(
+          currentDay.day.toString(),
+          style: AppTexts.scheduleMain,
+        ),
+        const SizedBox(width: 5),
+        Text(
+          nextDay.day.toString(),
+          style: AppTexts.scheduleSecondary,
+        ),
+        IconButton(
+            onPressed: () {
+              currentDay = nextDay;
+              updateState();
+            },
+            icon: const Icon(Icons.arrow_forward_ios_rounded, size: 20)),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -87,8 +125,12 @@ class _SchedulePageState extends State<SchedulePage> {
                       style: AppTexts.headingBold,
                       textAlign: TextAlign.center)),
               const SizedBox(height: 20),
+              scheduleDayPicker(() {
+                setState(() {});
+              }),
+              const SizedBox(height: 20),
               FutureBuilder<List<TaskModel>>(
-                future: DBHelper.tasks(),
+                future: DBHelper.certainDayTasks(currentDay),
                 builder: (context, snapshot) {
                   updateTasks() {
                     setState(() {});
@@ -120,16 +162,19 @@ class _SchedulePageState extends State<SchedulePage> {
                                 ? freeTimeText =
                                     "${freeTime.inHours} часа $freeTimeText"
                                 : null;
-                            widgets = <Widget>[freeTimeDivider(freeTimeText, () {
-                              _newTaskMenu(
-                                context,
-                                optionalStartTime: tasksList[index-1].endTime,
-                                optionalEndTime: task.startTime);
-                              setState(() {});
-                            })] +
+                            widgets = <Widget>[
+                                  freeTimeDivider(freeTimeText, () {
+                                    _newTaskMenu(context,
+                                        optionalStartTime:
+                                            tasksList[index - 1].endTime,
+                                        optionalEndTime: task.startTime);
+                                    setState(() {});
+                                  })
+                                ] +
                                 widgets;
                           } else {
-                            widgets = <Widget>[const SizedBox(height: 20)] + widgets;
+                            widgets =
+                                <Widget>[const SizedBox(height: 20)] + widgets;
                           }
                         }
 
@@ -150,13 +195,12 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  Future<void> _newTaskMenu(BuildContext context, {DateTime? optionalStartTime, DateTime? optionalEndTime}) {
-    DateTime startTime = optionalStartTime ?? DateTime.now();
-    DateTime endTime = optionalEndTime ?? DateTime.now();
-    String startTimeText =
-        '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
-    String endTimeText =
-        '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+  Future<void> _newTaskMenu(BuildContext context,
+      {DateTime? optionalStartTime, DateTime? optionalEndTime}) {
+    DateTime startTime = optionalStartTime ?? currentDay;
+    DateTime endTime = optionalEndTime ?? currentDay;
+    String startTimeText = readableDateTime(startTime);
+    String endTimeText = readableDateTime(endTime);
     TextEditingController name = TextEditingController();
     TextEditingController description = TextEditingController();
 
@@ -207,12 +251,12 @@ class _SchedulePageState extends State<SchedulePage> {
                         await taskDatePicker(
                             startTime,
                             (DateTime date) => setLocalState(() {
+                                  if (endTime == startTime) {
+                                    endTime = date;
+                                    endTimeText = readableDateTime(endTime);
+                                  }
                                   startTime = date;
-                                  endTime = date;
-                                  endTimeText =
-                                      '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
-                                  startTimeText =
-                                      '${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}';
+                                  startTimeText = readableDateTime(startTime);
                                 }));
                       },
                       child: Text(startTimeText),
@@ -226,8 +270,7 @@ class _SchedulePageState extends State<SchedulePage> {
                             endTime,
                             (date) => setLocalState(() {
                                   endTime = date;
-                                  endTimeText =
-                                      '${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}';
+                                  endTimeText = readableDateTime(endTime);
                                 }));
                       },
                       child: Text(endTimeText),
