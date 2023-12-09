@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/models/task_model.dart';
@@ -11,11 +13,13 @@ class DetailsButton extends StatelessWidget {
     super.key,
     required this.child,
     required this.action,
+    this.color = AppColors.grayBlueLight,
   });
 
   final Widget child;
-  final Function action;
+  final Function() action;
   final BorderRadius buttonBorderRadius = BorderRadius.circular(8);
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class DetailsButton extends StatelessWidget {
         borderRadius: buttonBorderRadius,
         child: Container(
             decoration: BoxDecoration(
-              color: AppColors.grayBlueLight,
+              color: color,
               borderRadius: buttonBorderRadius,
             ),
             height: 40,
@@ -54,6 +58,8 @@ class TaskDetailsPage extends StatefulWidget {
 }
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
+  bool isEditMode = false;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -68,6 +74,148 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             DateTime startTime = model.startTime;
             DateTime endTime = model.endTime;
             List<CheckpointModel> checkpointsList = model.checkpoints;
+
+            Future<void> editTaskMenu(
+              BuildContext context,
+            ) {
+              DateTime startTime = model.startTime;
+              DateTime endTime = model.endTime;
+              String startTimeText = readableDateTime(startTime);
+              String endTimeText = readableDateTime(endTime);
+              TextEditingController name =
+                  TextEditingController(text: model.name);
+              TextEditingController description =
+                  TextEditingController(text: model.description);
+
+              Future<DateTime?> taskDatePicker(
+                      DateTime initialTime, Function(DateTime) action) =>
+                  DatePicker.showDateTimePicker(context,
+                      minTime: DateTime(2015, 8),
+                      maxTime: DateTime(2101),
+                      currentTime: initialTime,
+                      locale: LocaleType.ru,
+                      onConfirm: (date) => action(date));
+
+              return showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      backgroundColor: AppColors.grayBlueDark,
+                      content: StatefulBuilder(builder:
+                          (BuildContext context, StateSetter setLocalState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Изменить задачу',
+                              style: AppTexts.bodyBold,
+                            ),
+                            const SizedBox(height: 20),
+                            Flexible(
+                                child: TextField(
+                              controller: name,
+                              decoration: const InputDecoration(
+                                  hintText: 'Название',
+                                  border: OutlineInputBorder()),
+                            )),
+                            const SizedBox(height: 20),
+                            TextField(
+                              controller: description,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              decoration: const InputDecoration(
+                                  hintText: 'Описание',
+                                  border: OutlineInputBorder()),
+                            ),
+                            const SizedBox(height: 20),
+                            Flexible(
+                              child: InkWell(
+                                onTap: () async {
+                                  await taskDatePicker(
+                                      startTime,
+                                      (DateTime date) => setLocalState(() {
+                                            if (endTime == startTime) {
+                                              endTime = date;
+                                              endTimeText =
+                                                  readableDateTime(endTime);
+                                            }
+                                            startTime = date;
+                                            startTimeText =
+                                                readableDateTime(startTime);
+                                          }));
+                                },
+                                child: Text(startTimeText),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Flexible(
+                              child: InkWell(
+                                onTap: () async {
+                                  await taskDatePicker(
+                                      endTime,
+                                      (date) => setLocalState(() {
+                                            endTime = date;
+                                            endTimeText =
+                                                readableDateTime(endTime);
+                                          }));
+                                },
+                                child: Text(endTimeText),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('Назад')),
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      TaskModel newModel = TaskModel(
+                                          id: model.id,
+                                          completed: model.completed,
+                                          name: name.text,
+                                          description: description.text,
+                                          startTime: startTime,
+                                          endTime: endTime,
+                                          checkpoints: model.checkpoints);
+                                      await DBHelper.insertTask(newModel);
+                                      setState(() {});
+                                      if (mounted) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    child: const Text('Продолжить')),
+                              ],
+                            ),
+                          ],
+                        );
+                      }));
+                },
+              );
+            }
+
+            void switchEditMode() {
+              setState(() {
+                if (isEditMode) {
+                  isEditMode = false;
+                } else {
+                  isEditMode = true;
+                }
+              });
+            }
+
+            void deleteCheckpoint(int checkpointId) async {
+              setState(() {
+                checkpointsList.removeAt(checkpointsList
+                    .indexWhere((element) => element.id == checkpointId));
+              });
+              await DBHelper.removeCheckpoint(
+                  checkpointId, model.id, ItemType.task);
+            }
 
             Row itemHeading(context) {
               return Row(
@@ -100,11 +248,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             await widget.updateItems();
                             Navigator.of(context).pop();
                             break;
+                          case 1:
+                            editTaskMenu(context);
                         }
                       },
                       itemBuilder: (context) => [
                             const PopupMenuItem<int>(
-                                value: 0, child: Text('Удалить'))
+                                value: 0, child: Text('Удалить')),
+                            const PopupMenuItem<int>(
+                                value: 1, child: Text('Изменить')),
                           ]),
                 ],
               );
@@ -141,11 +293,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    description,
-                    style: AppTexts.body,
-                  ),
+                  ItemDescription(description: description)
                 ],
               );
             }
@@ -219,17 +367,28 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             }
 
-            Row itemAction() {
+            Row itemActions() {
               return Row(
                 children: [
-                  DetailsButton(
-                    child: const Icon(
-                      Icons.edit_rounded,
-                      color: AppColors.white,
-                      size: 16,
+                  if (!isEditMode)
+                    DetailsButton(
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        color: AppColors.white,
+                        size: 16,
+                      ),
+                      action: () => switchEditMode(),
                     ),
-                    action: () {},
-                  ),
+                  if (isEditMode)
+                    DetailsButton(
+                      color: AppColors.accentBlue,
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        color: AppColors.white,
+                        size: 16,
+                      ),
+                      action: () => switchEditMode(),
+                    ),
                   const SizedBox(width: 10),
                   DetailsButton(
                     child: Text(
@@ -263,11 +422,27 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       style: AppTexts.body,
                     ),
                   ),
+                  if (isEditMode)
+                    IconButton(
+                        onPressed: () => deleteCheckpoint(checkpoint.id),
+                        icon: const Icon(Icons.delete_rounded))
                 ],
               );
             }
 
-            Flexible _checkpointsList() {
+            Flexible checkpointsListWidget() {
+              Widget checkpoint(int index) {
+                return Column(
+                  key: Key("${checkpointsList[index].id}"),
+                  children: [
+                    checkpointWidget(checkpointsList[index]),
+                    const SizedBox(
+                      height: 5,
+                    )
+                  ],
+                );
+              }
+
               return Flexible(
                   child: ReorderableListView(
                 buildDefaultDragHandles: false,
@@ -284,18 +459,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   await DBHelper.insertTask(model);
                 },
                 children: [
-                  for (var index = 0; index < checkpointsList.length; index++)
-                    ReorderableDragStartListener(
-                        key: Key("${checkpointsList[index].id}"),
-                        index: index,
-                        child: Column(
-                          children: [
-                            checkpointWidget(checkpointsList[index]),
-                            const SizedBox(
-                              height: 5,
-                            )
-                          ],
-                        )),
+                  if (isEditMode)
+                    for (var index = 0; index < checkpointsList.length; index++)
+                      ReorderableDragStartListener(
+                          key: Key("${checkpointsList[index].id}"),
+                          index: index,
+                          child: checkpoint(index)),
+                  if (!isEditMode)
+                    for (var index = 0; index < checkpointsList.length; index++)
+                      checkpoint(index)
                 ],
               ));
             }
@@ -317,9 +489,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         const SizedBox(height: 20),
                         horizontalDivider(),
                         const SizedBox(height: 20),
-                        itemAction(),
+                        itemActions(),
                         const SizedBox(height: 20),
-                        _checkpointsList(),
+                        checkpointsListWidget(),
                       ],
                     )),
               ),

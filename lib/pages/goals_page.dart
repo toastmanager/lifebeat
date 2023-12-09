@@ -18,7 +18,7 @@ class _GoalsPageState extends State<GoalsPage> {
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
-        bottomNavigationBar: const Navbar(),
+        bottomNavigationBar: const Navbar(currentPage: Routes.goals),
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
             onPressed: () => _newGoalMenu(context),

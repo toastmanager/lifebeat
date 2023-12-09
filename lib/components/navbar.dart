@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({super.key});
+  const Navbar({
+    super.key,
+    required this.currentPage,
+  });
+
+  final String currentPage;
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -27,12 +32,20 @@ class _NavbarState extends State<Navbar> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, Routes.schedule),
+            onPressed: () {
+              if (widget.currentPage != Routes.schedule) {
+                Navigator.pushNamed(context, Routes.schedule);
+              }
+            },
             icon: const Icon(Icons.calendar_today_rounded),
           ),
           const SizedBox(width: 10),
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, Routes.goals),
+            onPressed: () {
+              if (widget.currentPage != Routes.goals) {
+                Navigator.pushNamed(context, Routes.goals);
+              }
+            },
             icon: const Icon(Icons.flag_rounded),
           ),
           const SizedBox(width: 10),
