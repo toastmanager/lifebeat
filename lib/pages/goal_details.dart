@@ -137,6 +137,101 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
       ));
     }
 
+    Future<DateTime> selectDate(
+        BuildContext context, DateTime selectedDate) async {
+      final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: selectedDate,
+          firstDate: DateTime(2015, 8),
+          lastDate: DateTime(2101));
+      return picked ?? selectedDate;
+    }
+
+    Future<void> editGoalMenu(BuildContext context) {
+      DateTime deadline = widget.model.deadline;
+      String deadlineText =
+          '${deadline.year}-${deadline.month}-${deadline.day}';
+      TextEditingController name =
+          TextEditingController(text: widget.model.name);
+      TextEditingController description =
+          TextEditingController(text: widget.model.description);
+
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppColors.grayBlueDark,
+              content: StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setLocalState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Изменить цель',
+                      style: AppTexts.bodyBold,
+                    ),
+                    const SizedBox(height: 20),
+                    Flexible(
+                        child: TextField(
+                      controller: name,
+                      decoration: const InputDecoration(
+                          hintText: 'Название', border: OutlineInputBorder()),
+                    )),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: description,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                          hintText: 'Описание', border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(height: 20),
+                    Flexible(
+                      child: InkWell(
+                        onTap: () async {
+                          deadline = await selectDate(context, deadline);
+                          setLocalState(() {
+                            deadlineText =
+                                '${deadline.year}-${deadline.month}-${deadline.day}';
+                          });
+                        },
+                        child: Text(deadlineText),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Назад')),
+                        ElevatedButton(
+                            onPressed: () async {
+                              GoalModel newGoal = GoalModel(
+                                  id: widget.model.id,
+                                  completed: widget.model.completed,
+                                  name: name.text,
+                                  description: description.text,
+                                  deadline: deadline,
+                                  checkpoints: widget.model.checkpoints);
+                              await DBHelper.insertGoal(newGoal);
+                              setState(() {
+                                widget.model = newGoal;
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Продолжить')),
+                      ],
+                    ),
+                  ],
+                );
+              }));
+        },
+      );
+    }
+
     return Container(
       decoration: const BoxDecoration(
         gradient: AppColors.backgroundGradient,
@@ -181,12 +276,14 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                             }
                             break;
                           case 1:
-                            break;
+                            editGoalMenu(context);
                         }
                       },
                       itemBuilder: (context) => [
                             const PopupMenuItem<int>(
-                                value: 0, child: Text('Удалить'))
+                                value: 0, child: Text('Удалить')),
+                            const PopupMenuItem<int>(
+                                value: 1, child: Text('Изменить')),
                           ]),
                 ],
               ),

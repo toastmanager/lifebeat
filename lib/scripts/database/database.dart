@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
