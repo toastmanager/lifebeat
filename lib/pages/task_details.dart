@@ -136,14 +136,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                                   await taskDatePicker(
                                       startTime,
                                       (DateTime date) => setLocalState(() {
-                                            if (endTime == startTime) {
-                                              endTime = date;
-                                              endTimeText =
-                                                  readableDateTime(endTime);
-                                            }
+                                            Duration difference =
+                                                endTime.difference(startTime);
                                             startTime = date;
                                             startTimeText =
                                                 readableDateTime(startTime);
+                                            // if (difference.inMinutes)
+                                            endTime = startTime.add(difference);
+                                            endTimeText =
+                                                readableDateTime(endTime);
                                           }));
                                 },
                                 child: Text(startTimeText),

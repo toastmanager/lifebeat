@@ -10,11 +10,11 @@ import 'package:lifebeat/models/task_model.dart';
 class DBHelper {
   static Future createDB(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE IF NOT EXISTS goals(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, daysLeft INT, name TEXT, description TEXT, deadline TEXT, checkpoints TEXT)');
+        'CREATE TABLE goals(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, daysLeft INT, name TEXT, description TEXT, deadline TEXT, checkpoints TEXT)');
     await db.execute(
-        'CREATE TABLE IF NOT EXISTS checkpoints(id INTEGER PRIMARY KEY, value BOOL, text TEXT)');
+        'CREATE TABLE checkpoints(id INTEGER PRIMARY KEY, value BOOL, text TEXT)');
     await db.execute(
-        'CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, name TEXT, description TEXT, start_time TEXT, end_time TEXT, checkpoints TEXT)');
+        'CREATE TABLE tasks(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, name TEXT, description TEXT, start_time TEXT, end_time TEXT, checkpoints TEXT)');
   }
 
   static Future<Database> database() async {
@@ -29,11 +29,8 @@ class DBHelper {
 
   static Future<CheckpointModel> parseCheckpoint(int id) async {
     final db = await database();
-    final List<Map<String, dynamic>> checkpointsMap =
-        await db.query('checkpoints');
-
     final Map<String, dynamic> checkpoint =
-        checkpointsMap.firstWhere((element) => element['id'] == id);
+        (await db.query('checkpoints', where: "id = ?", whereArgs: [id]))[0];
 
     return CheckpointModel(
       id: checkpoint['id'] as int,
@@ -42,21 +39,31 @@ class DBHelper {
     );
   }
 
-  static Future<GoalModel> parseGoal(int id) async {
-    final db = await database();
-    final List<Map<String, dynamic>> goalsMap = await db.query('goals');
-    final Map<String, dynamic> goalMap =
-        goalsMap.firstWhere((element) => element['id'] == id);
-
-    DateTime deadline = DateTime.parse(goalMap['deadline'] as String);
-    List<int> goalsCheckpoints =
-        jsonDecode(goalMap['checkpoints']).cast<int>().toList();
+  static Future<List<CheckpointModel>> parseCheckpoints(
+      List<int> itemCheckpoints) async {
     List<CheckpointModel> checkpoints = [];
 
-    for (int j = 0; j < goalsCheckpoints.length; j++) {
-      int checkpointId = goalsCheckpoints[j];
+    for (int j = 0; j < itemCheckpoints.length; j++) {
+      int checkpointId = itemCheckpoints[j];
       checkpoints.add(await parseCheckpoint(checkpointId));
     }
+
+    return checkpoints;
+  }
+
+  static Future<List<CheckpointModel>> parseItemCheckpoints(itemMap) async {
+    List<int> itemCheckpoints =
+        jsonDecode(itemMap['checkpoints']).cast<int>().toList();
+    return await parseCheckpoints(itemCheckpoints);
+  }
+
+  static Future<GoalModel> parseGoal(int id) async {
+    final db = await database();
+    final Map<String, dynamic> goalMap =
+        (await db.query('goals', where: "id = ?", whereArgs: [id]))[0];
+
+    DateTime deadline = DateTime.parse(goalMap['deadline'] as String);
+    List<CheckpointModel> checkpoints = await parseItemCheckpoints(goalMap);
 
     return GoalModel(
       id: goalMap['id'] as int,
@@ -70,20 +77,12 @@ class DBHelper {
 
   static Future<TaskModel> parseTask(int id) async {
     final db = await database();
-    final List<Map<String, dynamic>> tasksMap = await db.query('tasks');
     final Map<String, dynamic> taskMap =
-        tasksMap.firstWhere((element) => element['id'] == id);
+        (await db.query('tasks', where: "id = ?", whereArgs: [id]))[0];
 
     DateTime startTime = DateTime.parse(taskMap['start_time'] as String);
     DateTime endTime = DateTime.parse(taskMap['end_time'] as String);
-    List<int> taskCheckpoints =
-        jsonDecode(taskMap['checkpoints']).cast<int>().toList();
-    List<CheckpointModel> checkpoints = [];
-
-    for (int j = 0; j < taskCheckpoints.length; j++) {
-      int checkpointId = taskCheckpoints[j];
-      checkpoints.add(await parseCheckpoint(checkpointId));
-    }
+    List<CheckpointModel> checkpoints = await parseItemCheckpoints(taskMap);
 
     return TaskModel(
       id: taskMap['id'] as int,
@@ -128,13 +127,11 @@ class DBHelper {
   }
 
   static Future<GoalModel> getGoalById(int goalId) async {
-    final List<GoalModel> goalsList = await goals();
-    return goalsList.firstWhere((element) => element.id == goalId);
+    return parseGoal(goalId);
   }
 
   static Future<TaskModel> getTaskById(int taskId) async {
-    final List<TaskModel> tasksList = await tasks();
-    return tasksList.firstWhere((task) => task.id == taskId);
+    return await parseTask(taskId);
   }
 
   static Future<List<TaskModel>> tasks() async {
@@ -172,13 +169,12 @@ class DBHelper {
     await db.insert('checkpoints', checkpoint.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
 
-    late final List itemsList;
+    late final dynamic item;
     if (isGoal) {
-      itemsList = await goals();
+      item = await getGoalById(itemId);
     } else {
-      itemsList = await tasks();
+      item = await getTaskById(itemId);
     }
-    final item = itemsList.firstWhere((element) => element.id == itemId);
 
     var itemCheckpoints = item.checkpoints.map((e) => e.id).toList();
     bool inList = false;
@@ -285,8 +281,7 @@ class DBHelper {
   static Future<int> removeGoal(int goalId) async {
     final db = await database();
 
-    List<GoalModel> goalsList = await goals();
-    GoalModel goal = goalsList.firstWhere((element) => element.id == goalId);
+    GoalModel goal = await getGoalById(goalId);
     List<int> goalCheckpointsIds = goal.checkpoints.map((e) => e.id).toList();
 
     for (var i = 0; i < goalCheckpointsIds.length; i++) {
@@ -303,8 +298,7 @@ class DBHelper {
   static Future<int> removeTask(int taskId) async {
     final db = await database();
 
-    List<TaskModel> tasksList = await tasks();
-    TaskModel task = tasksList.firstWhere((element) => element.id == taskId);
+    TaskModel task = await getTaskById(taskId);
     List<int> taskCheckpointsIds = task.checkpoints.map((e) => e.id).toList();
 
     for (var i = 0; i < taskCheckpointsIds.length; i++) {
