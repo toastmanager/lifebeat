@@ -23,7 +23,6 @@ class _ProgressCircleState extends State<ProgressCircle> {
       style: AppTexts.bodyBold,
     );
 
-
     double turns = 0;
 
     if (widget.progress == 100) {
@@ -42,7 +41,8 @@ class _ProgressCircleState extends State<ProgressCircle> {
         children: [
           Center(
             child: TweenAnimationBuilder<double>(
-                tween: Tween(begin: widget.progress / 100, end: widget.progress / 100),
+                tween: Tween(
+                    begin: widget.progress / 100, end: widget.progress / 100),
                 duration: const Duration(milliseconds: 200),
                 builder: (context, value, _) {
                   return CircularProgressIndicator(
