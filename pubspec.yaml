@@ -40,7 +40,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.0+3
   path: ^1.8.3
   flutter_datetime_picker_plus: ^2.1.0
-  window_manager: ^0.3.7
+  window_manager: ^0.3.8
 
 dev_dependencies:
   flutter_test:
