@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/models/goal_model.dart';
+import 'package:lifebeat/pages/main_wrapper.dart';
+import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/scripts/database/database.dart';
@@ -21,7 +23,14 @@ class _GoalsPageState extends State<GoalsPage> {
         bottomNavigationBar: const Navbar(currentPage: Routes.goals),
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
-            onPressed: () => _newGoalMenu(context),
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                    builder: (context) => MainWrapper(
+                        currentPage: Routes.goals, child: NewGoalPage()),
+                  ))
+                  .then((value) => setState(() {}));
+            },
             backgroundColor: AppColors.purple,
             shape: const OvalBorder(),
             child: Text(
@@ -74,93 +83,6 @@ class _GoalsPageState extends State<GoalsPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<DateTime> _selectDate(
-      BuildContext context, DateTime selectedDate) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    return picked ?? selectedDate;
-  }
-
-  Future<void> _newGoalMenu(BuildContext context) {
-    DateTime deadline = DateTime.now();
-    String deadlineText = '${deadline.year}-${deadline.month}-${deadline.day}';
-    TextEditingController name = TextEditingController();
-    TextEditingController description = TextEditingController();
-
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            backgroundColor: AppColors.grayBlueDark,
-            content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setLocalState) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Новая цель',
-                    style: AppTexts.bodyBold,
-                  ),
-                  const SizedBox(height: 20),
-                  Flexible(
-                      child: TextField(
-                    controller: name,
-                    decoration: const InputDecoration(
-                        hintText: 'Название', border: OutlineInputBorder()),
-                  )),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: description,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                        hintText: 'Описание', border: OutlineInputBorder()),
-                  ),
-                  const SizedBox(height: 20),
-                  Flexible(
-                    child: InkWell(
-                      onTap: () async {
-                        deadline = await _selectDate(context, deadline);
-                        setLocalState(() {
-                          deadlineText =
-                              '${deadline.year}-${deadline.month}-${deadline.day}';
-                        });
-                      },
-                      child: Text(deadlineText),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Назад')),
-                      ElevatedButton(
-                          onPressed: () async {
-                            await DBHelper.addGoal(
-                              name.text,
-                              description.text,
-                              deadline,
-                            );
-                            setState(() {});
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Продолжить')),
-                    ],
-                  ),
-                ],
-              );
-            }));
-      },
     );
   }
 }

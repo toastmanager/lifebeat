@@ -105,9 +105,11 @@ class NewItemButton extends StatelessWidget {
 }
 
 class DateField extends StatefulWidget {
-  const DateField({super.key, required this.onDateSelected});
+  const DateField(
+      {super.key, required this.onDateSelected, required this.labelText});
 
   final Function(DateTime) onDateSelected;
+  final String labelText;
 
   @override
   State<DateField> createState() => _DateFieldState();
@@ -119,7 +121,7 @@ class _DateFieldState extends State<DateField> {
   Widget build(BuildContext context) {
     var dateController = TextEditingController(text: readableDate(date));
     return TextField(
-      decoration: decoration('Дедлайн'),
+      decoration: decoration(widget.labelText),
       readOnly: true,
       onTap: () async {
         date = await selectDate(context, date);
@@ -147,7 +149,8 @@ class NewGoalPage extends NewItemPage {
           SizedBox(height: gap),
           defaultInputs(gap),
           SizedBox(height: gap),
-          DateField(onDateSelected: (date) => deadline = date),
+          DateField(
+              labelText: 'Дедлайн', onDateSelected: (date) => deadline = date),
           const Spacer(),
           buttons(context, () async {
             await DBHelper.addGoal(
