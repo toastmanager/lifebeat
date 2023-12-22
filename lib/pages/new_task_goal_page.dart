@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
@@ -11,9 +12,11 @@ InputDecoration decoration(String labelText) {
 }
 
 class NewItemPage extends StatelessWidget {
-  const NewItemPage({super.key, this.gap = 20});
+  NewItemPage({super.key, this.gap = 20});
 
   final double gap;
+  final name = TextEditingController();
+  final description = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +67,11 @@ class NewItemPage extends StatelessWidget {
   }
 
   Column defaultInputs(double gap) {
-    var name = TextEditingController();
-    var description = TextEditingController();
-
     return Column(
       children: [
         TextField(controller: name, decoration: decoration('Название')),
         SizedBox(height: gap),
         TextField(controller: description, decoration: decoration('Описание')),
-        SizedBox(height: gap),
       ],
     );
   }
@@ -106,7 +105,9 @@ class NewItemButton extends StatelessWidget {
 }
 
 class DateField extends StatefulWidget {
-  const DateField({super.key});
+  const DateField({super.key, required this.onDateSelected});
+
+  final Function(DateTime) onDateSelected;
 
   @override
   State<DateField> createState() => _DateFieldState();
@@ -122,6 +123,7 @@ class _DateFieldState extends State<DateField> {
       readOnly: true,
       onTap: () async {
         date = await selectDate(context, date);
+        widget.onDateSelected(date);
         setState(() {
           dateController = TextEditingController(text: readableDate(date));
         });
@@ -132,10 +134,11 @@ class _DateFieldState extends State<DateField> {
 }
 
 class NewGoalPage extends NewItemPage {
-  const NewGoalPage({super.key});
+  NewGoalPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var deadline = DateTime.now();
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -143,9 +146,17 @@ class NewGoalPage extends NewItemPage {
           heading(context, 'Новая цель'),
           SizedBox(height: gap),
           defaultInputs(gap),
-          const DateField(),
+          SizedBox(height: gap),
+          DateField(onDateSelected: (date) => deadline = date),
           const Spacer(),
-          buttons(context, () {})
+          buttons(context, () async {
+            await DBHelper.addGoal(
+              name.text,
+              description.text,
+              deadline,
+            );
+            Navigator.of(context).pop();
+          })
         ],
       ),
     );

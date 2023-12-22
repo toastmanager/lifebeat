@@ -47,7 +47,7 @@ class App extends StatelessWidget {
         routes: {
           '/goals': (context) => const GoalsPage(),
           '/schedule': (context) => const SchedulePage(),
-          '/new_item': (context) => Scaffold(body: const NewItemPage()),
+          '/new_item': (context) => Scaffold(body: NewItemPage()),
         },
       ),
     );
