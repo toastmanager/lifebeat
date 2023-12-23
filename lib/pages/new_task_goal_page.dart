@@ -223,7 +223,7 @@ class NewTaskPage extends NewItemPage {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          heading(context, 'Новая цель'),
+          heading(context, 'Новая задача'),
           SizedBox(height: gap),
           defaultInputs(gap),
           SizedBox(height: gap),
