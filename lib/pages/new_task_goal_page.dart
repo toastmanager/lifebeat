@@ -106,10 +106,14 @@ class NewItemButton extends StatelessWidget {
 
 class DateField extends StatefulWidget {
   const DateField(
-      {super.key, required this.onDateSelected, required this.labelText});
+      {super.key,
+      required this.onDateSelected,
+      required this.labelText,
+      this.initDate});
 
   final Function(DateTime) onDateSelected;
   final String labelText;
+  final DateTime? initDate;
 
   @override
   State<DateField> createState() => _DateFieldState();
@@ -119,6 +123,7 @@ class _DateFieldState extends State<DateField> {
   var date = DateTime.now();
   @override
   Widget build(BuildContext context) {
+    date = widget.initDate ?? DateTime.now();
     var dateController = TextEditingController(text: readableDate(date));
     return TextField(
       decoration: decoration(widget.labelText),
@@ -128,6 +133,44 @@ class _DateFieldState extends State<DateField> {
         widget.onDateSelected(date);
         setState(() {
           dateController = TextEditingController(text: readableDate(date));
+        });
+      },
+      controller: dateController,
+    );
+  }
+}
+
+class DateTimeField extends StatefulWidget {
+  const DateTimeField(
+      {super.key,
+      required this.onDateSelected,
+      required this.labelText,
+      this.initDate});
+
+  final Function(DateTime) onDateSelected;
+  final String labelText;
+  final DateTime? initDate;
+
+  @override
+  State<DateTimeField> createState() => _DateTimeFieldState();
+}
+
+class _DateTimeFieldState extends State<DateTimeField> {
+  var date = DateTime.now();
+  var isChanged = false;
+  @override
+  Widget build(BuildContext context) {
+    date = isChanged ? date : widget.initDate ?? date;
+    isChanged = true;
+    var dateController = TextEditingController(text: readableDateTime(date));
+    return TextField(
+      decoration: decoration(widget.labelText),
+      readOnly: true,
+      onTap: () async {
+        date = await taskDatePicker(context, date, (date) {}) ?? date;
+        widget.onDateSelected(date);
+        setState(() {
+          dateController = TextEditingController(text: readableDateTime(date));
         });
       },
       controller: dateController,
@@ -157,6 +200,45 @@ class NewGoalPage extends NewItemPage {
               name.text,
               description.text,
               deadline,
+            );
+            Navigator.of(context).pop();
+          })
+        ],
+      ),
+    );
+  }
+}
+
+class NewTaskPage extends NewItemPage {
+  NewTaskPage({super.key, this.startTime, this.endTime});
+
+  DateTime? startTime;
+  DateTime? endTime;
+
+  @override
+  Widget build(BuildContext context) {
+    startTime = startTime ?? DateTime.now();
+    endTime = endTime ?? DateTime.now();
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          heading(context, 'Новая цель'),
+          SizedBox(height: gap),
+          defaultInputs(gap),
+          SizedBox(height: gap),
+          DateTimeField(
+              onDateSelected: (date) => startTime = date, labelText: 'Начало', initDate: startTime,),
+          SizedBox(height: gap),
+          DateTimeField(
+              onDateSelected: (date) => startTime = date, labelText: 'Конец', initDate: endTime,),
+          const Spacer(),
+          buttons(context, () async {
+            await DBHelper.addTask(
+              name.text,
+              description.text,
+              startTime!,
+              endTime!,
             );
             Navigator.of(context).pop();
           })
