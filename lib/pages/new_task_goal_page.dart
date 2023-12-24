@@ -228,10 +228,16 @@ class NewTaskPage extends NewItemPage {
           defaultInputs(gap),
           SizedBox(height: gap),
           DateTimeField(
-              onDateSelected: (date) => startTime = date, labelText: 'Начало', initDate: startTime,),
+            onDateSelected: (date) => startTime = date,
+            labelText: 'Начало',
+            initDate: startTime,
+          ),
           SizedBox(height: gap),
           DateTimeField(
-              onDateSelected: (date) => startTime = date, labelText: 'Конец', initDate: endTime,),
+            onDateSelected: (date) => endTime = date,
+            labelText: 'Конец',
+            initDate: endTime,
+          ),
           const Spacer(),
           buttons(context, () async {
             await DBHelper.addTask(
