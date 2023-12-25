@@ -152,11 +152,13 @@ class DateTimeField extends StatefulWidget {
       {super.key,
       required this.onDateSelected,
       required this.labelText,
+      this.date,
       this.initDate,
       this.controller});
 
   final Function(DateTime) onDateSelected;
   final String labelText;
+  final DateTime? date;
   final DateTime? initDate;
   final TextEditingController? controller;
 
@@ -169,7 +171,7 @@ class _DateTimeFieldState extends State<DateTimeField> {
   var isChanged = false;
   @override
   Widget build(BuildContext context) {
-    date = isChanged ? date : widget.initDate ?? date;
+    date = widget.date ?? (isChanged ? date : widget.initDate ?? date);
     isChanged = true;
     var dateController = TextEditingController(text: readableDateTime(date));
     if (widget.controller != null) {
@@ -273,6 +275,7 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
             controller: startTimeController,
             labelText: 'Начало',
             initDate: startTime,
+            date: startTime,
           ),
           SizedBox(height: gap),
           DateTimeField(
@@ -282,6 +285,7 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
             },
             labelText: 'Конец',
             initDate: endTime,
+            date: endTime,
             controller: endTimeController,
           ),
           const Spacer(),
