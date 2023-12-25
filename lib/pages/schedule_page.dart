@@ -116,8 +116,8 @@ class _SchedulePageState extends State<SchedulePage> {
                   builder: (context) => MainWrapper(
                       currentPage: '/new_task',
                       child: NewTaskPage(
-                        startTime: currentDay,
-                        endTime: currentDay,
+                        optionalStartTime: currentDay,
+                        optionalEndTime: currentDay,
                       )),
                 ))
                 .then((value) => setState(() {})),
@@ -180,9 +180,9 @@ class _SchedulePageState extends State<SchedulePage> {
                                           builder: (context) => MainWrapper(
                                               currentPage: '/new_task',
                                               child: NewTaskPage(
-                                                startTime: tasksList[index - 1]
+                                                optionalStartTime: tasksList[index - 1]
                                                     .endTime,
-                                                endTime: task.startTime,
+                                                optionalEndTime: task.startTime,
                                               )),
                                         ))
                                         .then((value) => updateTasks());

@@ -11,11 +11,18 @@ InputDecoration decoration(String labelText) {
       labelText: labelText);
 }
 
-class NewItemPage extends StatelessWidget {
+class NewItemPage extends StatefulWidget {
   NewItemPage({super.key, this.gap = 20});
 
   final double gap;
+
+  @override
+  State<NewItemPage> createState() => _NewItemPageState();
+}
+
+class _NewItemPageState<T extends NewItemPage> extends State<T> {
   final name = TextEditingController();
+
   final description = TextEditingController();
 
   @override
@@ -25,8 +32,8 @@ class NewItemPage extends StatelessWidget {
       child: Column(
         children: [
           heading(context, 'New item'),
-          SizedBox(height: gap),
-          defaultInputs(gap),
+          SizedBox(height: widget.gap),
+          defaultInputs(widget.gap),
           const Spacer(),
           buttons(context, () {})
         ],
@@ -130,10 +137,10 @@ class _DateFieldState extends State<DateField> {
       readOnly: true,
       onTap: () async {
         date = await selectDate(context, date);
-        widget.onDateSelected(date);
         setState(() {
           dateController = TextEditingController(text: readableDate(date));
         });
+        widget.onDateSelected(date);
       },
       controller: dateController,
     );
@@ -145,11 +152,13 @@ class DateTimeField extends StatefulWidget {
       {super.key,
       required this.onDateSelected,
       required this.labelText,
-      this.initDate});
+      this.initDate,
+      this.controller});
 
   final Function(DateTime) onDateSelected;
   final String labelText;
   final DateTime? initDate;
+  final TextEditingController? controller;
 
   @override
   State<DateTimeField> createState() => _DateTimeFieldState();
@@ -163,6 +172,9 @@ class _DateTimeFieldState extends State<DateTimeField> {
     date = isChanged ? date : widget.initDate ?? date;
     isChanged = true;
     var dateController = TextEditingController(text: readableDateTime(date));
+    if (widget.controller != null) {
+      dateController = widget.controller!;
+    }
     return TextField(
       decoration: decoration(widget.labelText),
       readOnly: true,
@@ -182,8 +194,14 @@ class NewGoalPage extends NewItemPage {
   NewGoalPage({super.key});
 
   @override
+  State<NewItemPage> createState() => _NewGoalPageState();
+}
+
+class _NewGoalPageState extends _NewItemPageState {
+  var deadline = DateTime.now();
+  @override
   Widget build(BuildContext context) {
-    var deadline = DateTime.now();
+    var gap = widget.gap;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -193,7 +211,12 @@ class NewGoalPage extends NewItemPage {
           defaultInputs(gap),
           SizedBox(height: gap),
           DateField(
-              labelText: 'Дедлайн', onDateSelected: (date) => deadline = date),
+              labelText: 'Дедлайн',
+              initDate: deadline,
+              onDateSelected: (date) {
+                deadline = date;
+                setState(() {});
+              }),
           const Spacer(),
           buttons(context, () async {
             await DBHelper.addGoal(
@@ -210,15 +233,28 @@ class NewGoalPage extends NewItemPage {
 }
 
 class NewTaskPage extends NewItemPage {
-  NewTaskPage({super.key, this.startTime, this.endTime});
+  NewTaskPage({super.key, this.optionalStartTime, this.optionalEndTime});
 
+  final DateTime? optionalStartTime;
+  final DateTime? optionalEndTime;
+
+  @override
+  State<NewItemPage> createState() => _NewTaskPageState();
+}
+
+class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
   DateTime? startTime;
   DateTime? endTime;
 
   @override
   Widget build(BuildContext context) {
-    startTime = startTime ?? DateTime.now();
-    endTime = endTime ?? DateTime.now();
+    startTime = startTime ?? widget.optionalStartTime ?? DateTime.now();
+    endTime = endTime ?? widget.optionalEndTime ?? DateTime.now();
+    var startTimeController =
+        TextEditingController(text: readableDateTime(startTime!));
+    var endTimeController =
+        TextEditingController(text: readableDateTime(endTime!));
+    var gap = widget.gap;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -228,15 +264,25 @@ class NewTaskPage extends NewItemPage {
           defaultInputs(gap),
           SizedBox(height: gap),
           DateTimeField(
-            onDateSelected: (date) => startTime = date,
+            onDateSelected: (date) {
+              Duration difference = endTime!.difference(startTime!);
+              startTime = date;
+              endTime = startTime!.add(difference);
+              setState(() {});
+            },
+            controller: startTimeController,
             labelText: 'Начало',
             initDate: startTime,
           ),
           SizedBox(height: gap),
           DateTimeField(
-            onDateSelected: (date) => endTime = date,
+            onDateSelected: (date) {
+              endTime = date;
+              setState(() {});
+            },
             labelText: 'Конец',
             initDate: endTime,
+            controller: endTimeController,
           ),
           const Spacer(),
           buttons(context, () async {
