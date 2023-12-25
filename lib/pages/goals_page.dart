@@ -59,7 +59,8 @@ class _GoalsPageState extends State<GoalsPage> {
                         return const Text('Цели отсутствуют');
                       }
                       List<GoalModel> goalsList =
-                          snapshot.data!.reversed.toList();
+                          snapshot.data!.toList();
+                      goalsList.sort((a, b) => b.daysLeft.compareTo(a.daysLeft),);
                       return Flexible(
                         child: ListView.separated(
                             itemCount: goalsList.length,
