@@ -60,7 +60,7 @@ class _GoalsPageState extends State<GoalsPage> {
                       }
                       List<GoalModel> goalsList =
                           snapshot.data!.toList();
-                      goalsList.sort((a, b) => b.daysLeft.compareTo(a.daysLeft),);
+                      goalsList.sort((a, b) => b.deadline.compareTo(a.deadline),);
                       return Flexible(
                         child: ListView.separated(
                             itemCount: goalsList.length,
