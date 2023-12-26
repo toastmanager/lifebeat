@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,12 @@ class SchedulePage extends StatefulWidget {
 
 class _SchedulePageState extends State<SchedulePage> {
   DateTime currentDay = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(minutes: 1), (timer) => setState(() {}));
+  }
 
   Widget horizontalDivider() {
     return Expanded(
@@ -180,8 +187,9 @@ class _SchedulePageState extends State<SchedulePage> {
                                           builder: (context) => MainWrapper(
                                               currentPage: '/new_task',
                                               child: NewTaskPage(
-                                                optionalStartTime: tasksList[index - 1]
-                                                    .endTime,
+                                                optionalStartTime:
+                                                    tasksList[index - 1]
+                                                        .endTime,
                                                 optionalEndTime: task.startTime,
                                               )),
                                         ))
