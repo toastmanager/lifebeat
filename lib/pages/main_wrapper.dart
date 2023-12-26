@@ -4,7 +4,11 @@ import 'package:lifebeat/components/navbar.dart';
 import '../scripts/vars.dart';
 
 class MainWrapper extends StatelessWidget {
-  const MainWrapper({super.key, required this.child, required this.currentPage, this.floatingActionButtonAction});
+  const MainWrapper(
+      {super.key,
+      required this.child,
+      required this.currentPage,
+      this.floatingActionButtonAction});
 
   final Function()? floatingActionButtonAction;
   final Widget child;
@@ -12,12 +16,22 @@ class MainWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<Object?> Function()? action;
+
+    if (currentPage == Routes.goals) {
+      action = () => Navigator.pushNamed(context, Routes.newTask);
+    } else if (currentPage == Routes.schedule) {
+      action = () => Navigator.pushNamed(context, Routes.newTask);
+    }
+
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
       child: Scaffold(
         bottomNavigationBar: Navbar(currentPage: currentPage),
         backgroundColor: Colors.transparent,
-        floatingActionButton: floatingActionButtonAction != null ? LifebeatFloatingActionButton(action: floatingActionButtonAction!) : null,
+        floatingActionButton: action == null
+            ? null
+            : LifebeatFloatingActionButton(action: action),
         body: child,
       ),
     );
@@ -32,12 +46,12 @@ class LifebeatFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: action,
-            backgroundColor: AppColors.purple,
-            shape: const OvalBorder(),
-            child: Text(
-              '+',
-              style: AppTexts.headingBold,
-            ));
+        onPressed: action,
+        backgroundColor: AppColors.purple,
+        shape: const OvalBorder(),
+        child: Text(
+          '+',
+          style: AppTexts.headingBold,
+        ));
   }
 }

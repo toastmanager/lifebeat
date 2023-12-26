@@ -63,6 +63,9 @@ abstract final class AppTexts {
 abstract final class Routes {
   static const goals = '/goals';
   static const schedule = '/schedule';
+  static const newTask = '/new_task';
+  static const newGoal = '/new_goal';
+  static const initRoute = schedule;
 }
 
 abstract final class ItemType {

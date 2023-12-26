@@ -269,7 +269,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             if (mounted) {
                               Navigator.of(context).pop();
                             }
-                            break;
                           case 1:
                             editTaskMenu(context);
                         }
