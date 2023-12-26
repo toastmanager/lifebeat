@@ -20,11 +20,21 @@ class SchedulePage extends StatefulWidget {
 
 class _SchedulePageState extends State<SchedulePage> {
   DateTime currentDay = DateTime.now();
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(minutes: 1), (timer) => setState(() {}));
+    if (mounted) {
+      _timer = Timer.periodic(
+          const Duration(minutes: 1), (timer) => setState(() {}));
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   Widget horizontalDivider() {
