@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+
 import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
@@ -59,6 +62,12 @@ class TaskDetailsPage extends StatefulWidget {
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
   bool isEditMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(minutes: 1), (timer) => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
