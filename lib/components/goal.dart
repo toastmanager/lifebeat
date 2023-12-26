@@ -26,7 +26,7 @@ class _GoalState extends State<Goal> {
     String name = widget.model.name;
     DateTime deadline = widget.model.deadline;
     double progress = widget.model.progress;
-    int timeLeft = deadline.difference(DateTime.now()).inDays;
+    int timeLeft = widget.model.daysLeft;
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -49,7 +49,9 @@ class _GoalState extends State<Goal> {
           padding: const EdgeInsets.all(11.0),
           child: Row(
             children: [
-              ProgressCircle(progress: progress, isExpired: widget.model.deadline.isBefore(DateTime.now())),
+              ProgressCircle(
+                  progress: progress,
+                  isExpired: widget.model.deadline.isBefore(DateTime.now())),
               const SizedBox(width: 15),
               Expanded(
                 child: Column(

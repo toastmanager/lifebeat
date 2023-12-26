@@ -22,7 +22,16 @@ class GoalModel {
   }) {
     duration = getDateDurations();
     progress = getProgress();
-    daysLeft = deadline.difference(DateTime.now()).inDays;
+    daysLeft = getDaysLeft();
+  }
+
+  int getDaysLeft() {
+    var difference = deadline.difference(DateTime.now());
+    if (difference.inDays == 0 && difference.inHours > 0) {
+      return difference.inDays + 1;
+    } else {
+      return difference.inDays;
+    }
   }
 
   double getProgress() {
