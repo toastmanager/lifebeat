@@ -3,6 +3,7 @@ import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
+import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/scripts/database/database.dart';
@@ -58,9 +59,8 @@ class _GoalsPageState extends State<GoalsPage> {
                       if (snapshot.data!.isEmpty) {
                         return const Text('Цели отсутствуют');
                       }
-                      List<GoalModel> goalsList =
-                          snapshot.data!.toList();
-                      goalsList.sort((a, b) => b.deadline.compareTo(a.deadline),);
+                      List<GoalModel> goalsList = snapshot.data!.toList();
+                      goalsList = sortedGoalsList(goalsList);
                       return Flexible(
                         child: ListView.separated(
                             itemCount: goalsList.length,

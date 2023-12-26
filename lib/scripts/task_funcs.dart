@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
+import '../models/goal_model.dart';
+
 String readableDateTime(DateTime time) {
   return '${time.year}-${time.month}-${time.day} ${readableTime(time.hour, time.minute)}';
 }
@@ -27,11 +29,20 @@ Future<DateTime> selectDate(BuildContext context, DateTime selectedDate) async {
   return picked ?? selectedDate;
 }
 
-Future<DateTime?> taskDatePicker(
-        BuildContext context, DateTime initialTime, Function(DateTime) action) =>
+Future<DateTime?> taskDatePicker(BuildContext context, DateTime initialTime,
+        Function(DateTime) action) =>
     DatePicker.showDateTimePicker(context,
         minTime: DateTime(2015, 8),
         maxTime: DateTime(2101),
         currentTime: initialTime,
         locale: LocaleType.ru,
         onConfirm: (date) => action(date));
+
+List<GoalModel> sortedGoalsList(List<GoalModel> goalsList) {
+  goalsList.sort((a, b) => a.deadline.compareTo(b.deadline));
+  int lastGoalBeforeNow = goalsList.lastIndexWhere(
+      (e) => e.deadline.isBefore(DateTime.now().add(const Duration(days: -5))));
+  goalsList = goalsList.sublist(lastGoalBeforeNow + 1, goalsList.length) +
+      goalsList.sublist(0, lastGoalBeforeNow + 1);
+  return goalsList;
+}
