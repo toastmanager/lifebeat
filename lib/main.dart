@@ -54,7 +54,7 @@ class App extends StatelessWidget {
           Routes.newTask: (context) =>
               MainWrapper(currentPage: Routes.newTask, child: NewTaskPage()),
           Routes.newGoal: (context) =>
-              MainWrapper(currentPage: Routes.newGoal, child: NewGoalPage()),
+              MainWrapper(currentPage: Routes.newGoal, child: NewTaskPage()),
         },
       ),
     );

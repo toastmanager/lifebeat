@@ -19,7 +19,7 @@ class MainWrapper extends StatelessWidget {
     Future<Object?> Function()? action;
 
     if (currentPage == Routes.goals) {
-      action = () => Navigator.pushNamed(context, Routes.newGoal);
+      action = () => Navigator.pushNamed(context, Routes.newTask);
     } else if (currentPage == Routes.schedule) {
       action = () => Navigator.pushNamed(context, Routes.newTask);
     }
