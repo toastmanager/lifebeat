@@ -1,13 +1,14 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/models/task_model.dart';
+import 'package:lifebeat/pages/main_wrapper.dart';
+import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -19,6 +20,22 @@ class SchedulePage extends StatefulWidget {
 
 class _SchedulePageState extends State<SchedulePage> {
   DateTime currentDay = DateTime.now();
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      _timer = Timer.periodic(
+          const Duration(minutes: 1), (timer) => setState(() {}));
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   Widget horizontalDivider() {
     return Expanded(
@@ -111,7 +128,16 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
-            onPressed: () => _newTaskMenu(context),
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(
+                  builder: (context) => MainWrapper(
+                      currentPage: '/new_task',
+                      child: NewTaskPage(
+                        optionalStartTime: currentDay,
+                        optionalEndTime: currentDay,
+                      )),
+                ))
+                .then((value) => setState(() {})),
             backgroundColor: AppColors.purple,
             shape: const OvalBorder(),
             child: Text(
@@ -166,11 +192,18 @@ class _SchedulePageState extends State<SchedulePage> {
                                 : null;
                             widgets = <Widget>[
                                   freeTimeDivider(freeTimeText, () {
-                                    _newTaskMenu(context,
-                                        optionalStartTime:
-                                            tasksList[index - 1].endTime,
-                                        optionalEndTime: task.startTime);
-                                    setState(() {});
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                          builder: (context) => MainWrapper(
+                                              currentPage: '/new_task',
+                                              child: NewTaskPage(
+                                                optionalStartTime:
+                                                    tasksList[index - 1]
+                                                        .endTime,
+                                                optionalEndTime: task.startTime,
+                                              )),
+                                        ))
+                                        .then((value) => updateTasks());
                                   })
                                 ] +
                                 widgets;
@@ -178,6 +211,10 @@ class _SchedulePageState extends State<SchedulePage> {
                             widgets =
                                 <Widget>[const SizedBox(height: 20)] + widgets;
                           }
+                        }
+
+                        if (index == tasksList.length - 1) {
+                          widgets += <Widget>[const SizedBox(height: 80)];
                         }
 
                         return Column(
@@ -189,122 +226,11 @@ class _SchedulePageState extends State<SchedulePage> {
                     return const CircularProgressIndicator();
                   }
                 },
-              )
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> _newTaskMenu(BuildContext context,
-      {DateTime? optionalStartTime, DateTime? optionalEndTime}) {
-    DateTime startTime = optionalStartTime ?? currentDay;
-    DateTime endTime = optionalEndTime ?? currentDay;
-    String startTimeText = readableDateTime(startTime);
-    String endTimeText = readableDateTime(endTime);
-    TextEditingController name = TextEditingController();
-    TextEditingController description = TextEditingController();
-
-    Future<DateTime?> taskDatePicker(
-            DateTime initialTime, Function(DateTime) action) =>
-        DatePicker.showDateTimePicker(context,
-            minTime: DateTime(2015, 8),
-            maxTime: DateTime(2101),
-            currentTime: initialTime,
-            locale: LocaleType.ru,
-            onConfirm: (date) => action(date));
-
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            backgroundColor: AppColors.grayBlueDark,
-            content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setLocalState) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Новая задача',
-                    style: AppTexts.bodyBold,
-                  ),
-                  const SizedBox(height: 20),
-                  Flexible(
-                      child: TextField(
-                    controller: name,
-                    decoration: const InputDecoration(
-                        hintText: 'Название', border: OutlineInputBorder()),
-                  )),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: description,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                        hintText: 'Описание', border: OutlineInputBorder()),
-                  ),
-                  const SizedBox(height: 20),
-                  Flexible(
-                    child: InkWell(
-                      onTap: () async {
-                        await taskDatePicker(
-                            startTime,
-                            (DateTime date) => setLocalState(() {
-                                  if (endTime == startTime) {
-                                    endTime = date;
-                                    endTimeText = readableDateTime(endTime);
-                                  }
-                                  startTime = date;
-                                  startTimeText = readableDateTime(startTime);
-                                }));
-                      },
-                      child: Text(startTimeText),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Flexible(
-                    child: InkWell(
-                      onTap: () async {
-                        await taskDatePicker(
-                            endTime,
-                            (date) => setLocalState(() {
-                                  endTime = date;
-                                  endTimeText = readableDateTime(endTime);
-                                }));
-                      },
-                      child: Text(endTimeText),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Назад')),
-                      ElevatedButton(
-                          onPressed: () async {
-                            await DBHelper.addTask(
-                              name.text,
-                              description.text,
-                              startTime,
-                              endTime,
-                            );
-                            setState(() {});
-                            if (mounted) {
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          child: const Text('Продолжить')),
-                    ],
-                  ),
-                ],
-              );
-            }));
-      },
     );
   }
 }

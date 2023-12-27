@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:lifebeat/pages/main_wrapper.dart';
+import 'package:lifebeat/pages/new_task_goal_page.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
@@ -46,6 +48,8 @@ class App extends StatelessWidget {
         routes: {
           '/goals': (context) => const GoalsPage(),
           '/schedule': (context) => const SchedulePage(),
+          '/new_task': (context) => MainWrapper(currentPage: 'new_task', child: NewTaskPage()),
+          '/new_goal': (context) => MainWrapper(currentPage: 'new_goal', child: NewTaskPage()),
         },
       ),
     );

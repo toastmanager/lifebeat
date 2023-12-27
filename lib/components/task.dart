@@ -56,7 +56,10 @@ class _TaskState extends State<Task> {
                   padding: const EdgeInsets.all(11.0),
                   child: Row(
                     children: [
-                      ProgressCircle(progress: progress),
+                      ProgressCircle(
+                        progress: progress,
+                        isExpired: model.endTime.isBefore(DateTime.now()),
+                      ),
                       const SizedBox(width: 15),
                       Expanded(
                         child: Column(
