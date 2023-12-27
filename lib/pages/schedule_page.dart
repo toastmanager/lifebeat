@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
@@ -119,86 +120,116 @@ class _SchedulePageState extends State<SchedulePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          Center(
-              child: Text('Расписание',
-                  style: AppTexts.headingBold, textAlign: TextAlign.center)),
-          const SizedBox(height: 20),
-          scheduleDayPicker(() {
-            setState(() {});
-          }),
-          const SizedBox(height: 20),
-          FutureBuilder<List<TaskModel>>(
-            future: DBHelper.certainDayTasks(currentDay),
-            builder: (context, snapshot) {
-              updateTasks() {
+    return Container(
+      decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+      child: Scaffold(
+        bottomNavigationBar: const Navbar(
+          currentPage: Routes.schedule,
+        ),
+        backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(
+                  builder: (context) => MainWrapper(
+                      currentPage: '/new_task',
+                      child: NewTaskPage(
+                        optionalStartTime: currentDay,
+                        optionalEndTime: currentDay,
+                      )),
+                ))
+                .then((value) => setState(() {})),
+            backgroundColor: AppColors.purple,
+            shape: const OvalBorder(),
+            child: Text(
+              '+',
+              style: AppTexts.headingBold,
+            )),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Center(
+                  child: Text('Расписание',
+                      style: AppTexts.headingBold,
+                      textAlign: TextAlign.center)),
+              const SizedBox(height: 20),
+              scheduleDayPicker(() {
                 setState(() {});
-              }
+              }),
+              const SizedBox(height: 20),
+              FutureBuilder<List<TaskModel>>(
+                future: DBHelper.certainDayTasks(currentDay),
+                builder: (context, snapshot) {
+                  updateTasks() {
+                    setState(() {});
+                  }
 
-              if (snapshot.hasData) {
-                if (snapshot.data!.isEmpty) {
-                  return const Text('Задачи отсутствуют');
-                }
-                List<TaskModel> tasksList = sortTasks(snapshot.data!);
-                return Flexible(
-                    child: ListView.builder(
-                  itemCount: tasksList.length,
-                  itemBuilder: (context, index) {
-                    final TaskModel task = tasksList[index];
-                    List<Widget> widgets = [
-                      Task(taskId: task.id, updateItems: () => updateTasks()),
-                    ];
-
-                    if (index > 0) {
-                      Duration freeTime = task.startTime
-                          .difference(tasksList[index - 1].endTime);
-                      if (freeTime.inMinutes > 0) {
-                        String freeTimeText =
-                            "${freeTime.inMinutes - freeTime.inHours * 60} минут";
-                        freeTime.inHours > 0
-                            ? freeTimeText =
-                                "${freeTime.inHours} часа $freeTimeText"
-                            : null;
-                        widgets = <Widget>[
-                              freeTimeDivider(freeTimeText, () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(
-                                      builder: (context) => MainWrapper(
-                                          currentPage: '/new_task',
-                                          child: NewTaskPage(
-                                            optionalStartTime:
-                                                tasksList[index - 1].endTime,
-                                            optionalEndTime: task.startTime,
-                                          )),
-                                    ))
-                                    .then((value) => updateTasks());
-                              })
-                            ] +
-                            widgets;
-                      } else {
-                        widgets =
-                            <Widget>[const SizedBox(height: 20)] + widgets;
-                      }
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.isEmpty) {
+                      return const Text('Задачи отсутствуют');
                     }
+                    List<TaskModel> tasksList = sortTasks(snapshot.data!);
+                    return Flexible(
+                        child: ListView.builder(
+                      itemCount: tasksList.length,
+                      itemBuilder: (context, index) {
+                        final TaskModel task = tasksList[index];
+                        List<Widget> widgets = [
+                          Task(
+                              taskId: task.id,
+                              updateItems: () => updateTasks()),
+                        ];
 
-                    if (index == tasksList.length - 1) {
-                      widgets += <Widget>[const SizedBox(height: 80)];
-                    }
+                        if (index > 0) {
+                          Duration freeTime = task.startTime
+                              .difference(tasksList[index - 1].endTime);
+                          if (freeTime.inMinutes > 0) {
+                            String freeTimeText =
+                                "${freeTime.inMinutes - freeTime.inHours * 60} минут";
+                            freeTime.inHours > 0
+                                ? freeTimeText =
+                                    "${freeTime.inHours} часа $freeTimeText"
+                                : null;
+                            widgets = <Widget>[
+                                  freeTimeDivider(freeTimeText, () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                          builder: (context) => MainWrapper(
+                                              currentPage: '/new_task',
+                                              child: NewTaskPage(
+                                                optionalStartTime:
+                                                    tasksList[index - 1]
+                                                        .endTime,
+                                                optionalEndTime: task.startTime,
+                                              )),
+                                        ))
+                                        .then((value) => updateTasks());
+                                  })
+                                ] +
+                                widgets;
+                          } else {
+                            widgets =
+                                <Widget>[const SizedBox(height: 20)] + widgets;
+                          }
+                        }
 
-                    return Column(
-                      children: widgets,
-                    );
-                  },
-                ));
-              } else {
-                return const CircularProgressIndicator();
-              }
-            },
+                        if (index == tasksList.length - 1) {
+                          widgets += <Widget>[const SizedBox(height: 80)];
+                        }
+
+                        return Column(
+                          children: widgets,
+                        );
+                      },
+                    ));
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
