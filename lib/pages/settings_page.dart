@@ -47,7 +47,6 @@ class _SettingsPageState extends State<SettingsPage> {
             readOnly: true,
             controller: dbPathController,
           )),
-          const Text('При изменении пути к базе данных потребуется дать разрешение на ')
         ],
       ),
     );
