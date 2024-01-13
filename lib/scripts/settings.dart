@@ -1,3 +1,4 @@
+import 'package:lifebeat/scripts/vars.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -25,14 +26,21 @@ abstract final class Settings {
     init();
   }
 
-  static void setInitPage(String page) {
-    prefs.setString('init_page', page);
+  static Future<void> reload() async {
+    await prefs.reload();
   }
 
-  static void setDBPath(String page) {
-    prefs.setString('db_path', page);
+  static Future<void> setInitPage(String page) async {
+    await prefs.setString('init_page', page);
+    initPage = prefs.getString('init_page') ?? Routes.schedule;
   }
 
-  static String initPage = prefs.getString('init_page') ?? '/schedule';
+  static Future<void> setDBPath(String page) async {
+    await prefs.setString('db_path', page);
+    dbPath = prefs.getString('db_path') ?? defaultDBPath;
+  }
+
+
+  static String initPage = prefs.getString('init_page') ?? Routes.schedule;
   static String dbPath = prefs.getString('db_path') ?? defaultDBPath;
 }

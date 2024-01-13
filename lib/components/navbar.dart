@@ -50,7 +50,7 @@ class _NavbarState extends State<Navbar> {
           ),
           const SizedBox(width: 10),
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
             icon: const Icon(Icons.settings_rounded),
           ),
         ],
