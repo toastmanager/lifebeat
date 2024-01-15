@@ -77,8 +77,8 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   List<TaskModel> sortTasks(List<TaskModel> tasksList) {
-    // sort tasks by start time
-    tasksList.sort((a, b) => a.startTime.compareTo(b.startTime));
+    // sort tasks by end time
+    tasksList.sort((a, b) => a.endTime.compareTo(b.endTime));
     return tasksList;
   }
 

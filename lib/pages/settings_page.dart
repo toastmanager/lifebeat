@@ -38,9 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
               dbPath =
                   newDBPath == null ? dbPath : join(newDBPath, 'database.db');
               await Settings.setDBPath(dbPath);
-              print(Settings.dbPath);
               await Settings.reload();
-              print(Settings.dbPath);
               setState(() {});
             },
             decoration: textFieldDecoration('Путь к базе данных'),

@@ -6,6 +6,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 abstract final class Settings {
   static late SharedPreferences prefs;
   static late String defaultDBPath;
+  static String initPage = prefs.getString('init_page') ?? Routes.schedule;
+  static String dbPath = prefs.getString('db_path') ?? defaultDBPath;
 
   // Make sure you initialize Settings when running app
   static Future init() async {
@@ -41,6 +43,4 @@ abstract final class Settings {
   }
 
 
-  static String initPage = prefs.getString('init_page') ?? Routes.schedule;
-  static String dbPath = prefs.getString('db_path') ?? defaultDBPath;
 }
