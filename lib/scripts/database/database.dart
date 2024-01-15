@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:lifebeat/models/regular_task_model.dart';
 import 'package:lifebeat/scripts/settings.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:sqflite/sqflite.dart';
@@ -15,6 +16,8 @@ class DBHelper {
         'CREATE TABLE checkpoints(id INTEGER PRIMARY KEY, value BOOL, text TEXT)');
     await db.execute(
         'CREATE TABLE tasks(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, name TEXT, description TEXT, start_time TEXT, end_time TEXT, checkpoints TEXT)');
+    await db.execute(
+        'CREATE TABLE regular_tasks(id INTEGER PRIMARY KEY, name TEXT, description TEXT, start_time TEXT, end_time TEXT, week_days TEXT, interval INT, checkpoints TEXT)');
   }
 
   static Future<Database> database() async {
@@ -319,5 +322,44 @@ class DBHelper {
           startTime.day == day.day;
     }).toList();
     return todayTasksList;
+  }
+
+  static Future<RegularTaskModel> parseRegularTask(int id) async {
+    return RegularTaskModel(
+        id: id,
+        name: 'name',
+        description: 'description',
+        startTime: 'startTime',
+        endTime: 'endTime',
+        checkpoints: []);
+  }
+
+  static Future<void> insertRegularTask(
+    RegularTaskModel regularTaks,
+  ) async {}
+
+  static Future<void> addRegularTask(
+    String name,
+    String description,
+    String startTime,
+    String endTime, {
+    List<String>? weekDays,
+    Duration? interval,
+  }) async {}
+
+  static Future<void> removeRegularTask(int id) async {}
+  
+  static Future<RegularTaskModel> getRegularTaskById(int id) async {
+    return RegularTaskModel(
+        id: id,
+        name: 'name',
+        description: 'description',
+        startTime: 'startTime',
+        endTime: 'endTime',
+        checkpoints: []);
+  }
+
+  static Future<List<RegularTaskModel>> regularTasks() async {
+    return [];
   }
 }
