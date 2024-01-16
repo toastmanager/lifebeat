@@ -4,6 +4,7 @@ import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/pages/settings_page.dart';
 import 'package:lifebeat/scripts/settings.dart';
+import 'package:lifebeat/scripts/vars.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -57,16 +58,18 @@ class App extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        initialRoute: Settings.initPage,
+        initialRoute: '/new_regular_task',
         routes: {
-          '/goals': (context) => const GoalsPage(),
-          '/schedule': (context) => const SchedulePage(),
+          Routes.goals: (context) => const GoalsPage(),
+          Routes.schedule: (context) => const SchedulePage(),
           '/new_task': (context) =>
-              MainWrapper(currentPage: 'new_task', child: NewTaskPage()),
+              MainWrapper(currentPage: '/new_task', child: NewTaskPage()),
+          '/new_regular_task': (context) =>
+              MainWrapper(currentPage: '/new_regular_task', child: NewRegularTaskPage()),
           '/new_goal': (context) =>
-              MainWrapper(currentPage: 'new_goal', child: NewTaskPage()),
+              MainWrapper(currentPage: '/new_goal', child: NewTaskPage()),
           '/settings': (context) =>
-              MainWrapper(currentPage: 'settings', child: SettingsPage()),
+              const MainWrapper(currentPage: '/settings', child: SettingsPage()),
         },
       ),
     );

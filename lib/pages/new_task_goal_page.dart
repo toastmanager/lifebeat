@@ -6,7 +6,7 @@ import 'package:lifebeat/scripts/vars.dart';
 import '../styles/text_field_style.dart';
 
 class NewItemPage extends StatefulWidget {
-  NewItemPage({super.key, this.gap = 20});
+  const NewItemPage({super.key, this.gap = 20});
 
   final double gap;
 
@@ -16,7 +16,6 @@ class NewItemPage extends StatefulWidget {
 
 class _NewItemPageState<T extends NewItemPage> extends State<T> {
   final name = TextEditingController();
-
   final description = TextEditingController();
 
   @override
@@ -62,7 +61,8 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
         IconButton(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_ios_rounded)),
-        Text(text, style: AppTexts.headingBold),
+        const SizedBox(width: 10,),
+        Expanded(child: Text(text, style: AppTexts.headingBold)),
       ],
     );
   }
@@ -70,9 +70,12 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
   Column defaultInputs(double gap) {
     return Column(
       children: [
-        TextField(controller: name, decoration: textFieldDecoration('Название')),
+        TextField(
+            controller: name, decoration: textFieldDecoration('Название')),
         SizedBox(height: gap),
-        TextField(controller: description, decoration: textFieldDecoration('Описание')),
+        TextField(
+            controller: description,
+            decoration: textFieldDecoration('Описание')),
       ],
     );
   }
@@ -292,6 +295,37 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
             );
             Navigator.of(context).pop();
           })
+        ],
+      ),
+    );
+  }
+}
+
+class NewRegularTaskPage extends NewItemPage {
+  NewRegularTaskPage({super.key, this.optionalStartTime, this.optionalEndTime});
+
+  final DateTime? optionalStartTime;
+  final DateTime? optionalEndTime;
+
+  @override
+  State<NewItemPage> createState() => _NewRegularTaskPageState();
+}
+
+class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
+  DateTime? startTime;
+  DateTime? endTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          heading(context, 'Новая регулярная задача'),
+          SizedBox(height: widget.gap),
+          defaultInputs(widget.gap),
+          const Spacer(),
+          buttons(context, () {})
         ],
       ),
     );
