@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/models/regular_task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
+import 'package:lifebeat/scripts/regular_task_funcs.dart';
 import 'package:lifebeat/scripts/settings.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +34,7 @@ void main() {
 
   test('Regular task with one week day should be added', () async {
     await DBHelper.addRegularTask('name', 'description', '00:00', '01:00',
-        weekDays: ['monday']);
+        weekDays: [WeekDays.mon]);
     RegularTaskModel regularTask = (await DBHelper.regularTasks())[0];
     expect(regularTask.id, 0);
     expect(regularTask.name, 'name');
@@ -41,7 +42,7 @@ void main() {
     expect(regularTask.startTime, '00:00');
     expect(regularTask.endTime, '01:00');
     expect(regularTask.isWeekDays, true);
-    expect(regularTask.weekDays, ['monday']);
+    expect(regularTask.weekDays, [WeekDays.mon]);
     expect(regularTask.isIntervallic, false);
     expect(regularTask.interval, null);
     expect(regularTask.checkpoints, []);
@@ -49,7 +50,7 @@ void main() {
 
   test('Regular task with two week days should be added', () async {
     await DBHelper.addRegularTask('name', 'description', '00:00', '01:00',
-        weekDays: ['monday', 'tuesday']);
+        weekDays: [WeekDays.mon, WeekDays.tue]);
     RegularTaskModel regularTask = (await DBHelper.regularTasks())[0];
     expect(regularTask.id, 0);
     expect(regularTask.name, 'name');
@@ -57,7 +58,7 @@ void main() {
     expect(regularTask.startTime, '00:00');
     expect(regularTask.endTime, '01:00');
     expect(regularTask.isWeekDays, true);
-    expect(regularTask.weekDays, ['monday', 'tuesday']);
+    expect(regularTask.weekDays, [WeekDays.mon, WeekDays.tue]);
     expect(regularTask.isIntervallic, false);
     expect(regularTask.interval, null);
     expect(regularTask.checkpoints, []);
@@ -84,7 +85,7 @@ void main() {
     expect(
         () async => await DBHelper.addRegularTask(
             'name', 'description', '24:60', '19:26',
-            weekDays: ['monday']),
+            weekDays: [WeekDays.mon]),
         throwsException);
   });
 
@@ -92,7 +93,7 @@ void main() {
     expect(
         () async => await DBHelper.addRegularTask(
             'name', 'description', '19:26', '24:60',
-            weekDays: ['monday']),
+            weekDays: [WeekDays.mon]),
         throwsException);
   });
 
@@ -107,6 +108,23 @@ void main() {
             endTime: '01:00',
             checkpoints: [])),
         throwsException);
+  });
+
+  test('certainDayRegularTasks should give correct list of days', () async {
+    var weekDays = [WeekDays.mon];
+    await DBHelper.addRegularTask('name', 'description', '00:00', '01:00',
+        weekDays: weekDays);
+    await DBHelper.addRegularTask('name2', 'description2', '01:01', '02:00',
+        weekDays: weekDays);
+    await DBHelper.addRegularTask('name3', 'description3', '02:01', '03:00',
+        weekDays: weekDays);
+    await DBHelper.addRegularTask('name4', 'description4', '03:01', '04:00',
+        weekDays: [WeekDays.fri]);
+    await DBHelper.addRegularTask('name5', 'description5', '04:01', '05:00',
+        weekDays: [WeekDays.tue]);
+    await DBHelper.addRegularTask('name6', 'description5', '05:01', '06:00',
+        weekDays: [WeekDays.thu]);
+    expect((await DBHelper.certainDayRegularTasks(DateTime(2024))).length, 3);
   });
 
   tearDownAll(() async {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:lifebeat/models/regular_task_model.dart';
+import 'package:lifebeat/scripts/regular_task_funcs.dart';
 import 'package:lifebeat/scripts/settings.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:sqflite/sqflite.dart';
@@ -341,7 +342,8 @@ class DBHelper {
         description: taskMap['description'] as String,
         startTime: taskMap['start_time'] as String,
         endTime: taskMap['end_time'] as String,
-        interval: intervalInDays == null ? null : Duration(days: intervalInDays),
+        interval:
+            intervalInDays == null ? null : Duration(days: intervalInDays),
         weekDays: weekDays,
         checkpoints: checkpoints);
   }
@@ -396,8 +398,24 @@ class DBHelper {
 
     List<RegularTaskModel> regularTasksList = [];
     for (var i = 0; i < regularTasksMap.length; i++) {
-      RegularTaskModel goal = await parseRegularTask(regularTasksMap[i]['id']);
-      regularTasksList.add(goal);
+      RegularTaskModel task = await parseRegularTask(regularTasksMap[i]['id']);
+      regularTasksList.add(task);
+    }
+
+    return regularTasksList;
+  }
+
+  static Future<List<RegularTaskModel>> certainDayRegularTasks(
+      DateTime date) async {
+    final db = await database();
+    final String weekDay = WeekDays.weekDaysList[date.weekday - 1];
+    List<Map<String, dynamic>> regularTasksMap = await db.query('regular_tasks',
+        where: "week_days LIKE ?", whereArgs: ['%$weekDay%']);
+
+    List<RegularTaskModel> regularTasksList = [];
+    for (var i = 0; i < regularTasksMap.length; i++) {
+      RegularTaskModel task = await parseRegularTask(regularTasksMap[i]['id']);
+      regularTasksList.add(task);
     }
 
     return regularTasksList;

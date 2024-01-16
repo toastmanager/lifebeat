@@ -31,9 +31,10 @@ class RegularTaskModel {
   }
 
   bool isCorrectTime(String time) {
-    if (int.parse(startTime[0]) > 2 ||
-        int.parse(startTime[1]) > 4 ||
-        int.parse(startTime[3]) > 5) {
+    if (int.parse(time[0]) > 2 || int.parse(time[3]) > 5) {
+      return false;
+    }
+    if (int.parse(time[0]) == 2 && int.parse(time[1]) > 4) {
       return false;
     }
     return true;
@@ -69,7 +70,7 @@ class RegularTaskModel {
       'start_time': startTime,
       'end_time': endTime,
       'week_days': weekDays == null ? null : jsonEncode(weekDays!),
-      'interval': interval == null ? null : interval!.inDays,
+      'interval': interval?.inDays,
       'checkpoints': jsonEncode(checkpoints.map((e) => e.id).toList()),
     };
   }
