@@ -30,14 +30,30 @@ class RegularTaskModel {
     isIntervallic = interval == null ? false : true;
   }
 
+  bool isCorrectTime(String time) {
+    if (int.parse(startTime[0]) > 2 ||
+        int.parse(startTime[1]) > 4 ||
+        int.parse(startTime[3]) > 5) {
+      return false;
+    }
+    return true;
+  }
+
   void tests() {
     if (weekDays == null && interval == null) {
-      throw Exception("No week days or interval. There must to be at least one");
+      throw Exception(
+          "No week days or interval. There must to be at least one");
     }
     if (weekDays != null) {
       if (weekDays!.length > 7) {
         throw Exception("More than 7 days in weekDays");
       }
+    }
+    if (!isCorrectTime(startTime)) {
+      throw Exception("Incorrect startTime");
+    }
+    if (!isCorrectTime(endTime)) {
+      throw Exception("Incorrect endTime");
     }
   }
 
