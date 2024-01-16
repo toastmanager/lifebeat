@@ -325,30 +325,60 @@ class DBHelper {
   }
 
   static Future<RegularTaskModel> parseRegularTask(int id) async {
+    final db = await database();
+    final Map<String, dynamic> taskMap =
+        (await db.query('regular_tasks', where: "id = ?", whereArgs: [id]))[0];
+
+    List<String>? weekDays = taskMap['week_days'] == null
+        ? null
+        : await jsonDecode(taskMap['week_days']).cast<String>().toList();
+    List<CheckpointModel> checkpoints = await parseItemCheckpoints(taskMap);
+    int? intervalInDays = taskMap['interval'];
+
     return RegularTaskModel(
-        id: id,
-        name: 'name',
-        description: 'description',
-        startTime: 'startTime',
-        endTime: 'endTime',
-        checkpoints: []);
+        id: taskMap['id'] as int,
+        name: taskMap['name'] as String,
+        description: taskMap['description'] as String,
+        startTime: taskMap['start_time'] as String,
+        endTime: taskMap['end_time'] as String,
+        interval: intervalInDays == null ? null : Duration(days: intervalInDays),
+        weekDays: weekDays,
+        checkpoints: checkpoints);
   }
 
   static Future<void> insertRegularTask(
-    RegularTaskModel regularTaks,
-  ) async {}
+    RegularTaskModel regularTask,
+  ) async {
+    final db = await database();
+    await db.insert('regular_tasks', regularTask.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
 
-  static Future<void> addRegularTask(
+  static Future<RegularTaskModel> addRegularTask(
     String name,
     String description,
     String startTime,
     String endTime, {
     List<String>? weekDays,
     Duration? interval,
-  }) async {}
+  }) async {
+    final List<RegularTaskModel> regularTasksList = await regularTasks();
+    final int id = regularTasksList.isEmpty ? 0 : regularTasksList.last.id + 1;
+    final RegularTaskModel regularTask = RegularTaskModel(
+        id: id,
+        name: name,
+        description: description,
+        startTime: startTime,
+        weekDays: weekDays,
+        endTime: endTime,
+        interval: interval == null ? null : Duration(days: interval.inDays),
+        checkpoints: []);
+    await insertRegularTask(regularTask);
+    return regularTask;
+  }
 
   static Future<void> removeRegularTask(int id) async {}
-  
+
   static Future<RegularTaskModel> getRegularTaskById(int id) async {
     return RegularTaskModel(
         id: id,
@@ -360,6 +390,16 @@ class DBHelper {
   }
 
   static Future<List<RegularTaskModel>> regularTasks() async {
-    return [];
+    final db = await database();
+    final List<Map<String, dynamic>> regularTasksMap =
+        await db.query('regular_tasks');
+
+    List<RegularTaskModel> regularTasksList = [];
+    for (var i = 0; i < regularTasksMap.length; i++) {
+      RegularTaskModel goal = await parseRegularTask(regularTasksMap[i]['id']);
+      regularTasksList.add(goal);
+    }
+
+    return regularTasksList;
   }
 }

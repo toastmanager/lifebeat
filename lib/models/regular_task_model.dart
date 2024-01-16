@@ -24,6 +24,7 @@ class RegularTaskModel {
     this.interval,
     required this.checkpoints,
   }) {
+    tests();
     midDuration = getDuration();
     isWeekDays = weekDays == null ? false : true;
     isIntervallic = interval == null ? false : true;
@@ -51,8 +52,8 @@ class RegularTaskModel {
       'description': description,
       'start_time': startTime,
       'end_time': endTime,
-      'week_days': weekDays ?? jsonEncode(weekDays!),
-      'interval': interval ?? interval!.inDays,
+      'week_days': weekDays == null ? null : jsonEncode(weekDays!),
+      'interval': interval == null ? null : interval!.inDays,
       'checkpoints': jsonEncode(checkpoints.map((e) => e.id).toList()),
     };
   }

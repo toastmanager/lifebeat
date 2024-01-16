@@ -78,11 +78,11 @@ void main() {
   });
 
   test('Regular task with incorrect startTime should throw error', () async {
-    expect(() async => await DBHelper.addRegularTask('name', 'description', '24:60', '19:26', weekDays: ['monday']), throwsException);
+    expect(await DBHelper.addRegularTask('name', 'description', '24:60', '19:26', weekDays: ['monday']), throwsException);
   });
 
   test('Regular task with incorrect endTime should throw error', () async {
-    expect(() async => await DBHelper.addRegularTask('name', 'description', '19:26', '24:60', weekDays: ['monday']), throwsException);
+    expect(await DBHelper.addRegularTask('name', 'description', '19:26', '24:60', weekDays: ['monday']), throwsException);
   });
 
   test('Regular task with empty weekDays and interval should throw error', () async {
