@@ -324,10 +324,22 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
           heading(context, 'Новая регулярная задача'),
           SizedBox(height: widget.gap),
           defaultInputs(widget.gap),
+          SizedBox(height: widget.gap),
+          TimeField(),
+          SizedBox(height: widget.gap),
           const Spacer(),
-          buttons(context, () {})
+          buttons(context, () {}),
         ],
       ),
     );
+  }
+}
+
+class TimeField extends StatelessWidget {
+  const TimeField({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

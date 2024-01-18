@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:lifebeat/models/checkpoint_model.dart';
+import 'package:lifebeat/models/task_model.dart';
 
 class RegularTaskModel {
   final int id;
@@ -60,6 +61,27 @@ class RegularTaskModel {
 
   Duration getDuration() {
     return const Duration(days: 0);
+  }
+
+  TaskModel toTaskModel(DateTime day, taskId) {
+    return TaskModel(
+        id: taskId,
+        completed: false,
+        name: name,
+        description: description,
+        startTime: DateTime(
+            day.year,
+            day.month,
+            day.day,
+            int.parse(startTime.substring(1, 2)),
+            int.parse(startTime.substring(3, 4))),
+        endTime: DateTime(
+            day.year,
+            day.month,
+            day.day,
+            int.parse(endTime.substring(1, 2)),
+            int.parse(endTime.substring(3, 4))),
+        checkpoints: checkpoints);
   }
 
   Map<String, dynamic> toMap() {
