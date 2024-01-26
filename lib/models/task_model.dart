@@ -13,6 +13,7 @@ class TaskModel {
   final DateTime startTime;
   final DateTime endTime;
   List<CheckpointModel> checkpoints;
+  final int? parent;
 
   TaskModel({
     required this.id,
@@ -22,6 +23,7 @@ class TaskModel {
     required this.startTime,
     required this.endTime,
     required this.checkpoints,
+    this.parent,
   }) {
     duration = getDuration();
     progress = getProgress();
@@ -73,6 +75,7 @@ class TaskModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'parent': parent,
       'completed': completed ? 1 : 0,
       'progress': progress,
       'name': name,
@@ -81,5 +84,10 @@ class TaskModel {
       'end_time': endTime.toIso8601String(),
       'checkpoints': jsonEncode(checkpoints.map((e) => e.id).toList()),
     };
+  }
+
+  @override
+  String toString() {
+    return "TaskModel(id: $id, parent: $parent, progress: $progress, name: $name, description: $description, start_time: $startTime, end_time: $endTime, checkpoints: $checkpoints)";
   }
 }

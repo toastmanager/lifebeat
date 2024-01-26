@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/scripts/database/database.dart';
+import 'package:lifebeat/scripts/regular_task_funcs.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
@@ -315,6 +316,13 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
   DateTime? startTime;
   DateTime? endTime;
 
+  var timeFieldController = TextEditingController();
+
+  void addRegularTask() async {
+    await DBHelper.addRegularTask('name', 'description', '00:00', '01:00',
+        weekDays: [WeekDays.mon]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -325,10 +333,10 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
           SizedBox(height: widget.gap),
           defaultInputs(widget.gap),
           SizedBox(height: widget.gap),
-          TimeField(),
+          TimeField(controller: timeFieldController,),
           SizedBox(height: widget.gap),
           const Spacer(),
-          buttons(context, () {}),
+          buttons(context, () => addRegularTask()),
         ],
       ),
     );
@@ -336,10 +344,15 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
 }
 
 class TimeField extends StatelessWidget {
-  const TimeField({super.key});
+  const TimeField({super.key, required this.controller});
+
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return TextField(
+      controller: controller,
+      decoration: textFieldDecoration('Время выполнения', hintText: 'HH:MM - HH:MM'),
+    );
   }
 }

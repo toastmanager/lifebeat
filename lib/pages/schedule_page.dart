@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
+import 'package:lifebeat/models/regular_task_model.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';

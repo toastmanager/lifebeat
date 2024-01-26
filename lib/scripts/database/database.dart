@@ -16,7 +16,7 @@ class DBHelper {
     await db.execute(
         'CREATE TABLE checkpoints(id INTEGER PRIMARY KEY, value BOOL, text TEXT)');
     await db.execute(
-        'CREATE TABLE tasks(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, name TEXT, description TEXT, start_time TEXT, end_time TEXT, checkpoints TEXT)');
+        'CREATE TABLE tasks(id INTEGER PRIMARY KEY, completed BOOL, progress FLOAT, name TEXT, description TEXT, start_time TEXT, end_time TEXT, checkpoints TEXT, parent INTEGER)');
     await db.execute(
         'CREATE TABLE regular_tasks(id INTEGER PRIMARY KEY, name TEXT, description TEXT, start_time TEXT, end_time TEXT, week_days TEXT, interval INT, checkpoints TEXT)');
   }
@@ -94,6 +94,7 @@ class DBHelper {
       startTime: startTime,
       endTime: endTime,
       checkpoints: checkpoints,
+      parent: taskMap['parent'] as int?,
     );
   }
 
@@ -242,18 +243,21 @@ class DBHelper {
     String name,
     String description,
     DateTime startTime,
-    DateTime endTime,
-  ) async {
+    DateTime endTime, {
+    List<CheckpointModel>? checkpoints,
+    int? parent,
+  }) async {
     final List<TaskModel> tasksList = await tasks();
     final int taskId = tasksList.isEmpty ? 0 : tasksList.last.id + 1;
     final TaskModel task = TaskModel(
         id: taskId,
+        parent: parent,
         completed: false,
         name: name,
         description: description,
         startTime: startTime,
         endTime: endTime,
-        checkpoints: []);
+        checkpoints: checkpoints ?? []);
     await insertTask(task);
     return 0;
   }
@@ -322,6 +326,35 @@ class DBHelper {
           startTime.month == day.month &&
           startTime.day == day.day;
     }).toList();
+    
+    List<int> taskParents = [];
+    for (var element in todayTasksList) {
+      if (element.parent != null) {
+        taskParents.add(element.parent!);
+      }
+    }
+
+    List<RegularTaskModel> todayRegularTasks =
+        await certainDayRegularTasks(day);
+    bool isUpdated = false;
+    for (var element in todayRegularTasks) {
+      if (!taskParents.contains(element.id)) {
+        var startTime = DateTime(day.year, day.month, day.day, int.parse(element.startTime.substring(0, 2)), int.parse(element.startTime.substring(3, 5)));
+        var endTime = DateTime(day.year, day.month, day.day, int.parse(element.endTime.substring(0, 2)), int.parse(element.endTime.substring(3, 5)));
+        await DBHelper.addTask(element.name, element.description, startTime, endTime, parent: element.id, checkpoints: element.checkpoints);
+        isUpdated = true;
+      }
+    }
+
+    if (isUpdated) {
+      tasksList = await tasks();
+      todayTasksList = tasksList.where((task) {
+        DateTime startTime = task.startTime;
+        return startTime.year == day.year &&
+            startTime.month == day.month &&
+            startTime.day == day.day;
+      }).toList();
+    }
     return todayTasksList;
   }
 
