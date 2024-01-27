@@ -5,12 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
-import 'package:lifebeat/models/regular_task_model.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/vars.dart';
+import '../components/horizontal_divider.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -38,18 +38,6 @@ class _SchedulePageState extends State<SchedulePage> {
     super.dispose();
   }
 
-  Widget horizontalDivider() {
-    return Expanded(
-      child: Container(
-        height: 2,
-        decoration: BoxDecoration(
-          color: AppColors.lightBlue,
-          borderRadius: BorderRadius.circular(9),
-        ),
-      ),
-    );
-  }
-
   Widget freeTimeDivider(String freeTime, Function() addTask) {
     return InkWell(
       onTap: () => addTask(),
@@ -61,7 +49,7 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
         child: Row(
           children: [
-            horizontalDivider(),
+            HorizontalDivider(),
             const SizedBox(width: 20),
             Text(freeTime,
                 style: GoogleFonts.openSans(
@@ -70,7 +58,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         color: AppColors.lightBlue,
                         fontWeight: FontWeight.w500))),
             const SizedBox(width: 20),
-            horizontalDivider(),
+            HorizontalDivider(),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/horizontal_divider.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/regular_task_funcs.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
@@ -317,10 +318,31 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
   DateTime? endTime;
 
   var timeFieldController = TextEditingController();
+  List<String> weekDaysList = [];
 
   void addRegularTask() async {
-    await DBHelper.addRegularTask('name', 'description', '00:00', '01:00',
-        weekDays: [WeekDays.mon]);
+    await DBHelper.addRegularTask(name.text, description.text, timeFieldController.text.substring(0,5), timeFieldController.text.substring(8,13),
+        weekDays: weekDaysList);
+  }
+
+  Row weekDaysButtons() {
+    return Row(
+      children: [
+        WeekDayButton(weekDay: "Пн", onActive: () => weekDaysList.add(WeekDays.mon), onUnactive: () => weekDaysList.remove(WeekDays.mon)),
+        const SizedBox(width: 10),
+        WeekDayButton(weekDay: "Вт", onActive: () => weekDaysList.add(WeekDays.tue), onUnactive: () => weekDaysList.remove(WeekDays.tue)),
+        const SizedBox(width: 10),
+        WeekDayButton(weekDay: "Cр", onActive: () => weekDaysList.add(WeekDays.wed), onUnactive: () => weekDaysList.remove(WeekDays.wed)),
+        const SizedBox(width: 10),
+        WeekDayButton(weekDay: "Чт", onActive: () => weekDaysList.add(WeekDays.thu), onUnactive: () => weekDaysList.remove(WeekDays.thu)),
+        const SizedBox(width: 10),
+        WeekDayButton(weekDay: "Пт", onActive: () => weekDaysList.add(WeekDays.fri), onUnactive: () => weekDaysList.remove(WeekDays.fri)),
+        const SizedBox(width: 10),
+        WeekDayButton(weekDay: "Сб", onActive: () => weekDaysList.add(WeekDays.sat), onUnactive: () => weekDaysList.remove(WeekDays.sat)),
+        const SizedBox(width: 10),
+        WeekDayButton(weekDay: "Вс", onActive: () => weekDaysList.add(WeekDays.sun), onUnactive: () => weekDaysList.remove(WeekDays.sun)),
+      ],
+    );
   }
 
   @override
@@ -335,9 +357,65 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
           SizedBox(height: widget.gap),
           TimeField(controller: timeFieldController,),
           SizedBox(height: widget.gap),
+          const Row(
+            children: [
+              HorizontalDivider(),
+            ],
+          ),
+          SizedBox(height: widget.gap),
+          const Text('Повторять'),
+          weekDaysButtons(),
           const Spacer(),
           buttons(context, () => addRegularTask()),
         ],
+      ),
+    );
+  }
+}
+
+class WeekDayButton extends StatefulWidget {
+  const WeekDayButton({super.key, required this.weekDay, required this.onActive, required this.onUnactive});
+
+  final String weekDay;
+  // final String value;
+  final Function() onActive;
+  final Function() onUnactive;
+
+  @override
+  State<WeekDayButton> createState() => _WeekDayButtonState();
+}
+
+class _WeekDayButtonState extends State<WeekDayButton> {
+  bool isChoosed = false;
+  Color color = AppColors.grayBlueLight;
+  @override
+  Widget build(BuildContext context) {
+    void onTap() {
+      if (!isChoosed) {
+        setState(() {
+          isChoosed = true;
+          color = AppColors.purple;
+          widget.onActive();
+        });
+      } else {
+        setState(() {
+          isChoosed = false;
+          color = AppColors.grayBlueLight;
+          widget.onUnactive();
+        });
+      }
+    }
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        height: 35,
+        width: 35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: color,
+        ),
+        child: Center(child: Text(widget.weekDay))
       ),
     );
   }
