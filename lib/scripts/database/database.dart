@@ -168,15 +168,21 @@ class DBHelper {
       CheckpointModel checkpoint, int itemId, String type) async {
     final db = await database();
     bool isGoal = type == ItemType.goal;
+    bool isTask = type == ItemType.task;
+    bool isRegularTask = type == ItemType.regularTask;
 
     await db.insert('checkpoints', checkpoint.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
 
-    late final dynamic item;
+    late dynamic item;
     if (isGoal) {
       item = await getGoalById(itemId);
-    } else {
+    }
+    if (isTask) {
       item = await getTaskById(itemId);
+    }
+    if (isRegularTask) {
+      item = await getRegularTaskById(itemId);
     }
 
     var itemCheckpoints = item.checkpoints.map((e) => e.id).toList();
@@ -197,7 +203,8 @@ class DBHelper {
             description: item.description,
             deadline: item.deadline,
             checkpoints: item.checkpoints + [checkpoint]));
-      } else {
+      }
+      if (isTask) {
         insertTask(TaskModel(
             id: itemId,
             completed: item.completed,
@@ -207,17 +214,28 @@ class DBHelper {
             endTime: item.endTime,
             checkpoints: item.checkpoints + [checkpoint]));
       }
+      if (isRegularTask) {
+        insertRegularTask(RegularTaskModel(
+            id: itemId,
+            name: item.name,
+            description: item.description,
+            startTime: item.startTime,
+            endTime: item.endTime,
+            checkpoints: item.checkpoints + [checkpoint],
+            weekDays: item.weekDays,
+            interval: item.interval));
+      }
     }
   }
 
   static Future addCheckpoint(
-      bool value, String text, int goalId, String type) async {
+      bool value, String text, int itemId, String type) async {
     final List<CheckpointModel> checkpointsList = await checkpoints();
     final int checkpointId =
         checkpointsList.isEmpty ? 0 : checkpointsList.last.id + 1;
     final CheckpointModel checkpoint =
         CheckpointModel(id: checkpointId, value: value, text: text);
-    await insertCheckpoint(checkpoint, goalId, type);
+    await insertCheckpoint(checkpoint, itemId, type);
     return 0;
   }
 
@@ -276,6 +294,11 @@ class DBHelper {
       task.checkpoints.removeWhere((element) => element.id == checkpointId);
       insertTask(task);
     }
+    if (type == ItemType.regularTask) {
+      RegularTaskModel task = await getRegularTaskById(itemId);
+      task.checkpoints.removeWhere((element) => element.id == checkpointId);
+      insertRegularTask(task);
+    }
 
     return db.delete(
       'checkpoints',
@@ -326,7 +349,7 @@ class DBHelper {
           startTime.month == day.month &&
           startTime.day == day.day;
     }).toList();
-    
+
     List<int> taskParents = [];
     for (var element in todayTasksList) {
       if (element.parent != null) {
@@ -339,9 +362,21 @@ class DBHelper {
     bool isUpdated = false;
     for (var element in todayRegularTasks) {
       if (!taskParents.contains(element.id)) {
-        var startTime = DateTime(day.year, day.month, day.day, int.parse(element.startTime.substring(0, 2)), int.parse(element.startTime.substring(3, 5)));
-        var endTime = DateTime(day.year, day.month, day.day, int.parse(element.endTime.substring(0, 2)), int.parse(element.endTime.substring(3, 5)));
-        await DBHelper.addTask(element.name, element.description, startTime, endTime, parent: element.id, checkpoints: element.checkpoints);
+        var startTime = DateTime(
+            day.year,
+            day.month,
+            day.day,
+            int.parse(element.startTime.substring(0, 2)),
+            int.parse(element.startTime.substring(3, 5)));
+        var endTime = DateTime(
+            day.year,
+            day.month,
+            day.day,
+            int.parse(element.endTime.substring(0, 2)),
+            int.parse(element.endTime.substring(3, 5)));
+        await DBHelper.addTask(
+            element.name, element.description, startTime, endTime,
+            parent: element.id, checkpoints: element.checkpoints);
         isUpdated = true;
       }
     }
@@ -415,13 +450,7 @@ class DBHelper {
   static Future<void> removeRegularTask(int id) async {}
 
   static Future<RegularTaskModel> getRegularTaskById(int id) async {
-    return RegularTaskModel(
-        id: id,
-        name: 'name',
-        description: 'description',
-        startTime: 'startTime',
-        endTime: 'endTime',
-        checkpoints: []);
+    return parseRegularTask(id);
   }
 
   static Future<List<RegularTaskModel>> regularTasks() async {

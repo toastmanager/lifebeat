@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
+import 'package:lifebeat/pages/regular_task_details.dart';
 import 'package:lifebeat/pages/settings_page.dart';
 import 'package:lifebeat/scripts/settings.dart';
 import 'package:lifebeat/scripts/vars.dart';
@@ -19,7 +20,7 @@ void main() async {
   if (Platform.isWindows | Platform.isLinux | Platform.isMacOS) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
-    
+
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
         size: Size(380, 700),
@@ -33,13 +34,12 @@ void main() async {
   }
 
   await Settings.init();
-  
+
   if (Platform.isAndroid) {
     if (Settings.dbPath != Settings.defaultDBPath) {
       await Permission.manageExternalStorage.request();
     }
   }
-
 
   runApp(const App());
 }
@@ -58,18 +58,23 @@ class App extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        initialRoute: '/new_regular_task',
+        initialRoute: '/regular_task_details',
         routes: {
           Routes.goals: (context) => const GoalsPage(),
           Routes.schedule: (context) => const SchedulePage(),
           '/new_task': (context) =>
-              MainWrapper(currentPage: '/new_task', child: NewTaskPage()),
-          '/new_regular_task': (context) =>
-              MainWrapper(currentPage: '/new_regular_task', child: NewRegularTaskPage()),
+              const MainWrapper(currentPage: '/new_task', child: NewTaskPage()),
+          '/new_regular_task': (context) => MainWrapper(
+              currentPage: '/new_regular_task', child: NewRegularTaskPage()),
           '/new_goal': (context) =>
-              MainWrapper(currentPage: '/new_goal', child: NewTaskPage()),
-          '/settings': (context) =>
-              const MainWrapper(currentPage: '/settings', child: SettingsPage()),
+              const MainWrapper(currentPage: '/new_goal', child: NewTaskPage()),
+          '/settings': (context) => const MainWrapper(
+              currentPage: '/settings', child: SettingsPage()),
+          '/regular_task_details': (context) => MainWrapper(
+                currentPage: '/regular_task_details',
+                child: RegularTaskDetailsPage(
+                    taskId: 0, updateItemComponent: () {}, updateItems: () {}),
+              )
         },
       ),
     );

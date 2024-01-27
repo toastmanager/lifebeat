@@ -69,4 +69,5 @@ abstract final class Routes {
 abstract final class ItemType {
   static const goal = 'goal';
   static const task = 'task';
+  static const regularTask = 'regular_task';
 }

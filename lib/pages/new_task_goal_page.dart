@@ -234,7 +234,7 @@ class _NewGoalPageState extends _NewItemPageState {
 }
 
 class NewTaskPage extends NewItemPage {
-  NewTaskPage({super.key, this.optionalStartTime, this.optionalEndTime});
+  const NewTaskPage({super.key, this.optionalStartTime, this.optionalEndTime});
 
   final DateTime? optionalStartTime;
   final DateTime? optionalEndTime;
@@ -320,9 +320,10 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
   var timeFieldController = TextEditingController();
   List<String> weekDaysList = [];
 
-  void addRegularTask() async {
+  void addRegularTask(BuildContext context) async {
     await DBHelper.addRegularTask(name.text, description.text, timeFieldController.text.substring(0,5), timeFieldController.text.substring(8,13),
         weekDays: weekDaysList);
+    // Navigator.pop(context);
   }
 
   Row weekDaysButtons() {
@@ -366,7 +367,7 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
           const Text('Повторять'),
           weekDaysButtons(),
           const Spacer(),
-          buttons(context, () => addRegularTask()),
+          buttons(context, () => addRegularTask(context)),
         ],
       ),
     );
