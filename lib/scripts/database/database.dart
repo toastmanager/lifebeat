@@ -450,11 +450,18 @@ class DBHelper {
   static Future<int> removeRegularTask(int id) async {
     final db = await database();
 
-    RegularTaskModel task = await getRegularTaskById(id);
-    List<int> taskCheckpointsIds = task.checkpoints.map((e) => e.id).toList();
+    RegularTaskModel regularTask = await getRegularTaskById(id);
+    List<int> taskCheckpointsIds =
+        regularTask.checkpoints.map((e) => e.id).toList();
 
     for (var i = 0; i < taskCheckpointsIds.length; i++) {
       await removeCheckpoint(taskCheckpointsIds[i], id, ItemType.task);
+    }
+
+    List<TaskModel> childrens = await regularTaskChildrens(id);
+    for (var task in childrens) {
+      task.parent = null;
+      insertTask(task);
     }
 
     return db.delete(
@@ -462,6 +469,21 @@ class DBHelper {
       where: "id = ?",
       whereArgs: [id],
     );
+  }
+
+  static Future<List<TaskModel>> regularTaskChildrens(int id) async {
+    final db = await database();
+
+    final List<Map<String, dynamic>> childrenMaps =
+        await db.query('tasks', where: "parent = ?", whereArgs: [id]);
+
+    List<TaskModel> childrens = [];
+
+    for (var children in childrenMaps) {
+      childrens.add(await parseTask(children['id'] as int));
+    }
+
+    return childrens;
   }
 
   static Future<RegularTaskModel> getRegularTaskById(int id) async {

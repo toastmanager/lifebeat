@@ -13,7 +13,7 @@ class TaskModel {
   final DateTime startTime;
   final DateTime endTime;
   List<CheckpointModel> checkpoints;
-  final int? parent;
+  int? parent;
 
   TaskModel({
     required this.id,
