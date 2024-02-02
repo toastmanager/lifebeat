@@ -323,7 +323,9 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
   void addRegularTask(BuildContext context) async {
     await DBHelper.addRegularTask(name.text, description.text, timeFieldController.text.substring(0,5), timeFieldController.text.substring(8,13),
         weekDays: weekDaysList);
-    // Navigator.pop(context);
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   Row weekDaysButtons() {
