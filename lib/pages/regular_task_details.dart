@@ -121,9 +121,7 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                           case 0:
                             await widget.removeItem();
                             await widget.updateItems();
-                            if (mounted) {
-                              Navigator.of(context).pop();
-                            }
+                            Navigator.of(context).pop();
                             break;
                         }
                       },

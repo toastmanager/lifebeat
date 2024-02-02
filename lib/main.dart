@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/pages/regular_task_details.dart';
+import 'package:lifebeat/pages/regular_tasks.dart';
 import 'package:lifebeat/pages/settings_page.dart';
 import 'package:lifebeat/scripts/settings.dart';
 import 'package:lifebeat/scripts/vars.dart';
@@ -58,7 +59,8 @@ class App extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        initialRoute: '/regular_task_details',
+        // initialRoute: Settings.initPage,
+        initialRoute: '/regular_tasks',
         routes: {
           Routes.goals: (context) => const GoalsPage(),
           Routes.schedule: (context) => const SchedulePage(),
@@ -74,7 +76,8 @@ class App extends StatelessWidget {
                 currentPage: '/regular_task_details',
                 child: RegularTaskDetailsPage(
                     taskId: 0, updateItemComponent: () {}, updateItems: () {}),
-              )
+              ),
+          '/regular_tasks': (context) => const RegularTasksPage(),
         },
       ),
     );

@@ -447,7 +447,22 @@ class DBHelper {
     return regularTask;
   }
 
-  static Future<void> removeRegularTask(int id) async {}
+  static Future<int> removeRegularTask(int id) async {
+    final db = await database();
+
+    RegularTaskModel task = await getRegularTaskById(id);
+    List<int> taskCheckpointsIds = task.checkpoints.map((e) => e.id).toList();
+
+    for (var i = 0; i < taskCheckpointsIds.length; i++) {
+      await removeCheckpoint(taskCheckpointsIds[i], id, ItemType.task);
+    }
+
+    return db.delete(
+      'regular_tasks',
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
 
   static Future<RegularTaskModel> getRegularTaskById(int id) async {
     return parseRegularTask(id);
