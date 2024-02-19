@@ -59,8 +59,7 @@ class App extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        // initialRoute: Settings.initPage,
-        initialRoute: '/regular_tasks',
+        initialRoute: Settings.initPage,
         routes: {
           Routes.goals: (context) => const GoalsPage(),
           Routes.schedule: (context) => const SchedulePage(),
@@ -70,14 +69,14 @@ class App extends StatelessWidget {
               currentPage: '/new_regular_task', child: NewRegularTaskPage()),
           '/new_goal': (context) =>
               const MainWrapper(currentPage: '/new_goal', child: NewTaskPage()),
-          '/settings': (context) => const MainWrapper(
-              currentPage: '/settings', child: SettingsPage()),
+          Routes.settings: (context) => const MainWrapper(
+              currentPage: Routes.settings, child: SettingsPage()),
           '/regular_task_details': (context) => MainWrapper(
                 currentPage: '/regular_task_details',
                 child: RegularTaskDetailsPage(
                     taskId: 0, updateItemComponent: () {}, updateItems: () {}),
               ),
-          '/regular_tasks': (context) => const RegularTasksPage(),
+          Routes.regularTasks: (context) => const RegularTasksPage(),
         },
       ),
     );
