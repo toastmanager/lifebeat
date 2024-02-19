@@ -41,12 +41,13 @@ class _NavbarState extends State<Navbar> {
           ),
           const SizedBox(width: 10),
           IconButton(
-            onPressed: () {
-              if (widget.currentPage != Routes.goals) {
-                Navigator.pushNamed(context, Routes.goals);
-              }
-            },
+            onPressed: () => Navigator.pushNamed(context, Routes.goals),
             icon: const Icon(Icons.flag_rounded),
+          ),
+          const SizedBox(width: 10),
+          IconButton(
+            onPressed: () => Navigator.of(context).pushNamed(Routes.regularTasks),
+            icon: const Icon(Icons.emoji_events_rounded),
           ),
           const SizedBox(width: 10),
           IconButton(

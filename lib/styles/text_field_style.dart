@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-InputDecoration textFieldDecoration(String labelText) {
+InputDecoration textFieldDecoration(String labelText, {String? helperText, String? hintText}) {
   return InputDecoration(
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      labelText: labelText);
+      labelText: labelText,
+      helperText: helperText,
+      hintText: hintText,
+  );
 }

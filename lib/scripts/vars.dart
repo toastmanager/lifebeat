@@ -64,9 +64,11 @@ abstract final class Routes {
   static const goals = '/goals';
   static const schedule = '/schedule';
   static const settings = '/settings';
+  static const regularTasks = '/regular_tasks';
 }
 
 abstract final class ItemType {
   static const goal = 'goal';
   static const task = 'task';
+  static const regularTask = 'regular_task';
 }
