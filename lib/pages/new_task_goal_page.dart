@@ -3,13 +3,7 @@ import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
-InputDecoration decoration(String labelText) {
-  return InputDecoration(
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      labelText: labelText);
-}
+import '../styles/text_field_style.dart';
 
 class NewItemPage extends StatefulWidget {
   NewItemPage({super.key, this.gap = 20});
@@ -76,9 +70,9 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
   Column defaultInputs(double gap) {
     return Column(
       children: [
-        TextField(controller: name, decoration: decoration('Название')),
+        TextField(controller: name, decoration: textFieldDecoration('Название')),
         SizedBox(height: gap),
-        TextField(controller: description, decoration: decoration('Описание')),
+        TextField(controller: description, decoration: textFieldDecoration('Описание')),
       ],
     );
   }
@@ -133,7 +127,7 @@ class _DateFieldState extends State<DateField> {
     date = widget.initDate ?? DateTime.now();
     var dateController = TextEditingController(text: readableDate(date));
     return TextField(
-      decoration: decoration(widget.labelText),
+      decoration: textFieldDecoration(widget.labelText),
       readOnly: true,
       onTap: () async {
         date = await selectDate(context, date);
@@ -178,7 +172,7 @@ class _DateTimeFieldState extends State<DateTimeField> {
       dateController = widget.controller!;
     }
     return TextField(
-      decoration: decoration(widget.labelText),
+      decoration: textFieldDecoration(widget.labelText),
       readOnly: true,
       onTap: () async {
         date = await taskDatePicker(context, date, (date) {}) ?? date;

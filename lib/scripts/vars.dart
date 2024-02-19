@@ -63,6 +63,7 @@ abstract final class AppTexts {
 abstract final class Routes {
   static const goals = '/goals';
   static const schedule = '/schedule';
+  static const settings = '/settings';
 }
 
 abstract final class ItemType {

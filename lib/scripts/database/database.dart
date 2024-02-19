@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:lifebeat/scripts/settings.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/models/task_model.dart';
@@ -18,10 +18,8 @@ class DBHelper {
   }
 
   static Future<Database> database() async {
-    final path = join(await getDatabasesPath(), 'database.db');
-
     return openDatabase(
-      path,
+      Settings.dbPath,
       version: 1,
       onCreate: (db, version) => createDB(db, version),
     );

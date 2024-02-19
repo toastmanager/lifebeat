@@ -12,7 +12,7 @@ class ItemDescription extends StatelessWidget {
       children: [
         if (description.isNotEmpty) const SizedBox(height: 20),
         if (description.isNotEmpty)
-          Text(
+          SelectableText(
             description,
             style: AppTexts.body,
           ),
