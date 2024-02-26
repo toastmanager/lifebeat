@@ -21,7 +21,7 @@ class App extends StatelessWidget {
             background: Color(0xFF1A1A1A),
             onBackground: Color(0xFFDADDE5),
             onSurface: Color(0xFFDADDE5),
-            onSurfaceVariant: Color(0xFF919599),
+            onSurfaceVariant: Color(0xFF797C80),
             surface: Color(0xFF262626),
             primary: Color(0xFF8D33FF),
             onPrimary: Color(0xFFDADDE5),

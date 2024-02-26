@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/utils/vars.dart';
 
 class HorizontalDivider extends StatelessWidget {
   const HorizontalDivider({super.key});
@@ -8,10 +7,10 @@ class HorizontalDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        height: 2,
+        height: 3,
         decoration: BoxDecoration(
-          color: AppColors.lightBlue,
-          borderRadius: BorderRadius.circular(9),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

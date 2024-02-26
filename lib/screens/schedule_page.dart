@@ -48,7 +48,13 @@ class _SchedulePageState extends State<SchedulePage> {
           children: [
             const HorizontalDivider(),
             const SizedBox(width: 20),
-            Text(freeTime),
+            Text(
+              freeTime,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(width: 20),
             const HorizontalDivider(),
           ],
@@ -185,12 +191,14 @@ class _SchedulePageState extends State<SchedulePage> {
                                 freeTimeDivider(freeTimeText, () {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
-                                        builder: (context) => NewTaskPage(
-                                              optionalStartTime:
-                                                  tasksList[index - 1]
-                                                      .endTime,
-                                              optionalEndTime: task.startTime,
-                                            )),
+                                        builder: (context) => Scaffold(
+                                          body: NewTaskPage(
+                                                optionalStartTime:
+                                                    tasksList[index - 1]
+                                                        .endTime,
+                                                optionalEndTime: task.startTime,
+                                              ),
+                                        )),
                                       )
                                       .then((value) => updateTasks());
                                 })
