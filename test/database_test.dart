@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/models/regular_task_model.dart';
-import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/regular_task_funcs.dart';
-import 'package:lifebeat/scripts/settings.dart';
+import 'package:lifebeat/utils/database/database.dart';
+import 'package:lifebeat/utils/regular_task_funcs.dart';
+import 'package:lifebeat/utils/settings.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';

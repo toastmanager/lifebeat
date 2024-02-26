@@ -1,10 +1,7 @@
 abstract final class TextValue {
-  // Template
-  // static const  = '';
-
+  // General
   static const cancel = 'Отмена';
   static const continueText = 'Продолжить';
-
 
   // Schedule
   static const scheduleHeading = 'Расписание';

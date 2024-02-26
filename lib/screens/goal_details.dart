@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
-import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/text.dart';
-import 'package:lifebeat/scripts/vars.dart';
+import 'package:lifebeat/utils/database/database.dart';
+import 'package:lifebeat/utils/text_values.dart';
+import 'package:lifebeat/utils/vars.dart';
 import 'package:lifebeat/models/goal_model.dart';
 
 class DetailsButton extends StatelessWidget {
@@ -323,6 +323,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
               ),
               const SizedBox(height: 20),
               Row(
+                
                 children: [
                   DetailsButton(
                     child: const Icon(

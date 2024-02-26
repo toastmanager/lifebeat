@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/horizontal_divider.dart';
-import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/regular_task_funcs.dart';
-import 'package:lifebeat/scripts/task_funcs.dart';
-import 'package:lifebeat/scripts/text.dart';
-import 'package:lifebeat/scripts/vars.dart';
+import 'package:lifebeat/utils/database/database.dart';
+import 'package:lifebeat/utils/regular_task_funcs.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
+import 'package:lifebeat/utils/text_values.dart';
+import 'package:lifebeat/utils/vars.dart';
 
 import '../styles/text_field_style.dart';
 

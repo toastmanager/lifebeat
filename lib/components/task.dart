@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/task_model.dart';
-import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/task_funcs.dart';
-import 'package:lifebeat/scripts/vars.dart';
-import 'package:lifebeat/pages/task_details.dart';
+import 'package:lifebeat/utils/database/database.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
+import 'package:lifebeat/utils/vars.dart';
+import 'package:lifebeat/screens/task_details.dart';
 
 class Task extends StatefulWidget {
   const Task({super.key, required this.taskId, required this.updateItems});
@@ -50,7 +50,7 @@ class _TaskState extends State<Task> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: AppColors.grayBlueLight,
+                  color: Theme.of(context).colorScheme.surface,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(11.0),
@@ -69,6 +69,7 @@ class _TaskState extends State<Task> {
                           children: [
                             Text(
                               name,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             ),
                             const SizedBox(height: 5),
                             Row(

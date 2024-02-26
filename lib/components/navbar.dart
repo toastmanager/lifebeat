@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/scripts/vars.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({
     super.key,
-    required this.currentPage,
+    required this.currentIndex,
+    required this.onTap,
   });
 
-  final String currentPage;
+  final int currentIndex;
+  final Function(int) onTap;
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -17,42 +18,44 @@ class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 52,
-      clipBehavior: Clip.antiAlias,
-      decoration: const ShapeDecoration(
-        color: Color(0xFF232D33),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-          ),
-        ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        )
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            onPressed: () {
-              if (widget.currentPage != Routes.schedule) {
-                Navigator.pushNamed(context, Routes.schedule);
-              }
-            },
-            icon: const Icon(Icons.calendar_today_rounded),
+      child: BottomNavigationBar(
+        iconSize: 24,
+        elevation: 0,
+        currentIndex: widget.currentIndex,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.transparent,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedItemColor: Theme.of(context).colorScheme.onSurface,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        onTap: (value) => widget.onTap(value),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_rounded),
+            label: 'Schedule'
           ),
-          const SizedBox(width: 10),
-          IconButton(
-            onPressed: () => Navigator.pushNamed(context, Routes.goals),
-            icon: const Icon(Icons.flag_rounded),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.flag_rounded),
+            label: 'Goals',
           ),
-          const SizedBox(width: 10),
-          IconButton(
-            onPressed: () => Navigator.of(context).pushNamed(Routes.regularTasks),
-            icon: const Icon(Icons.emoji_events_rounded),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.emoji_events_rounded),
+            label: 'Regular Tasks',
           ),
-          const SizedBox(width: 10),
-          IconButton(
-            onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
-            icon: const Icon(Icons.settings_rounded),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_rounded),
+            label: 'Statistics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_rounded),
+            label: 'Settings',
           ),
         ],
       ),

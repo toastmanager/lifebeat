@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/models/regular_task_model.dart';
-import 'package:lifebeat/pages/regular_task_details.dart';
-import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/vars.dart';
+import 'package:lifebeat/screens/regular_task_details.dart';
+import 'package:lifebeat/utils/database/database.dart';
+import 'package:lifebeat/utils/vars.dart';
 
 class RegularTask extends StatefulWidget {
   const RegularTask({super.key, required this.taskId, required this.updateItems});
@@ -46,7 +46,7 @@ class _RegularTaskState extends State<RegularTask> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: AppColors.grayBlueLight,
+                  color: Theme.of(context).colorScheme.surface,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(11.0),

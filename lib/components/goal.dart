@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/goal_model.dart';
-import 'package:lifebeat/scripts/vars.dart';
-import 'package:lifebeat/pages/goal_details.dart';
+import 'package:lifebeat/utils/vars.dart';
+import 'package:lifebeat/screens/goal_details.dart';
 
 class Goal extends StatefulWidget {
   Goal({super.key, required this.model, required this.updateGoals});
@@ -33,17 +33,19 @@ class _GoalState extends State<Goal> {
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => GoalDetailsPage(
-                      model: widget.model,
-                      updateGoalComponent: updateGoalComponent,
-                      updateGoals: widget.updateGoals,
-                    )))
+                builder: (context) => Scaffold(
+                  body: GoalDetailsPage(
+                        model: widget.model,
+                        updateGoalComponent: updateGoalComponent,
+                        updateGoals: widget.updateGoals,
+                      ),
+                )))
             .then((value) => setState(() {}));
       },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: AppColors.grayBlueLight,
+          color: Theme.of(context).colorScheme.surface,
         ),
         child: Padding(
           padding: const EdgeInsets.all(11.0),
@@ -61,6 +63,7 @@ class _GoalState extends State<Goal> {
                   children: [
                     Text(
                       name,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 5),
                     Row(

@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/pages/main_wrapper.dart';
-import 'package:lifebeat/pages/new_task_goal_page.dart';
-import 'package:lifebeat/pages/regular_task_details.dart';
-import 'package:lifebeat/pages/regular_tasks.dart';
-import 'package:lifebeat/pages/settings_page.dart';
-import 'package:lifebeat/scripts/settings.dart';
-import 'package:lifebeat/scripts/vars.dart';
-import 'package:lifebeat/pages/goals_page.dart';
-import 'package:lifebeat/pages/schedule_page.dart';
+import 'package:lifebeat/screens/main_wrapper.dart';
+import 'package:lifebeat/styles/text_styles.dart';
 
 
 class App extends StatelessWidget {
@@ -24,39 +17,30 @@ class App extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
           fontFamily: 'Manrope',
+          colorScheme: const ColorScheme.dark(
+            background: Color(0xFF1A1A1A),
+            onBackground: Color(0xFFDADDE5),
+            onSurface: Color(0xFFDADDE5),
+            onSurfaceVariant: Color(0xFF919599),
+            surface: Color(0xFF262626),
+            primary: Color(0xFF8D33FF),
+            onPrimary: Color(0xFFDADDE5),
+          ),
           textTheme: const TextTheme(
-            // Heading Text
-            bodyLarge: TextStyle(
-              color: AppColors.white,
+            headlineMedium: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: AppTexts.headingSize,
             ),
-            // Regular Text
+            headlineSmall: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: AppTexts.bodySize,
+            ),
             bodyMedium: TextStyle(
-              color: AppColors.white,
-              fontSize: 16,
+              fontSize: AppTexts.bodySize,
             )
           ),
         ),
-        initialRoute: Settings.initPage,
-        routes: {
-          Routes.goals: (context) => const GoalsPage(),
-          Routes.schedule: (context) => const SchedulePage(),
-          '/new_task': (context) =>
-              const MainWrapper(currentPage: '/new_task', child: NewTaskPage()),
-          '/new_regular_task': (context) => MainWrapper(
-              currentPage: '/new_regular_task', child: NewRegularTaskPage()),
-          '/new_goal': (context) =>
-              const MainWrapper(currentPage: '/new_goal', child: NewTaskPage()),
-          Routes.settings: (context) => const MainWrapper(
-              currentPage: Routes.settings, child: SettingsPage()),
-          '/regular_task_details': (context) => MainWrapper(
-                currentPage: '/regular_task_details',
-                child: RegularTaskDetailsPage(
-                    taskId: 0, updateItemComponent: () {}, updateItems: () {}),
-              ),
-          Routes.regularTasks: (context) => const RegularTasksPage(),
-        },
+        home: const MainWrapper(),
       ),
     );
   }

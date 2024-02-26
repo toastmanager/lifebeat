@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:lifebeat/scripts/settings.dart';
-import 'package:lifebeat/scripts/text.dart';
+import 'package:lifebeat/utils/settings.dart';
+import 'package:lifebeat/utils/text_values.dart';
 import 'package:lifebeat/styles/text_field_style.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';

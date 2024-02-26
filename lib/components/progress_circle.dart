@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/scripts/vars.dart';
 
 class ProgressCircle extends StatefulWidget {
   const ProgressCircle({
@@ -20,6 +19,7 @@ class _ProgressCircleState extends State<ProgressCircle> {
   Widget build(BuildContext context) {
     Widget child = Text(
       '${widget.progress.toInt()}%',
+      style: Theme.of(context).textTheme.headlineSmall,
     );
 
     double turns = 0;
@@ -45,8 +45,8 @@ class _ProgressCircleState extends State<ProgressCircle> {
                 duration: const Duration(milliseconds: 200),
                 builder: (context, value, _) {
                   return CircularProgressIndicator(
-                    backgroundColor: AppColors.purpleDark,
-                    color: AppColors.purple,
+                    backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(170),
+                    color: Theme.of(context).colorScheme.primary,
                     strokeAlign: 2.5,
                     strokeWidth: 5,
                     value: value,

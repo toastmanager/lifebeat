@@ -2,16 +2,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
-
+import 'package:lifebeat/components/horizontal_divider.dart';
 import 'package:lifebeat/components/item_description.dart';
-import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
-import 'package:lifebeat/models/task_model.dart';
-import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/task_funcs.dart';
-import 'package:lifebeat/scripts/text.dart';
-import 'package:lifebeat/scripts/vars.dart';
+import 'package:lifebeat/models/regular_task_model.dart';
+import 'package:lifebeat/utils/database/database.dart';
+import 'package:lifebeat/utils/vars.dart';
 
 class DetailsButton extends StatelessWidget {
   DetailsButton({
@@ -45,8 +41,8 @@ class DetailsButton extends StatelessWidget {
   }
 }
 
-class TaskDetailsPage extends StatefulWidget {
-  const TaskDetailsPage({
+class RegularTaskDetailsPage extends StatefulWidget {
+  const RegularTaskDetailsPage({
     super.key,
     required this.taskId,
     required this.updateItemComponent,
@@ -56,168 +52,27 @@ class TaskDetailsPage extends StatefulWidget {
   final int taskId;
   final Function() updateItemComponent;
   final Function() updateItems;
-  Future<int> removeItem() => DBHelper.removeTask(taskId);
+  Future removeItem() => DBHelper.removeRegularTask(taskId);
 
   @override
-  State<TaskDetailsPage> createState() => _TaskDetailsPageState();
+  State<RegularTaskDetailsPage> createState() => _RegularTaskDetailsPageState();
 }
 
-class _TaskDetailsPageState extends State<TaskDetailsPage> {
+class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
   bool isEditMode = false;
-  late Timer _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    if (mounted) {
-      _timer = Timer.periodic(
-          const Duration(minutes: 1), (timer) => setState(() {}));
-    }
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: DBHelper.getTaskById(widget.taskId),
+        future: DBHelper.getRegularTaskById(widget.taskId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            TaskModel model = snapshot.data!;
+            RegularTaskModel model = snapshot.data!;
             String name = model.name;
             String description = model.description;
-            double progress = model.progress;
-            String timeLeft = model.timeLeft;
-            DateTime startTime = model.startTime;
-            DateTime endTime = model.endTime;
+            String startTime = model.startTime;
+            String endTime = model.endTime;
             List<CheckpointModel> checkpointsList = model.checkpoints;
-
-            Future<void> editTaskMenu(
-              BuildContext context,
-            ) {
-              DateTime startTime = model.startTime;
-              DateTime endTime = model.endTime;
-              String startTimeText = readableDateTime(startTime);
-              String endTimeText = readableDateTime(endTime);
-              TextEditingController name =
-                  TextEditingController(text: model.name);
-              TextEditingController description =
-                  TextEditingController(text: model.description);
-
-              Future<DateTime?> taskDatePicker(
-                      DateTime initialTime, Function(DateTime) action) =>
-                  DatePicker.showDateTimePicker(context,
-                      minTime: DateTime(2015, 8),
-                      maxTime: DateTime(2101),
-                      currentTime: initialTime,
-                      locale: LocaleType.ru,
-                      onConfirm: (date) => action(date));
-
-              return showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      backgroundColor: AppColors.grayBlueDark,
-                      content: StatefulBuilder(builder:
-                          (BuildContext context, StateSetter setLocalState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Изменить задачу',
-                            ),
-                            const SizedBox(height: 20),
-                            Flexible(
-                                child: TextField(
-                              controller: name,
-                              decoration: const InputDecoration(
-                                  hintText: TextValue.name,
-                                  border: OutlineInputBorder()),
-                            )),
-                            const SizedBox(height: 20),
-                            TextField(
-                              controller: description,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                  hintText: TextValue.description,
-                                  border: OutlineInputBorder()),
-                            ),
-                            const SizedBox(height: 20),
-                            Flexible(
-                              child: InkWell(
-                                onTap: () async {
-                                  await taskDatePicker(
-                                      startTime,
-                                      (DateTime date) => setLocalState(() {
-                                            Duration difference =
-                                                endTime.difference(startTime);
-                                            startTime = date;
-                                            startTimeText =
-                                                readableDateTime(startTime);
-                                            // if (difference.inMinutes)
-                                            endTime = startTime.add(difference);
-                                            endTimeText =
-                                                readableDateTime(endTime);
-                                          }));
-                                },
-                                child: Text(startTimeText),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Flexible(
-                              child: InkWell(
-                                onTap: () async {
-                                  await taskDatePicker(
-                                      endTime,
-                                      (date) => setLocalState(() {
-                                            endTime = date;
-                                            endTimeText =
-                                                readableDateTime(endTime);
-                                          }));
-                                },
-                                child: Text(endTimeText),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('Назад')),
-                                ElevatedButton(
-                                    onPressed: () async {
-                                      TaskModel newModel = TaskModel(
-                                          id: model.id,
-                                          completed: model.completed,
-                                          name: name.text,
-                                          description: description.text,
-                                          startTime: startTime,
-                                          endTime: endTime,
-                                          checkpoints: model.checkpoints);
-                                      await DBHelper.insertTask(newModel);
-                                      setState(() {});
-                                      if (mounted) {
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                    child: const Text('Продолжить')),
-                              ],
-                            ),
-                          ],
-                        );
-                      }));
-                },
-              );
-            }
 
             void switchEditMode() {
               setState(() {
@@ -235,7 +90,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     .indexWhere((element) => element.id == checkpointId));
               });
               await DBHelper.removeCheckpoint(
-                  checkpointId, model.id, ItemType.task);
+                  checkpointId, model.id, ItemType.regularTask);
             }
 
             Row itemHeading(context) {
@@ -266,12 +121,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           case 0:
                             await widget.removeItem();
                             await widget.updateItems();
-                            if (mounted) {
-                              Navigator.of(context).pop();
-                            }
+                            Navigator.of(context).pop();
                             break;
-                          case 1:
-                            editTaskMenu(context);
                         }
                       },
                       itemBuilder: (context) => [
@@ -290,17 +141,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                 children: [
                   Row(
                     children: [
-                      ProgressCircle(progress: progress),
-                      const SizedBox(width: 10),
-                      const Icon(
-                        Icons.timer_rounded,
-                        color: AppColors.white,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        timeLeft,
-                      ),
                       const SizedBox(width: 10),
                       const Icon(
                         Icons.calendar_month_rounded,
@@ -309,22 +149,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        '${readableTime(startTime.hour, startTime.minute)} - ${readableTime(endTime.hour, endTime.minute)}',
+                        '$startTime - $endTime',
                       ),
                     ],
                   ),
                   ItemDescription(description: description)
                 ],
-              );
-            }
-
-            Container horizontalDivider() {
-              return Container(
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.grayBlueLight,
-                  borderRadius: BorderRadius.circular(9),
-                ),
               );
             }
 
@@ -368,9 +198,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                                     false,
                                     newCheckpointname.text,
                                     widget.taskId,
-                                    ItemType.task);
+                                    ItemType.regularTask);
                                 model =
-                                    await DBHelper.getTaskById(widget.taskId);
+                                    await DBHelper.getRegularTaskById(widget.taskId);
                                 setState(() {});
                                 widget.updateItemComponent();
                                 if (mounted) {
@@ -428,8 +258,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         checkpoint.value =
                             checkpoint.value == true ? false : true;
                         DBHelper.insertCheckpoint(
-                            checkpoint, widget.taskId, ItemType.task);
-                        model.progress = model.getProgress();
+                            checkpoint, widget.taskId, ItemType.regularTask);
                       });
                     },
                   ),
@@ -472,7 +301,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     checkpointsList.insert(newIndex, item);
                   });
                   model.checkpoints = checkpointsList;
-                  await DBHelper.insertTask(model);
+                  await DBHelper.insertRegularTask(model);
                 },
                 children: [
                   if (isEditMode)
@@ -503,7 +332,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         const SizedBox(height: 20),
                         itemInfo(),
                         const SizedBox(height: 20),
-                        horizontalDivider(),
+                        const HorizontalDivider(),
                         const SizedBox(height: 20),
                         itemActions(),
                         const SizedBox(height: 20),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
-import 'package:lifebeat/scripts/database/database.dart';
-import 'package:lifebeat/scripts/task_funcs.dart';
-import 'package:lifebeat/scripts/text.dart';
-import 'package:lifebeat/scripts/vars.dart';
+import 'package:lifebeat/utils/database/database.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
+import 'package:lifebeat/utils/text_values.dart';
+import 'package:lifebeat/utils/vars.dart';
 
 Future<void> newItemMenu(BuildContext context, DateTime currentDay,
     {DateTime? optionalStartTime, DateTime? optionalEndTime}) {

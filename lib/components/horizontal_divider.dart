@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/scripts/vars.dart';
+import 'package:lifebeat/utils/vars.dart';
 
 class HorizontalDivider extends StatelessWidget {
   const HorizontalDivider({super.key});

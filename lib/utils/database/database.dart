@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:lifebeat/models/regular_task_model.dart';
-import 'package:lifebeat/scripts/regular_task_funcs.dart';
-import 'package:lifebeat/scripts/settings.dart';
-import 'package:lifebeat/scripts/vars.dart';
+import 'package:lifebeat/utils/regular_task_funcs.dart';
+import 'package:lifebeat/utils/settings.dart';
+import 'package:lifebeat/utils/vars.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
