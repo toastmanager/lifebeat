@@ -365,11 +365,7 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
           SizedBox(height: widget.gap),
           TimeField(controller: timeFieldController,),
           SizedBox(height: widget.gap),
-          const Row(
-            children: [
-              HorizontalDivider(),
-            ],
-          ),
+          const HorizontalDividerVariant(),
           SizedBox(height: widget.gap),
           const Text('Повторять'),
           weekDaysButtons(),

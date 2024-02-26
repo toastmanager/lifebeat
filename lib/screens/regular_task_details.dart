@@ -332,7 +332,7 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                         const SizedBox(height: 20),
                         itemInfo(),
                         const SizedBox(height: 20),
-                        const HorizontalDivider(),
+                        const HorizontalDividerVariant(),
                         const SizedBox(height: 20),
                         itemActions(),
                         const SizedBox(height: 20),

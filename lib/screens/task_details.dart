@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:lifebeat/components/horizontal_divider.dart';
 
 import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
@@ -18,16 +19,18 @@ class DetailsButton extends StatelessWidget {
     super.key,
     required this.child,
     required this.action,
-    this.color = AppColors.grayBlueLight,
+    this.color,
   });
 
   final Widget child;
   final Function() action;
   final BorderRadius buttonBorderRadius = BorderRadius.circular(8);
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final Color finalColor = color
+      ?? Theme.of(context).colorScheme.surface;
     return Flexible(
       fit: FlexFit.tight,
       child: InkWell(
@@ -35,7 +38,7 @@ class DetailsButton extends StatelessWidget {
         borderRadius: buttonBorderRadius,
         child: Container(
             decoration: BoxDecoration(
-              color: color,
+              color: finalColor,
               borderRadius: buttonBorderRadius,
             ),
             height: 40,
@@ -318,16 +321,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             }
 
-            Container horizontalDivider() {
-              return Container(
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.grayBlueLight,
-                  borderRadius: BorderRadius.circular(9),
-                ),
-              );
-            }
-
             Future<void> newCheckpointMenu(BuildContext checkpointMenuContext) {
               TextEditingController newCheckpointname = TextEditingController();
 
@@ -394,17 +387,15 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     DetailsButton(
                       child: const Icon(
                         Icons.edit_rounded,
-                        color: AppColors.white,
                         size: 16,
                       ),
                       action: () => switchEditMode(),
                     ),
                   if (isEditMode)
                     DetailsButton(
-                      color: AppColors.accentBlue,
+                      color: Theme.of(context).colorScheme.primary,
                       child: const Icon(
                         Icons.edit_rounded,
-                        color: AppColors.white,
                         size: 16,
                       ),
                       action: () => switchEditMode(),
@@ -488,29 +479,23 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               ));
             }
 
-            return Container(
-              decoration: const BoxDecoration(
-                gradient: AppColors.backgroundGradient,
-              ),
-              child: Scaffold(
-                backgroundColor: Colors.transparent,
-                body: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        itemHeading(context),
-                        const SizedBox(height: 20),
-                        itemInfo(),
-                        const SizedBox(height: 20),
-                        horizontalDivider(),
-                        const SizedBox(height: 20),
-                        itemActions(),
-                        const SizedBox(height: 20),
-                        checkpointsListWidget(),
-                      ],
-                    )),
-              ),
+            return Scaffold(
+              body: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      itemHeading(context),
+                      const SizedBox(height: 20),
+                      itemInfo(),
+                      const SizedBox(height: 20),
+                      const HorizontalDivider(),
+                      const SizedBox(height: 20),
+                      itemActions(),
+                      const SizedBox(height: 20),
+                      checkpointsListWidget(),
+                    ],
+                  )),
             );
           } else {
             return Container();

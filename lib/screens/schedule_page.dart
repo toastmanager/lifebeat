@@ -46,7 +46,7 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
         child: Row(
           children: [
-            const HorizontalDivider(),
+            const Expanded(child: HorizontalDividerVariant()),
             const SizedBox(width: 20),
             Text(
               freeTime,
@@ -56,7 +56,7 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
             ),
             const SizedBox(width: 20),
-            const HorizontalDivider(),
+            const Expanded(child: HorizontalDividerVariant()),
           ],
         ),
       ),
