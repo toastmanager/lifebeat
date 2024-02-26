@@ -169,7 +169,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    const Text(
                       TextValue.changeGoal,
                     ),
                     const SizedBox(height: 20),
@@ -220,7 +220,9 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                               setState(() {
                                 widget.model = newGoal;
                               });
-                              Navigator.of(context).pop();
+                              if (mounted) {
+                                Navigator.of(context).pop();
+                              }
                             },
                             child: const Text('Продолжить')),
                       ],
@@ -276,6 +278,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                             break;
                           case 1:
                             editGoalMenu(context);
+                            break;
                         }
                       },
                       itemBuilder: (context) => [
@@ -363,7 +366,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Новый чекпоинт'),
+              const Text('Новый чекпоинт'),
               const SizedBox(
                 height: 20,
               ),

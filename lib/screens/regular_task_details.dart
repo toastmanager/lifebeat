@@ -170,7 +170,7 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Новый чекпоинт'),
+                        const Text('Новый чекпоинт'),
                         const SizedBox(
                           height: 20,
                         ),

@@ -35,7 +35,7 @@ Future<void> newItemMenu(BuildContext context, DateTime currentDay,
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   TextValue.newTaskHeading,
                 ),
                 const SizedBox(height: 20),

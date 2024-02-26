@@ -22,7 +22,7 @@ class _RegularTasksPageState extends State<RegularTasksPage> {
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(
-                  builder: (context) => Scaffold(body: NewRegularTaskPage())),
+                  builder: (context) => const Scaffold(body: NewRegularTaskPage())),
                 )
                 .then((value) => setState(() {}));
           },

@@ -23,7 +23,7 @@ class _GoalsPageState extends State<GoalsPage> {
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(
-                  builder: (context) => Scaffold(body: NewGoalPage())),
+                  builder: (context) => const Scaffold(body: NewGoalPage())),
                 )
                 .then((value) => setState(() {}));
           },

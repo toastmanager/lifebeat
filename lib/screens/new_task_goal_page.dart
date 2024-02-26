@@ -193,7 +193,7 @@ class _DateTimeFieldState extends State<DateTimeField> {
 }
 
 class NewGoalPage extends NewItemPage {
-  NewGoalPage({super.key});
+  const NewGoalPage({super.key});
 
   @override
   State<NewItemPage> createState() => _NewGoalPageState();
@@ -226,7 +226,9 @@ class _NewGoalPageState extends _NewItemPageState {
               description.text,
               deadline,
             );
-            Navigator.of(context).pop();
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
           })
         ],
       ),
@@ -296,7 +298,9 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
               startTime!,
               endTime!,
             );
-            Navigator.of(context).pop();
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
           })
         ],
       ),
@@ -305,7 +309,7 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
 }
 
 class NewRegularTaskPage extends NewItemPage {
-  NewRegularTaskPage({super.key, this.optionalStartTime, this.optionalEndTime});
+  const NewRegularTaskPage({super.key, this.optionalStartTime, this.optionalEndTime});
 
   final DateTime? optionalStartTime;
   final DateTime? optionalEndTime;

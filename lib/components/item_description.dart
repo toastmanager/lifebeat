@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/utils/vars.dart';
 
 class ItemDescription extends StatelessWidget {
   const ItemDescription({super.key, required this.description});

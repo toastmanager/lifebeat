@@ -129,7 +129,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
+                            const Text(
                               'Изменить задачу',
                             ),
                             const SizedBox(height: 20),
@@ -340,7 +340,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Новый чекпоинт'),
+                        const Text('Новый чекпоинт'),
                         const SizedBox(
                           height: 20,
                         ),

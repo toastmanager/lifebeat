@@ -30,12 +30,11 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () async {
               if (Platform.isAndroid) {
                 var permission = Permission.manageExternalStorage;
-                if (permission.status != PermissionStatus.granted) {
+                if (await permission.status != PermissionStatus.granted) {
                   await permission.request();
                 }
               }
               String? newDBPath = await FilePicker.platform.getDirectoryPath();
-              print(newDBPath);
               dbPath =
                   newDBPath == null ? dbPath : join(newDBPath, 'database.db');
               await Settings.setDBPath(dbPath);
