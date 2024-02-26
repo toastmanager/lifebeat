@@ -3,6 +3,7 @@ import 'package:lifebeat/components/horizontal_divider.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/regular_task_funcs.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
+import 'package:lifebeat/scripts/text.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 import '../styles/text_field_style.dart';
@@ -42,7 +43,7 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
         Expanded(
             child: NewItemButton(
           action: () => Navigator.pop(context),
-          text: 'Отмена',
+          text: TextValue.cancel,
         )),
         const SizedBox(
           width: 10,
@@ -50,7 +51,7 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
         Expanded(
             child: NewItemButton(
           action: createAction,
-          text: 'Создать',
+          text: TextValue.continueText,
           backgroundColor: AppColors.purple,
         )),
       ],
@@ -64,7 +65,7 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_ios_rounded)),
         const SizedBox(width: 10,),
-        Expanded(child: Text(text, style: AppTexts.headingBold)),
+        Expanded(child: Text(text)),
       ],
     );
   }
@@ -73,11 +74,11 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
     return Column(
       children: [
         TextField(
-            controller: name, decoration: textFieldDecoration('Название')),
+            controller: name, decoration: textFieldDecoration(TextValue.name)),
         SizedBox(height: gap),
         TextField(
             controller: description,
-            decoration: textFieldDecoration('Описание')),
+            decoration: textFieldDecoration(TextValue.description)),
       ],
     );
   }
@@ -260,7 +261,7 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          heading(context, 'Новая задача'),
+          heading(context, TextValue.newTaskHeading),
           SizedBox(height: gap),
           defaultInputs(gap),
           SizedBox(height: gap),
@@ -272,7 +273,7 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
               setState(() {});
             },
             controller: startTimeController,
-            labelText: 'Начало',
+            labelText: TextValue.newTaskStart,
             initDate: startTime,
             date: startTime,
           ),
@@ -282,7 +283,7 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
               endTime = date;
               setState(() {});
             },
-            labelText: 'Конец',
+            labelText: TextValue.newTaskEnd,
             initDate: endTime,
             date: endTime,
             controller: endTimeController,
@@ -331,19 +332,19 @@ class _NewRegularTaskPageState extends _NewItemPageState<NewRegularTaskPage> {
   Row weekDaysButtons() {
     return Row(
       children: [
-        WeekDayButton(weekDay: "Пн", onActive: () => weekDaysList.add(WeekDays.mon), onUnactive: () => weekDaysList.remove(WeekDays.mon)),
+        WeekDayButton(weekDay: TextValue.mondayShort, onActive: () => weekDaysList.add(WeekDays.mon), onUnactive: () => weekDaysList.remove(WeekDays.mon)),
         const SizedBox(width: 10),
-        WeekDayButton(weekDay: "Вт", onActive: () => weekDaysList.add(WeekDays.tue), onUnactive: () => weekDaysList.remove(WeekDays.tue)),
+        WeekDayButton(weekDay: TextValue.tuesdayShort, onActive: () => weekDaysList.add(WeekDays.tue), onUnactive: () => weekDaysList.remove(WeekDays.tue)),
         const SizedBox(width: 10),
-        WeekDayButton(weekDay: "Cр", onActive: () => weekDaysList.add(WeekDays.wed), onUnactive: () => weekDaysList.remove(WeekDays.wed)),
+        WeekDayButton(weekDay: TextValue.wednesdayShort, onActive: () => weekDaysList.add(WeekDays.wed), onUnactive: () => weekDaysList.remove(WeekDays.wed)),
         const SizedBox(width: 10),
-        WeekDayButton(weekDay: "Чт", onActive: () => weekDaysList.add(WeekDays.thu), onUnactive: () => weekDaysList.remove(WeekDays.thu)),
+        WeekDayButton(weekDay: TextValue.thursdayShort, onActive: () => weekDaysList.add(WeekDays.thu), onUnactive: () => weekDaysList.remove(WeekDays.thu)),
         const SizedBox(width: 10),
-        WeekDayButton(weekDay: "Пт", onActive: () => weekDaysList.add(WeekDays.fri), onUnactive: () => weekDaysList.remove(WeekDays.fri)),
+        WeekDayButton(weekDay: TextValue.fridayShort, onActive: () => weekDaysList.add(WeekDays.fri), onUnactive: () => weekDaysList.remove(WeekDays.fri)),
         const SizedBox(width: 10),
-        WeekDayButton(weekDay: "Сб", onActive: () => weekDaysList.add(WeekDays.sat), onUnactive: () => weekDaysList.remove(WeekDays.sat)),
+        WeekDayButton(weekDay: TextValue.saturdayShort, onActive: () => weekDaysList.add(WeekDays.sat), onUnactive: () => weekDaysList.remove(WeekDays.sat)),
         const SizedBox(width: 10),
-        WeekDayButton(weekDay: "Вс", onActive: () => weekDaysList.add(WeekDays.sun), onUnactive: () => weekDaysList.remove(WeekDays.sun)),
+        WeekDayButton(weekDay: TextValue.sundayShort, onActive: () => weekDaysList.add(WeekDays.sun), onUnactive: () => weekDaysList.remove(WeekDays.sun)),
       ],
     );
   }
@@ -433,7 +434,7 @@ class TimeField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      decoration: textFieldDecoration('Время выполнения', hintText: 'HH:MM - HH:MM'),
+      decoration: textFieldDecoration(TextValue.newRegularTaskExecutionTime, hintText: 'HH:MM - HH:MM'),
     );
   }
 }

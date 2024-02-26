@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
@@ -9,6 +10,7 @@ import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
+import 'package:lifebeat/scripts/text.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 class DetailsButton extends StatelessWidget {
@@ -129,14 +131,13 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           children: [
                             Text(
                               'Изменить задачу',
-                              style: AppTexts.bodyBold,
                             ),
                             const SizedBox(height: 20),
                             Flexible(
                                 child: TextField(
                               controller: name,
                               decoration: const InputDecoration(
-                                  hintText: 'Название',
+                                  hintText: TextValue.name,
                                   border: OutlineInputBorder()),
                             )),
                             const SizedBox(height: 20),
@@ -145,7 +146,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                               keyboardType: TextInputType.multiline,
                               maxLines: null,
                               decoration: const InputDecoration(
-                                  hintText: 'Описание',
+                                  hintText: TextValue.description,
                                   border: OutlineInputBorder()),
                             ),
                             const SizedBox(height: 20),
@@ -254,7 +255,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         Expanded(
                           child: Text(
                             name,
-                            style: AppTexts.headingBold,
                           ),
                         ),
                       ],
@@ -300,7 +300,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       const SizedBox(width: 5),
                       Text(
                         timeLeft,
-                        style: AppTexts.body,
                       ),
                       const SizedBox(width: 10),
                       const Icon(
@@ -311,7 +310,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       const SizedBox(width: 5),
                       Text(
                         '${readableTime(startTime.hour, startTime.minute)} - ${readableTime(endTime.hour, endTime.minute)}',
-                        style: AppTexts.body,
                       ),
                     ],
                   ),
@@ -342,7 +340,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Новый чекпоинт', style: AppTexts.bodyBold),
+                        Text('Новый чекпоинт'),
                         const SizedBox(
                           height: 20,
                         ),
@@ -413,10 +411,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     ),
                   const SizedBox(width: 10),
                   DetailsButton(
-                    child: Text(
-                      '+',
-                      style: AppTexts.bodyBold,
-                    ),
+                    child: const Icon(CupertinoIcons.plus),
                     action: () => newCheckpointMenu(context),
                   ),
                 ],
@@ -441,7 +436,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   Expanded(
                     child: Text(
                       checkpoint.text,
-                      style: AppTexts.body,
                     ),
                   ),
                   if (isEditMode)

@@ -14,7 +14,6 @@ class ItemDescription extends StatelessWidget {
         if (description.isNotEmpty)
           SelectableText(
             description,
-            style: AppTexts.body,
           ),
       ],
     );

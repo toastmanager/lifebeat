@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 abstract final class AppColors {
   static const Color grayBlueLight = Color(0xffb232d33);
@@ -17,47 +16,6 @@ abstract final class AppColors {
         AppColors.purple,
         AppColors.grayBlueDark,
       ]);
-}
-
-abstract final class AppTexts {
-  static const appFontStyle = GoogleFonts.openSans;
-  static const double bodyFontSize = 14;
-  static const double headingFontSize = 24;
-  static const Color textColor = AppColors.white;
-
-  static final body = appFontStyle(
-      textStyle: const TextStyle(
-    fontSize: bodyFontSize,
-    color: textColor,
-  ));
-
-  static final scheduleMain = appFontStyle(
-      textStyle: const TextStyle(
-    fontSize: bodyFontSize + 4,
-    fontWeight: FontWeight.bold,
-    color: textColor,
-  ));
-
-  static final scheduleSecondary = appFontStyle(
-      textStyle: const TextStyle(
-    fontSize: bodyFontSize,
-    fontWeight: FontWeight.bold,
-    color: AppColors.lightBlue,
-  ));
-
-  static final bodyBold = appFontStyle(
-      textStyle: const TextStyle(
-    fontSize: bodyFontSize,
-    fontWeight: FontWeight.bold,
-    color: textColor,
-  ));
-
-  static final headingBold = appFontStyle(
-      textStyle: const TextStyle(
-    fontSize: headingFontSize,
-    fontWeight: FontWeight.bold,
-    color: textColor,
-  ));
 }
 
 abstract final class Routes {

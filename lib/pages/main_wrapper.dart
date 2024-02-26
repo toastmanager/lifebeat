@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/navbar.dart';
 
@@ -35,9 +36,6 @@ class LifebeatFloatingActionButton extends StatelessWidget {
       onPressed: action,
             backgroundColor: AppColors.purple,
             shape: const OvalBorder(),
-            child: Text(
-              '+',
-              style: AppTexts.headingBold,
-            ));
+            child: const Icon(CupertinoIcons.plus),);
   }
 }

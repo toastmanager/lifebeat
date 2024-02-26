@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
 import 'package:lifebeat/scripts/database/database.dart';
+import 'package:lifebeat/scripts/text.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/models/goal_model.dart';
 
@@ -93,7 +95,6 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
           Expanded(
             child: Text(
               checkpoint.text,
-              style: AppTexts.body,
             ),
           ),
           if (isEditMode)
@@ -169,15 +170,14 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Изменить цель',
-                      style: AppTexts.bodyBold,
+                      TextValue.changeGoal,
                     ),
                     const SizedBox(height: 20),
                     Flexible(
                         child: TextField(
                       controller: name,
                       decoration: const InputDecoration(
-                          hintText: 'Название', border: OutlineInputBorder()),
+                          hintText: TextValue.name, border: OutlineInputBorder()),
                     )),
                     const SizedBox(height: 20),
                     TextField(
@@ -185,7 +185,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: const InputDecoration(
-                          hintText: 'Описание', border: OutlineInputBorder()),
+                          hintText: TextValue.description, border: OutlineInputBorder()),
                     ),
                     const SizedBox(height: 20),
                     Flexible(
@@ -259,7 +259,6 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                         Expanded(
                           child: Text(
                             model.name,
-                            style: AppTexts.headingBold,
                           ),
                         ),
                       ],
@@ -300,7 +299,6 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                   const SizedBox(width: 5),
                   Text(
                     '$timeLeft дней',
-                    style: AppTexts.body,
                   ),
                   const SizedBox(width: 10),
                   const Icon(
@@ -311,7 +309,6 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                   const SizedBox(width: 5),
                   Text(
                     '${model.deadline.day}.${model.deadline.month}.${model.deadline.year}',
-                    style: AppTexts.body,
                   ),
                 ],
               ),
@@ -337,10 +334,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                   ),
                   const SizedBox(width: 10),
                   DetailsButton(
-                    child: Text(
-                      '+',
-                      style: AppTexts.bodyBold,
-                    ),
+                    child: const Icon(CupertinoIcons.plus),
                     action: () => _newCheckpointMenu(context),
                   ),
                 ],
@@ -368,7 +362,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Новый чекпоинт', style: AppTexts.bodyBold),
+              Text('Новый чекпоинт'),
               const SizedBox(
                 height: 20,
               ),

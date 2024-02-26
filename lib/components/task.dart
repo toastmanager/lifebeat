@@ -69,7 +69,6 @@ class _TaskState extends State<Task> {
                           children: [
                             Text(
                               name,
-                              style: AppTexts.bodyBold,
                             ),
                             const SizedBox(height: 5),
                             Row(
@@ -82,7 +81,6 @@ class _TaskState extends State<Task> {
                                 const SizedBox(width: 5),
                                 Text(
                                   timeLeft,
-                                  style: AppTexts.body,
                                 ),
                                 const SizedBox(width: 10),
                                 const Icon(
@@ -93,7 +91,6 @@ class _TaskState extends State<Task> {
                                 const SizedBox(width: 5),
                                 Text(
                                   '${readableTime(startTime.hour, startTime.minute)} - ${readableTime(endTime.hour, endTime.minute)}',
-                                  style: AppTexts.body,
                                 ),
                               ],
                             ),

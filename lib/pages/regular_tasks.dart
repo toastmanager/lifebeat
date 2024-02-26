@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/regular_task.dart';
 import 'package:lifebeat/models/regular_task_model.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
+import 'package:lifebeat/scripts/text.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 
@@ -33,18 +35,15 @@ class _RegularTasksPageState extends State<RegularTasksPage> {
             },
             backgroundColor: AppColors.purple,
             shape: const OvalBorder(),
-            child: Text(
-              '+',
-              style: AppTexts.headingBold,
-            )),
+            child: const Icon(CupertinoIcons.plus),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Center(
             child: Column(
               children: [
                 Text(
-                  'Регулярные задачи',
-                  style: AppTexts.headingBold,
+                  TextValue.regularTasksHeading,
                 ),
                 const SizedBox(height: 25),
                 FutureBuilder<List<RegularTaskModel>>(
@@ -56,7 +55,7 @@ class _RegularTasksPageState extends State<RegularTasksPage> {
 
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
-                        return const Text('Регулярные задачи отсутствуют');
+                        return const Text(TextValue.regularTasksEmpty);
                       }
                       List<RegularTaskModel> regularTasksList = snapshot.data!.toList();
                       return Flexible(

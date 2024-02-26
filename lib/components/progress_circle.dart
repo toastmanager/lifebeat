@@ -20,7 +20,6 @@ class _ProgressCircleState extends State<ProgressCircle> {
   Widget build(BuildContext context) {
     Widget child = Text(
       '${widget.progress.toInt()}%',
-      style: AppTexts.bodyBold,
     );
 
     double turns = 0;

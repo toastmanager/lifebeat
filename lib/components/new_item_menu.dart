@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:lifebeat/scripts/database/database.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
+import 'package:lifebeat/scripts/text.dart';
 import 'package:lifebeat/scripts/vars.dart';
 
 Future<void> newItemMenu(BuildContext context, DateTime currentDay,
@@ -35,15 +36,14 @@ Future<void> newItemMenu(BuildContext context, DateTime currentDay,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Новая задача',
-                  style: AppTexts.bodyBold,
+                  TextValue.newTaskHeading,
                 ),
                 const SizedBox(height: 20),
                 Flexible(
                     child: TextField(
                   controller: name,
                   decoration: const InputDecoration(
-                      hintText: 'Название', border: OutlineInputBorder()),
+                      hintText: TextValue.newTaskName, border: OutlineInputBorder()),
                 )),
                 const SizedBox(height: 20),
                 TextField(
@@ -51,7 +51,7 @@ Future<void> newItemMenu(BuildContext context, DateTime currentDay,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   decoration: const InputDecoration(
-                      hintText: 'Описание', border: OutlineInputBorder()),
+                      hintText: TextValue.newTaskDesk, border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 20),
                 Flexible(

@@ -61,7 +61,6 @@ class _GoalState extends State<Goal> {
                   children: [
                     Text(
                       name,
-                      style: AppTexts.bodyBold,
                     ),
                     const SizedBox(height: 5),
                     Row(
@@ -74,7 +73,6 @@ class _GoalState extends State<Goal> {
                         const SizedBox(width: 5),
                         Text(
                           '$timeLeft дней',
-                          style: AppTexts.body,
                         ),
                         const SizedBox(width: 10),
                         const Icon(
@@ -85,7 +83,6 @@ class _GoalState extends State<Goal> {
                         const SizedBox(width: 5),
                         Text(
                           '${deadline.day}.${deadline.month}.${deadline.year}',
-                          style: AppTexts.body,
                         ),
                       ],
                     ),

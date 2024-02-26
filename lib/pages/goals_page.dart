@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/models/goal_model.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/scripts/task_funcs.dart';
+import 'package:lifebeat/scripts/text.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import 'package:lifebeat/components/goal.dart';
 import 'package:lifebeat/scripts/database/database.dart';
@@ -34,18 +36,14 @@ class _GoalsPageState extends State<GoalsPage> {
             },
             backgroundColor: AppColors.purple,
             shape: const OvalBorder(),
-            child: Text(
-              '+',
-              style: AppTexts.headingBold,
-            )),
+            child: const Icon(CupertinoIcons.plus),),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Center(
             child: Column(
               children: [
                 Text(
-                  'Цели',
-                  style: AppTexts.headingBold,
+                  TextValue.goalsHeading,
                 ),
                 const SizedBox(height: 25),
                 FutureBuilder<List<GoalModel>>(
@@ -57,7 +55,7 @@ class _GoalsPageState extends State<GoalsPage> {
 
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
-                        return const Text('Цели отсутствуют');
+                        return const Text(TextValue.goalsEmpty);
                       }
                       List<GoalModel> goalsList = snapshot.data!.toList();
                       goalsList = sortedGoalsList(goalsList);

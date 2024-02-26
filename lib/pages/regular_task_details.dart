@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:lifebeat/components/horizontal_divider.dart';
@@ -109,7 +110,6 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                         Expanded(
                           child: Text(
                             name,
-                            style: AppTexts.headingBold,
                           ),
                         ),
                       ],
@@ -150,7 +150,6 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                       const SizedBox(width: 5),
                       Text(
                         '$startTime - $endTime',
-                        style: AppTexts.body,
                       ),
                     ],
                   ),
@@ -171,7 +170,7 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Новый чекпоинт', style: AppTexts.bodyBold),
+                        Text('Новый чекпоинт'),
                         const SizedBox(
                           height: 20,
                         ),
@@ -242,10 +241,7 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                     ),
                   const SizedBox(width: 10),
                   DetailsButton(
-                    child: Text(
-                      '+',
-                      style: AppTexts.bodyBold,
-                    ),
+                    child: const Icon(CupertinoIcons.plus),
                     action: () => newCheckpointMenu(context),
                   ),
                 ],
@@ -269,7 +265,6 @@ class _RegularTaskDetailsPageState extends State<RegularTaskDetailsPage> {
                   Expanded(
                     child: Text(
                       checkpoint.text,
-                      style: AppTexts.body,
                     ),
                   ),
                   if (isEditMode)

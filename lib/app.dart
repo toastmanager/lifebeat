@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/pages/regular_task_details.dart';
@@ -24,7 +23,20 @@ class App extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
-          fontFamily: 'Manrope'
+          fontFamily: 'Manrope',
+          textTheme: const TextTheme(
+            // Heading Text
+            bodyLarge: TextStyle(
+              color: AppColors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            // Regular Text
+            bodyMedium: TextStyle(
+              color: AppColors.white,
+              fontSize: 16,
+            )
+          ),
         ),
         initialRoute: Settings.initPage,
         routes: {

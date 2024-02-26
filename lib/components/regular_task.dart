@@ -60,7 +60,6 @@ class _RegularTaskState extends State<RegularTask> {
                           children: [
                             Text(
                               name,
-                              style: AppTexts.bodyBold,
                             ),
                             const SizedBox(height: 5),
                             Row(
@@ -79,7 +78,6 @@ class _RegularTaskState extends State<RegularTask> {
                                 const SizedBox(width: 5),
                                 Text(
                                   '$startTime - $endTime',
-                                  style: AppTexts.body,
                                 ),
                               ],
                             ),

@@ -1,14 +1,13 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:lifebeat/components/navbar.dart';
 import 'package:lifebeat/components/task.dart';
 import 'package:lifebeat/models/task_model.dart';
 import 'package:lifebeat/pages/main_wrapper.dart';
 import 'package:lifebeat/pages/new_task_goal_page.dart';
 import 'package:lifebeat/scripts/database/database.dart';
+import 'package:lifebeat/scripts/text.dart';
 import 'package:lifebeat/scripts/vars.dart';
 import '../components/horizontal_divider.dart';
 
@@ -49,16 +48,11 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
         child: Row(
           children: [
-            HorizontalDivider(),
+            const HorizontalDivider(),
             const SizedBox(width: 20),
-            Text(freeTime,
-                style: GoogleFonts.openSans(
-                    textStyle: const TextStyle(
-                        fontSize: AppTexts.bodyFontSize,
-                        color: AppColors.lightBlue,
-                        fontWeight: FontWeight.w500))),
+            Text(freeTime),
             const SizedBox(width: 20),
-            HorizontalDivider(),
+            const HorizontalDivider(),
           ],
         ),
       ),
@@ -85,17 +79,14 @@ class _SchedulePageState extends State<SchedulePage> {
             icon: const Icon(Icons.arrow_back_ios_rounded, size: 20)),
         Text(
           lastDay.day.toString(),
-          style: AppTexts.scheduleSecondary,
         ),
         const SizedBox(width: 5),
         Text(
           currentDay.day.toString(),
-          style: AppTexts.scheduleMain,
         ),
         const SizedBox(width: 5),
         Text(
           nextDay.day.toString(),
-          style: AppTexts.scheduleSecondary,
         ),
         IconButton(
             onPressed: () {
@@ -129,17 +120,14 @@ class _SchedulePageState extends State<SchedulePage> {
                 .then((value) => setState(() {})),
             backgroundColor: AppColors.purple,
             shape: const OvalBorder(),
-            child: Text(
-              '+',
-              style: AppTexts.headingBold,
-            )),
+            child: const Icon(CupertinoIcons.plus),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
               Center(
-                  child: Text('Расписание',
-                      style: AppTexts.headingBold,
+                  child: Text(TextValue.scheduleHeading,
                       textAlign: TextAlign.center)),
               const SizedBox(height: 20),
               scheduleDayPicker(() {
@@ -155,7 +143,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
                   if (snapshot.hasData) {
                     if (snapshot.data!.isEmpty) {
-                      return const Text('Задачи отсутствуют');
+                      return const Text(TextValue.scheduleDayEmpty);
                     }
                     List<TaskModel> tasksList = sortTasks(snapshot.data!);
                     return Flexible(
