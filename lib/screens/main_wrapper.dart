@@ -27,18 +27,23 @@ class _MainWrapperState extends State<MainWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Navbar(
-        currentIndex: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index)
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: Navbar(
+          currentIndex: currentIndex,
+          onTap: (index) => setState(() => currentIndex = index)
+        ),
+        body: pagesList[currentIndex],
       ),
-      body: pagesList[currentIndex],
     );
   }
 }
 
 class LifebeatFloatingActionButton extends StatelessWidget {
-  const LifebeatFloatingActionButton({super.key, required this.action});
+  const LifebeatFloatingActionButton({
+    super.key,
+    required this.action
+  });
 
   final Function() action;
 
@@ -46,8 +51,9 @@ class LifebeatFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: action,
-            backgroundColor: AppColors.purple,
-            shape: const OvalBorder(),
-            child: const Icon(CupertinoIcons.plus),);
+      backgroundColor: AppColors.purple,
+      shape: const OvalBorder(),
+      child: const Icon(CupertinoIcons.plus),
+    );
   }
 }
