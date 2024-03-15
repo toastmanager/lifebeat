@@ -25,14 +25,16 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          heading(context, 'New item'),
-          SizedBox(height: widget.gap),
-          defaultInputs(widget.gap),
-          const Spacer(),
-          buttons(context, () {})
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            heading(context, 'New item'),
+            SizedBox(height: widget.gap),
+            defaultInputs(widget.gap),
+            const Spacer(),
+            buttons(context, () {})
+          ],
+        ),
       ),
     );
   }
@@ -52,7 +54,7 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
             child: NewItemButton(
           action: createAction,
           text: TextValue.continueText,
-          backgroundColor: AppColors.purple,
+          backgroundColor: Theme.of(context).colorScheme.primary,
         )),
       ],
     );
@@ -65,7 +67,10 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_ios_rounded)),
         const SizedBox(width: 10,),
-        Expanded(child: Text(text)),
+        Expanded(child: Text(
+          text,
+          style: Theme.of(context).textTheme.headlineMedium,
+        )),
       ],
     );
   }
@@ -78,7 +83,10 @@ class _NewItemPageState<T extends NewItemPage> extends State<T> {
         SizedBox(height: gap),
         TextField(
             controller: description,
-            decoration: textFieldDecoration(TextValue.description)),
+            decoration: textFieldDecoration(TextValue.description),
+            maxLines: null,
+            keyboardType: TextInputType.multiline,
+        ),
       ],
     );
   }
@@ -259,50 +267,61 @@ class _NewTaskPageState extends _NewItemPageState<NewTaskPage> {
     var endTimeController =
         TextEditingController(text: readableDateTime(endTime!));
     var gap = widget.gap;
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          heading(context, TextValue.newTaskHeading),
-          SizedBox(height: gap),
-          defaultInputs(gap),
-          SizedBox(height: gap),
-          DateTimeField(
-            onDateSelected: (date) {
-              Duration difference = endTime!.difference(startTime!);
-              startTime = date;
-              endTime = startTime!.add(difference);
-              setState(() {});
-            },
-            controller: startTimeController,
-            labelText: TextValue.newTaskStart,
-            initDate: startTime,
-            date: startTime,
-          ),
-          SizedBox(height: gap),
-          DateTimeField(
-            onDateSelected: (date) {
-              endTime = date;
-              setState(() {});
-            },
-            labelText: TextValue.newTaskEnd,
-            initDate: endTime,
-            date: endTime,
-            controller: endTimeController,
-          ),
-          const Spacer(),
-          buttons(context, () async {
-            await DBHelper.addTask(
-              name.text,
-              description.text,
-              startTime!,
-              endTime!,
-            );
-            if (mounted) {
-              Navigator.of(context).pop();
-            }
-          })
-        ],
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column( 
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,     
+          children: [
+            heading(context, TextValue.newTaskHeading),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: gap),
+                    defaultInputs(gap),
+                    SizedBox(height: gap),
+                    DateTimeField(
+                      onDateSelected: (date) {
+                        Duration difference = endTime!.difference(startTime!);
+                        startTime = date;
+                        endTime = startTime!.add(difference);
+                        setState(() {});
+                      },
+                      controller: startTimeController,
+                      labelText: TextValue.newTaskStart,
+                      initDate: startTime,
+                      date: startTime,
+                    ),
+                    SizedBox(height: gap),
+                    DateTimeField(
+                      onDateSelected: (date) {
+                        endTime = date;
+                        setState(() {});
+                      },
+                      labelText: TextValue.newTaskEnd,
+                      initDate: endTime,
+                      date: endTime,
+                      controller: endTimeController,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: gap),
+            buttons(context, () async {
+              await DBHelper.addTask(
+                name.text,
+                description.text,
+                startTime!,
+                endTime!,
+              );
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            })
+          ],
+        ),
       ),
     );
   }

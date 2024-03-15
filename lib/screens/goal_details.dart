@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/details_button.dart';
 import 'package:lifebeat/components/item_description.dart';
 import 'package:lifebeat/components/progress_circle.dart';
 import 'package:lifebeat/models/checkpoint_model.dart';
@@ -7,36 +8,6 @@ import 'package:lifebeat/utils/database/database.dart';
 import 'package:lifebeat/utils/text_values.dart';
 import 'package:lifebeat/utils/vars.dart';
 import 'package:lifebeat/models/goal_model.dart';
-
-class DetailsButton extends StatelessWidget {
-  DetailsButton({
-    super.key,
-    required this.child,
-    required this.action,
-  });
-
-  final Widget child;
-  final Function action;
-  final BorderRadius buttonBorderRadius = BorderRadius.circular(8);
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.tight,
-      child: InkWell(
-        onTap: () => action(),
-        borderRadius: buttonBorderRadius,
-        child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.grayBlueLight,
-              borderRadius: buttonBorderRadius,
-            ),
-            height: 40,
-            child: Center(child: child)),
-      ),
-    );
-  }
-}
 
 class GoalDetailsPage extends StatefulWidget {
   GoalDetailsPage(
@@ -328,7 +299,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
               Row(
                 
                 children: [
-                  DetailsButton(
+                  DetailButton(
                     child: const Icon(
                       Icons.edit_rounded,
                       color: AppColors.white,
@@ -337,7 +308,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage> {
                     action: () => switchEditMode(),
                   ),
                   const SizedBox(width: 10),
-                  DetailsButton(
+                  DetailButton(
                     child: const Icon(CupertinoIcons.plus),
                     action: () => _newCheckpointMenu(context),
                   ),
