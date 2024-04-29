@@ -1,0 +1,38 @@
+name: lifebeat
+description: "Lifebeat"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  objectbox: ^2.5.1
+  objectbox_flutter_libs: any
+  riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1
+  equatable: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  build_runner: ^2.4.9
+  objectbox_generator: any
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: fonts/Manrope/Manrope-Bold.ttf
+        - asset: fonts/Manrope/Manrope-ExtraBold.ttf
+        - asset: fonts/Manrope/Manrope-ExtraLight.ttf
+        - asset: fonts/Manrope/Manrope-Light.ttf
+        - asset: fonts/Manrope/Manrope-Medium.ttf
+        - asset: fonts/Manrope/Manrope-Regular.ttf
+        - asset: fonts/Manrope/Manrope-SemiBold.ttf

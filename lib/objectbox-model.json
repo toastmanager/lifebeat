@@ -1,0 +1,119 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1881036810011932458",
+      "lastPropertyId": "3:6331343978512154370",
+      "name": "Checkpoint",
+      "properties": [
+        {
+          "id": "1:7610827726889503435",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1203079135790154913",
+          "name": "text",
+          "type": 9
+        },
+        {
+          "id": "3:6331343978512154370",
+          "name": "finished",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:1458145482174392471",
+      "lastPropertyId": "5:1613906021395688499",
+      "name": "Task",
+      "properties": [
+        {
+          "id": "1:7421325585400494966",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:530974513048107006",
+          "name": "text",
+          "type": 9
+        },
+        {
+          "id": "4:2384886994792544975",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "5:1613906021395688499",
+          "name": "status",
+          "type": 1
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:5212266623199784108",
+          "name": "checkpoints",
+          "targetId": "1:1881036810011932458"
+        }
+      ]
+    },
+    {
+      "id": "3:5622267691994581109",
+      "lastPropertyId": "5:2697537407064213606",
+      "name": "Goal",
+      "properties": [
+        {
+          "id": "1:752857698456178807",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5866171995527601387",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "3:3055245156354372647",
+          "name": "text",
+          "type": 9
+        },
+        {
+          "id": "4:7556343997514342449",
+          "name": "begin",
+          "type": 10
+        },
+        {
+          "id": "5:2697537407064213606",
+          "name": "deadline",
+          "type": 10
+        }
+      ],
+      "relations": [
+        {
+          "id": "2:8603767106778413392",
+          "name": "checkpoints",
+          "targetId": "1:1881036810011932458"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "3:5622267691994581109",
+  "lastIndexId": "0:0",
+  "lastRelationId": "2:8603767106778413392",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    54079599871844231
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
