@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/task_checkcircle.dart';
 import 'package:lifebeat/entities/task.dart';
+import 'package:lifebeat/main.dart';
 
 class TaskTile extends StatefulWidget {
   const TaskTile({
@@ -15,13 +16,7 @@ class TaskTile extends StatefulWidget {
 }
 
 class _TaskTileState extends State<TaskTile> {
-  late Task task;
-
-  @override
-  void initState() {
-    super.initState();
-    task = widget.task;
-  }
+  late Task task = widget.task;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +45,9 @@ class _TaskTileState extends State<TaskTile> {
               )
             ],
           ),
-          const TaskPopup()
+          TaskPopup(
+            taskId: task.id,
+          )
         ],
       ),
     );
@@ -58,14 +55,25 @@ class _TaskTileState extends State<TaskTile> {
 }
 
 class TaskPopup extends StatelessWidget {
-  const TaskPopup({super.key});
+  const TaskPopup({
+    super.key,
+    required this.taskId,
+  });
+
+  final int taskId;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      itemBuilder: (context) => const [
-        PopupMenuItem(child: Text('Изменить')),
-        PopupMenuItem(child: Text('Удалить')),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          onTap: () {},
+          child: const Text('Изменить')
+        ),
+        PopupMenuItem(
+          onTap: () => objectbox.deleteTask(taskId),
+          child: const Text('Удалить')
+        ),
       ],
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/screens/main_wrapper.dart';
-import 'package:lifebeat/screens/tasks_page.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -24,7 +23,9 @@ class _MainAppState extends State<MainApp> {
           primary: Color(0xFFFF5833),
           background: Color(0xFF0F141A),
           outline: Color(0xFF3C3C3C),
+          surface: Color(0xFF161E29),
           onSurface: Color(0xFFDADDE5),
+          onPrimary: Color(0xFFDADDE5),
         ),
         fontFamily: 'Manrope',
         textTheme: const TextTheme(

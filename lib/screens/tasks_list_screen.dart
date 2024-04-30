@@ -20,7 +20,10 @@ class TaskListScreen extends ConsumerWidget {
           return ListView.separated(
             shrinkWrap: true,
             itemCount: snapshot.hasData ? snapshot.data!.length : 0,
-            itemBuilder: (context, index) => TaskTile(task: taskList[index]),
+            itemBuilder: (context, index) => TaskTile(
+              key: Key("task-${taskList[index].id}"),
+              task: taskList[index]
+            ),
             separatorBuilder: (context, index) => const SizedBox(height: 20),
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {

@@ -53,12 +53,11 @@ class ObjectBox {
 
   int addTask(
     String text,
-    bool finished,
     DateTime date,
   ) {
     Task newTask = Task(
       text: text,
-      status: finished,
+      status: false,
       date: date
     );
     int newTaskId = taskBox.put(newTask);
@@ -66,10 +65,15 @@ class ObjectBox {
     return newTaskId;
   }
 
+  bool deleteTask(int id) {
+    return taskBox.remove(id);
+  }
+
   Stream<List<Task>> getDayTasks(DateTime date) {
     final builder = taskBox.query(
-      Task_.date.equalsDate(
+      Task_.date.betweenDate(
         DateTime(date.year, date.month, date.day, 0, 0, 0),
+        DateTime(date.year, date.month, date.day, 23, 59, 59),
       )
     );
     return builder.watch(triggerImmediately: true).map((query) => query.find());

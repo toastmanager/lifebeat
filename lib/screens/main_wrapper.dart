@@ -14,7 +14,6 @@ final List<Widget> pages = [
 class MainWrapper extends ConsumerWidget {
   const MainWrapper({super.key});
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -30,6 +29,7 @@ class NavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BottomNavigationBar(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       selectedItemColor: Theme.of(context).colorScheme.onSurface,

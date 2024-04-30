@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lifebeat/screens/new_task_page.dart';
 import 'package:lifebeat/screens/tasks_list_screen.dart';
 import 'package:lifebeat/utils/providers.dart';
 
@@ -10,6 +12,19 @@ class TasksPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => NewTaskPage(
+                date: ref.watch(tasksDay),
+              ),
+            ),
+          ),
+        elevation: 0,
+        shape: const CircleBorder(),
+        child: const Icon(CupertinoIcons.add),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
