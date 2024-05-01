@@ -4,7 +4,7 @@ import 'package:lifebeat/components/task_checkcircle.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
 
-class TaskTile extends StatefulWidget {
+class TaskTile extends StatelessWidget {
   const TaskTile({
     super.key,
     required this.task,
@@ -13,29 +13,26 @@ class TaskTile extends StatefulWidget {
   final Task task;
 
   @override
-  State<TaskTile> createState() => _TaskTileState();
-}
-
-class _TaskTileState extends State<TaskTile> {
-  late Task task = widget.task;
-
-  @override
   Widget build(BuildContext context) {
     return Surface(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              TaskCheckCircle(
-                task: task,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                task.text,
-                style: Theme.of(context).textTheme.labelLarge,
-              )
-            ],
+          Expanded(
+            child: Row(
+              children: [
+                TaskCheckCircle(
+                  task: task,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    task.text,
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                )
+              ],
+            ),
           ),
           TaskPopup(
             taskId: task.id,

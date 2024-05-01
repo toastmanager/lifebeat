@@ -30,80 +30,82 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Surface(
-                  padding: const EdgeInsets.only(
-                    left: 12,
-                    right: 12,
-                    bottom: 12,
-                    top: 15,
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Surface(
+                    padding: const EdgeInsets.only(
+                      left: 12,
+                      right: 12,
+                      bottom: 12,
+                      top: 15,
+                    ),
+                    child: Column(
+                      children: [
+                        LBTextField(
+                          label: const Text('Название'),
+                          controller: nameController,
+                        ),
+                        const SizedBox(height: 15),
+                        LBTextField(
+                          label: const Text('Дата'),
+                          controller: dateController,
+                          readOnly: true,
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      LBTextField(
-                        label: const Text('Название'),
-                        controller: nameController,
-                      ),
-                      const SizedBox(height: 15),
-                      LBTextField(
-                        label: const Text('Дата'),
-                        controller: dateController,
-                        readOnly: true,
-                      ),
-                    ],
+                  const SizedBox(height: 20),
+                  Surface(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Время суток'),
+                        DropdownButton(
+                          value: dayTime,
+                          items: const [
+                            DropdownMenuItem<String>(value: DayTime.morning, child: Text('Утро')),
+                            DropdownMenuItem<String>(value: DayTime.afternoon, child: Text('День')),
+                            DropdownMenuItem<String>(value: DayTime.evening, child: Text('Вечер')),
+                          ],
+                          onChanged: (value) => setState(() => dayTime = value!),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Surface(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Время суток'),
-                      DropdownButton(
-                        value: dayTime,
-                        items: const [
-                          DropdownMenuItem<String>(value: DayTime.morning, child: Text('Утро')),
-                          DropdownMenuItem<String>(value: DayTime.afternoon, child: Text('День')),
-                          DropdownMenuItem<String>(value: DayTime.evening, child: Text('Вечер')),
-                        ],
-                        onChanged: (value) => setState(() => dayTime = value!),
-                      )
-                    ],
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Отмена')
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Отмена')
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        objectbox.addTask(
+                          nameController.text,
+                          date,
+                          dayTime,
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Подтвердить')
+                    )
                   ),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      objectbox.addTask(
-                        nameController.text,
-                        date,
-                        dayTime,
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Подтвердить')
-                  )
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
