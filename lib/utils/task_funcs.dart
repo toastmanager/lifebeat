@@ -1,4 +1,5 @@
 import 'package:lifebeat/entities/task.dart';
+import 'package:lifebeat/utils/settings.dart';
 
 final class TaskFuncs {
   static List<List<Task>> groupedTasks(List<Task> tasks) {
@@ -27,12 +28,40 @@ final class TaskFuncs {
     return "${date.year}.${date.month < 10 ? 0 : ''}${date.month}.${date.day < 10 ? 0 : ''}${date.day}";
   }
 
-  static bool isBeforeTime(List<int> time, DateTime date) {
-    if (date.hour * 60 + date.minute < time[0] * 60 + time[1]) {
+  static bool isBeforeTime(int timeInMinutes, DateTime date) {
+    if (date.hour * 60 + date.minute < timeInMinutes) {
       return true;
     } else {
       return false;
     }
+  }
+
+  static bool isAfterTime(int timeInMinutes, DateTime date) {
+    if (date.hour * 60 + date.minute > timeInMinutes) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static bool isAfterDayTime(Task task, DateTime date) {
+    if (task.dayTime == DayTime.morning) {
+      return isAfterTime(Settings.afternoonBeginTime, date);
+    }
+    if (task.dayTime == DayTime.afternoon) {
+      return isAfterTime(Settings.eveningBeginTime, date);
+    }
+    return isAfterTime(1439, date);
+  }
+
+  static bool isBeforeByDays(DateTime taskDate, DateTime date) {
+    if (taskDate.year <= date.year &&
+      taskDate.month <= taskDate.month &&
+      taskDate.day < date.day
+    ) {
+      return true;
+    }
+    return false;
   }
 
   static String timeByMinutes(int minutes) {

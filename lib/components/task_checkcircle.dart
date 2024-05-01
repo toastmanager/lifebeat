@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/main.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
 import '../entities/task.dart';
 
 class TaskCheckCircle extends StatefulWidget {
@@ -26,7 +27,10 @@ class _TaskCheckCircleState extends State<TaskCheckCircle> {
       strokeAlign: -1,
       color: Theme.of(context).colorScheme.primary,
     );
-    if (widget.task.status == false && widget.task.date.isBefore(DateTime.now())) {
+    if (widget.task.status == false &&
+      TaskFuncs.isAfterDayTime(widget.task, DateTime.now()) &&
+      TaskFuncs.isBeforeByDays(widget.task.date, DateTime.now().add(const Duration(days: 1)))  
+    ) {
         decoration = const BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(
