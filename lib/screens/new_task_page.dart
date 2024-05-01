@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/lbtextfield.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
 import '../components/surface.dart';
 
 class NewTaskPage extends StatefulWidget {
@@ -18,6 +20,7 @@ class NewTaskPage extends StatefulWidget {
 class _NewTaskPageState extends State<NewTaskPage> {
   final nameController = TextEditingController();
   late final date = widget.date;
+  late final dateController = TextEditingController(text: TaskFuncs.ymdDate(date));
   String dayTime = DayTime.morning;
 
   @override
@@ -36,13 +39,23 @@ class _NewTaskPageState extends State<NewTaskPage> {
             Column(
               children: [
                 Surface(
+                  padding: const EdgeInsets.only(
+                    left: 12,
+                    right: 12,
+                    bottom: 12,
+                    top: 15,
+                  ),
                   child: Column(
                     children: [
-                      TextField(
+                      LBTextField(
+                        label: const Text('Название'),
                         controller: nameController,
-                        decoration: const InputDecoration(
-                          label: Text('Задача')
-                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      LBTextField(
+                        label: const Text('Дата'),
+                        controller: dateController,
+                        readOnly: true,
                       ),
                     ],
                   ),

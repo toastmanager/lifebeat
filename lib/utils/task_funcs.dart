@@ -18,4 +18,12 @@ class TaskFuncs {
     }
     return [morning, afternoon, evening];
   }
+
+  static String dmDate(DateTime date) {
+    return "${date.day < 10 ? 0 : ''}${date.day}.${date.month < 10 ? 0 : ''}${date.month}";
+  }
+  
+  static String ymdDate(DateTime date) {
+    return "${date.year}.${date.month < 10 ? 0 : ''}${date.month}.${date.day < 10 ? 0 : ''}${date.day}";
+  }
 }

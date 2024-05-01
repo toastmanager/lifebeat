@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifebeat/screens/goals_screen.dart';
-import 'package:lifebeat/screens/settings.dart';
+import 'package:lifebeat/screens/settings_page.dart';
 import 'package:lifebeat/screens/tasks_page.dart';
 import 'package:lifebeat/utils/providers.dart';
 
