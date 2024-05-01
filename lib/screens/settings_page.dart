@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/surface.dart';
+import 'package:lifebeat/utils/settings.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -8,10 +10,10 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final afternoonBeginTime = TextEditingController(
-      text: '13:00'
+      text: TaskFuncs.timeByMinutes(Settings.afternoonBeginTime)
     );
     final eveningBeginTime = TextEditingController(
-      text: '17:00'
+      text: TaskFuncs.timeByMinutes(Settings.eveningBeginTime)
     );
 
     return Scaffold(

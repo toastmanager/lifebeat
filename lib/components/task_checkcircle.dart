@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:lifebeat/main.dart';
-
 import '../entities/task.dart';
 
 class TaskCheckCircle extends StatefulWidget {
@@ -18,6 +15,7 @@ class TaskCheckCircle extends StatefulWidget {
 }
 
 class _TaskCheckCircleState extends State<TaskCheckCircle> {
+  final now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {

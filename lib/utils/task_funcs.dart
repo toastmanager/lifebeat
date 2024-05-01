@@ -1,6 +1,6 @@
 import 'package:lifebeat/entities/task.dart';
 
-class TaskFuncs {
+final class TaskFuncs {
   static List<List<Task>> groupedTasks(List<Task> tasks) {
     List<Task> morning = [];
     List<Task> afternoon = [];
@@ -25,5 +25,19 @@ class TaskFuncs {
   
   static String ymdDate(DateTime date) {
     return "${date.year}.${date.month < 10 ? 0 : ''}${date.month}.${date.day < 10 ? 0 : ''}${date.day}";
+  }
+
+  static bool isBeforeTime(List<int> time, DateTime date) {
+    if (date.hour * 60 + date.minute < time[0] * 60 + time[1]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static String timeByMinutes(int minutes) {
+    final int hours = minutes ~/ 60;
+    final int mins = minutes - (minutes ~/ 60) * 60;
+    return "${hours < 10 ? 0 : ''}$hours:${mins < 10 ? 0 : ''}$mins";
   }
 }
