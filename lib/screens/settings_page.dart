@@ -28,7 +28,7 @@ class SettingsPage extends StatelessWidget {
                     children: [
                       Text(
                         'Начало дня',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.labelMedium,
                       ),
                       const Spacer(),
                       Flexible(
@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
                     children: [
                       Text(
                         'Начало вечера',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.labelMedium,
                       ),
                       const Spacer(),
                       Flexible(
@@ -63,6 +63,19 @@ class SettingsPage extends StatelessWidget {
                       )
                     ],
                   ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Surface(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Директория базы данных',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const TextField()
                 ],
               ),
             )
