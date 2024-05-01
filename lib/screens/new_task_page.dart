@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
 
 class NewTaskPage extends StatefulWidget {
@@ -46,12 +47,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      var id = objectbox.addTask(
+                      objectbox.addTask(
                         nameController.text,
                         date,
+                        DayTime.afternoon,
                       );
-                      print(id);
-                      print(date);
                       Navigator.of(context).pop();
                     },
                     child: const Text('Подтвердить')

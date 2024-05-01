@@ -29,7 +29,7 @@
     },
     {
       "id": "2:1458145482174392471",
-      "lastPropertyId": "5:1613906021395688499",
+      "lastPropertyId": "7:7471598068197570837",
       "name": "Task",
       "properties": [
         {
@@ -52,6 +52,19 @@
           "id": "5:1613906021395688499",
           "name": "status",
           "type": 1
+        },
+        {
+          "id": "6:7270171260018002348",
+          "name": "dayTime",
+          "type": 9
+        },
+        {
+          "id": "7:7471598068197570837",
+          "name": "parentGoalId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:7435272883056686995",
+          "relationTarget": "Goal"
         }
       ],
       "relations": [
@@ -104,7 +117,7 @@
     }
   ],
   "lastEntityId": "3:5622267691994581109",
-  "lastIndexId": "0:0",
+  "lastIndexId": "1:7435272883056686995",
   "lastRelationId": "2:8603767106778413392",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

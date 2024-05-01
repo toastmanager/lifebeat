@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/components/task_checkcircle.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
@@ -20,16 +21,7 @@ class _TaskTileState extends State<TaskTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(11),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          width: 1,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-        color: const Color(0xFF161E29)
-      ),
+    return Surface(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

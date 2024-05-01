@@ -49,7 +49,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 1458145482174392471),
       name: 'Task',
-      lastPropertyId: const obx_int.IdUid(5, 1613906021395688499),
+      lastPropertyId: const obx_int.IdUid(7, 7471598068197570837),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -71,7 +71,19 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(5, 1613906021395688499),
             name: 'status',
             type: 1,
-            flags: 0)
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 7270171260018002348),
+            name: 'dayTime',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 7471598068197570837),
+            name: 'parentGoalId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(1, 7435272883056686995),
+            relationTarget: 'Goal')
       ],
       relations: <obx_int.ModelRelation>[
         obx_int.ModelRelation(
@@ -157,7 +169,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
       lastEntityId: const obx_int.IdUid(3, 5622267691994581109),
-      lastIndexId: const obx_int.IdUid(0, 0),
+      lastIndexId: const obx_int.IdUid(1, 7435272883056686995),
       lastRelationId: const obx_int.IdUid(2, 8603767106778413392),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
@@ -202,7 +214,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         }),
     Task: obx_int.EntityDefinition<Task>(
         model: _entities[1],
-        toOneRelations: (Task object) => [],
+        toOneRelations: (Task object) => [object.parentGoal],
         toManyRelations: (Task object) =>
             {obx_int.RelInfo<Task>.toMany(1, object.id): object.checkpoints},
         getId: (Task object) => object.id,
@@ -211,11 +223,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (Task object, fb.Builder fbb) {
           final textOffset = fbb.writeString(object.text);
-          fbb.startTable(6);
+          final dayTimeOffset = fbb.writeString(object.dayTime);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, textOffset);
           fbb.addInt64(3, object.date.millisecondsSinceEpoch);
           fbb.addBool(4, object.status);
+          fbb.addOffset(5, dayTimeOffset);
+          fbb.addInt64(6, object.parentGoal.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -230,11 +245,17 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
           final dateParam = DateTime.fromMillisecondsSinceEpoch(
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0));
+          final dayTimeParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 14, '');
           final object = Task(
               id: idParam,
               text: textParam,
               status: statusParam,
-              date: dateParam);
+              date: dateParam,
+              dayTime: dayTimeParam);
+          object.parentGoal.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.parentGoal.attach(store);
           obx_int.InternalToManyAccess.setRelInfo<Task>(object.checkpoints,
               store, obx_int.RelInfo<Task>.toMany(1, object.id));
           return object;
@@ -318,6 +339,14 @@ class Task_ {
   /// see [Task.status]
   static final status =
       obx.QueryBooleanProperty<Task>(_entities[1].properties[3]);
+
+  /// see [Task.dayTime]
+  static final dayTime =
+      obx.QueryStringProperty<Task>(_entities[1].properties[4]);
+
+  /// see [Task.parentGoal]
+  static final parentGoal =
+      obx.QueryRelationToOne<Task, Goal>(_entities[1].properties[5]);
 
   /// see [Task.checkpoints]
   static final checkpoints =

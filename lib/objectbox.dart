@@ -21,9 +21,9 @@ class ObjectBox {
   }
 
   void _putDemoData() {
-    Task task1 = Task(text: 'task 1', status: false, date: DateTime(2025));
-    Task task2 = Task(text: 'task 2', status: true, date: DateTime(2025));
-    Task task3 = Task(text: 'task 3', status: false, date: DateTime(2024));
+    Task task1 = Task(text: 'task 1', status: false, date: DateTime.now(), dayTime: DayTime.morning);
+    Task task2 = Task(text: 'task 2', status: true, date: DateTime.now(), dayTime: DayTime.evening);
+    Task task3 = Task(text: 'task 3', status: false, date: DateTime.now().add(const Duration(days: 2)), dayTime: DayTime.afternoon);
 
     Goal goal1 = Goal(description: 'description 1', text: 'text 1', begin: DateTime(2025), deadline: DateTime(2026));
     Goal goal2 = Goal(description: 'description 2', text: 'text 2', begin: DateTime(2025), deadline: DateTime(2026));
@@ -54,11 +54,13 @@ class ObjectBox {
   int addTask(
     String text,
     DateTime date,
+    String dayTime,
   ) {
     Task newTask = Task(
       text: text,
       status: false,
-      date: date
+      date: date,
+      dayTime: dayTime,
     );
     int newTaskId = taskBox.put(newTask);
     
