@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/components/lbtextfield.dart';
 import 'package:lifebeat/components/surface.dart';
 
 class SettingsPage extends StatelessWidget {
