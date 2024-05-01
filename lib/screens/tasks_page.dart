@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifebeat/screens/new_task_page.dart';
 import 'package:lifebeat/screens/tasks_list_screen.dart';
 import 'package:lifebeat/utils/providers.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
 
 
 class TasksPage extends ConsumerWidget {
@@ -73,7 +74,7 @@ class ScheduleDayPicker extends ConsumerWidget {
         ),
         const SizedBox(width: 5),
         Text(
-          "${date.day < 10 ? 0 : ''}${date.day}.${date.month < 10 ? 0 : ''}${date.month}",
+          TaskFuncs.dmDate(date),
           style: Theme.of(context).textTheme.labelMedium?.copyWith(fontSize: 16),
         ),
         const SizedBox(width: 5),
