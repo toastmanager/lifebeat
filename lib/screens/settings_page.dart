@@ -38,6 +38,7 @@ class SettingsPage extends StatelessWidget {
                           decoration: const InputDecoration(
                             border: InputBorder.none
                           ),
+                          keyboardType: TextInputType.number,
                         ),
                       )
                     ],
@@ -57,6 +58,7 @@ class SettingsPage extends StatelessWidget {
                           decoration: const InputDecoration(
                             border: InputBorder.none
                           ),
+                          keyboardType: TextInputType.number,
                         ),
                       )
                     ],
