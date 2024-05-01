@@ -28,6 +28,7 @@ class TaskListScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineSmall,
                 )
               );
+              widgets.add(const SizedBox(height: 20));
             }
             if (i == 1 && groupedTaskList[i].isNotEmpty) {
               widgets.add(
@@ -36,6 +37,7 @@ class TaskListScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineSmall,
                 )
               );
+              widgets.add(const SizedBox(height: 20));
             }
             if (i == 2 && groupedTaskList[i].isNotEmpty) {
               widgets.add(
@@ -44,8 +46,8 @@ class TaskListScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineSmall,
                 )
               );
+              widgets.add(const SizedBox(height: 20));
             }
-            widgets.add(const SizedBox(height: 20));
             for (Task task in groupedTaskList[i]) {
               widgets.add(
                 TaskTile(
