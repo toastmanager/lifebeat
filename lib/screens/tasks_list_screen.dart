@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifebeat/components/task_tile.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
+import 'package:lifebeat/utils/task_funcs.dart';
 
 import '../utils/providers.dart';
 
@@ -16,15 +17,52 @@ class TaskListScreen extends ConsumerWidget {
       stream: objectbox.getDayTasks(date),
       builder: (context, snapshot) {
         if (snapshot.data?.isNotEmpty ?? false) {
-          List<Task> taskList = snapshot.data ?? [];
-          return ListView.separated(
+          List<List<Task>> groupedTaskList = TaskFuncs.groupedTasks(snapshot.data ?? []);
+          List<Widget> widgets = [];
+
+          for (int i = 0; i < groupedTaskList.length; i++) {
+            if (i == 0 && groupedTaskList[i].isNotEmpty) {
+              widgets.add(
+                Text(
+                  'Утро',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                )
+              );
+            }
+            if (i == 1 && groupedTaskList[i].isNotEmpty) {
+              widgets.add(
+                Text(
+                  'День',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                )
+              );
+            }
+            if (i == 2 && groupedTaskList[i].isNotEmpty) {
+              widgets.add(
+                Text(
+                  'Вечер',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                )
+              );
+            }
+            widgets.add(const SizedBox(height: 20));
+            for (Task task in groupedTaskList[i]) {
+              widgets.add(
+                TaskTile(
+                  key: Key("task-${task.id}"),
+                  task: task,
+                )
+              );
+              widgets.add(const SizedBox(height: 20));
+            }
+            if (i == 2) {
+              widgets.add(const SizedBox(height: 40));
+            }
+          }
+
+          return ListView(
             shrinkWrap: true,
-            itemCount: snapshot.hasData ? snapshot.data!.length : 0,
-            itemBuilder: (context, index) => TaskTile(
-              key: Key("task-${taskList[index].id}"),
-              task: taskList[index]
-            ),
-            separatorBuilder: (context, index) => const SizedBox(height: 20),
+            children: widgets,
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();

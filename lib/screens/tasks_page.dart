@@ -36,7 +36,9 @@ class TasksPage extends ConsumerWidget {
             const SizedBox(height: 20),
             const ScheduleDayPicker(),
             const SizedBox(height: 20),
-            const TaskListScreen(),
+            const Expanded(
+              child: TaskListScreen()
+            ),
           ],
         ),
       ),
