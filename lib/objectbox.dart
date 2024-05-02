@@ -67,6 +67,10 @@ class ObjectBox {
     return newTaskId;
   }
 
+  void updateTask(Task task) {
+    taskBox.put(task);
+  }
+
   bool deleteTask(int id) {
     return taskBox.remove(id);
   }

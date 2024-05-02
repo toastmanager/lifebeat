@@ -17,7 +17,7 @@ class TasksPage extends ConsumerWidget {
         onPressed: () =>
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => NewTaskPage(
+              builder: (context) => TaskPropertiesPage(
                 date: ref.watch(tasksDay),
               ),
             ),

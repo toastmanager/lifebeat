@@ -5,23 +5,28 @@ import 'package:lifebeat/main.dart';
 import 'package:lifebeat/utils/task_funcs.dart';
 import '../components/surface.dart';
 
-class NewTaskPage extends StatefulWidget {
-  const NewTaskPage({
+class TaskPropertiesPage extends StatefulWidget {
+  // Update Task if task property provided
+  // Create new Task if task property not provided
+  const TaskPropertiesPage({
     super.key,
+    this.task,
     required this.date,
   });
 
+  final Task? task;
   final DateTime date;
 
   @override
-  State<NewTaskPage> createState() => _NewTaskPageState();
+  State<TaskPropertiesPage> createState() => _TaskPropertiesPageState();
 }
 
-class _NewTaskPageState extends State<NewTaskPage> {
-  final nameController = TextEditingController();
+class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
+  late final task = widget.task;
   late final date = widget.date;
-  late final dateController = TextEditingController(text: TaskFuncs.ymdDate(date));
-  String dayTime = DayTime.morning;
+  late final nameController = TextEditingController(text: task?.text);
+  late final dateController = TextEditingController(text: task != null ?   TaskFuncs.ymdDate(task!.date) : TaskFuncs.ymdDate(date));
+  late String dayTime = task != null ? task!.dayTime : DayTime.morning;
 
   @override
   void initState() {
@@ -92,11 +97,20 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        objectbox.addTask(
-                          nameController.text.trim(),
-                          date,
-                          dayTime,
-                        );
+                        if (task == null) {
+                          objectbox.addTask(
+                            nameController.text.trim(),
+                            date,
+                            dayTime,
+                          );
+                        } else {
+                          Task updatedTask = task!;
+                          task!.text = nameController.text;
+                          task!.dayTime = dayTime;
+                          // TODO: add date change
+                          // task.date = efsdf
+                          objectbox.updateTask(updatedTask);
+                        }
                         Navigator.of(context).pop();
                       },
                       child: const Text('Подтвердить')

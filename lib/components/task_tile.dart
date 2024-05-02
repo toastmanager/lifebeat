@@ -3,6 +3,7 @@ import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/components/task_checkcircle.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
+import 'package:lifebeat/screens/new_task_page.dart';
 
 class TaskTile extends StatelessWidget {
   const TaskTile({
@@ -35,7 +36,7 @@ class TaskTile extends StatelessWidget {
             ),
           ),
           TaskPopup(
-            taskId: task.id,
+            task: task,
           )
         ],
       ),
@@ -46,21 +47,26 @@ class TaskTile extends StatelessWidget {
 class TaskPopup extends StatelessWidget {
   const TaskPopup({
     super.key,
-    required this.taskId,
+    required this.task,
   });
 
-  final int taskId;
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
-          onTap: () {},
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => TaskPropertiesPage(
+              date: task.date,
+              task: task,
+            ))
+          ),
           child: const Text('Изменить')
         ),
         PopupMenuItem(
-          onTap: () => objectbox.deleteTask(taskId),
+          onTap: () => objectbox.deleteTask(task.id),
           child: const Text('Удалить')
         ),
       ],
