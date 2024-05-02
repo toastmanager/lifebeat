@@ -93,7 +93,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         objectbox.addTask(
-                          nameController.text,
+                          nameController.text.trim(),
                           date,
                           dayTime,
                         );
