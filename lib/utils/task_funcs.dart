@@ -28,7 +28,7 @@ final class TaskFuncs {
     return "${date.year}.${date.month < 10 ? 0 : ''}${date.month}.${date.day < 10 ? 0 : ''}${date.day}";
   }
 
-  static bool isBeforeTime(int timeInMinutes, DateTime date) {
+  static bool isDateBeforeTime(int timeInMinutes, DateTime date) {
     if (date.hour * 60 + date.minute < timeInMinutes) {
       return true;
     } else {
@@ -36,7 +36,7 @@ final class TaskFuncs {
     }
   }
 
-  static bool isAfterTime(int timeInMinutes, DateTime date) {
+  static bool isDateAfterTime(int timeInMinutes, DateTime date) {
     if (date.hour * 60 + date.minute > timeInMinutes) {
       return true;
     } else {
@@ -44,17 +44,17 @@ final class TaskFuncs {
     }
   }
 
-  static bool isAfterDayTime(Task task, DateTime date) {
+  static bool isDateAfterTaskDayTime(Task task, DateTime date) {
     if (task.dayTime == DayTime.morning) {
-      return isAfterTime(Settings.afternoonBeginTime, date);
+      return isDateAfterTime(Settings.afternoonBeginTime, date);
     }
     if (task.dayTime == DayTime.afternoon) {
-      return isAfterTime(Settings.eveningBeginTime, date);
+      return isDateAfterTime(Settings.eveningBeginTime, date);
     }
-    return isAfterTime(1439, date);
+    return isDateAfterTime(1439, date);
   }
 
-  static bool isBeforeByDays(DateTime taskDate, DateTime date) {
+  static bool isTaskBeforeByDays(DateTime taskDate, DateTime date) {
     if (taskDate.year <= date.year &&
       taskDate.month <= taskDate.month &&
       taskDate.day < date.day
