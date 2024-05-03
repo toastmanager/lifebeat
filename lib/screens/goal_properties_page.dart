@@ -18,7 +18,8 @@ class GoalPropertiesPage extends StatefulWidget {
 class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
   DateTime beginDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  
+  int importance = 2;
+
   final nameController = TextEditingController();
   final descController = TextEditingController();
   late final beginController = TextEditingController(text: TaskFuncs.ymdDate(beginDate));
@@ -53,6 +54,7 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                       descController.text, 
                       beginDate, 
                       endDate,
+                      importance,
                     );
                     Navigator.of(context).pop();
                   },
@@ -109,6 +111,28 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                           setState(() {});
                         },
                       ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Surface(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Важность'
+                      ),
+                      DropdownButton(
+                        value: importance,
+                        items: const [
+                          DropdownMenuItem(value: 1, child: Text('Низкая')),
+                          DropdownMenuItem(value: 2, child: Text('Средняя')),
+                          DropdownMenuItem(value: 3, child: Text('Высокая')),
+                        ],
+                        onChanged: (value) => setState(() =>
+                          importance = value ?? importance
+                        ),
+                      )
                     ],
                   ),
                 ),

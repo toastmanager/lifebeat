@@ -110,13 +110,15 @@ class ObjectBox {
     String description,
     DateTime begin,
     DateTime end,
+    int importance,
   ) {
     return goalBox.put(
       Goal(
         description: description,
         text: name,
         begin: begin,
-        deadline: end
+        deadline: end,
+        importance: importance,
       )
     );
   }

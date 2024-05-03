@@ -24,12 +24,21 @@ class _GoalTileState extends State<GoalTile> {
   late final width = widget.width;
   late final heigth = widget.height;
   late final goal = widget.goal;
+  Color? color;
 
   @override
   Widget build(BuildContext context) {
+    if (goal.importance == 1) {
+      color = const Color(0xFF272918);
+    }
+    if (goal.importance == 3) {
+      color = const Color(0xFF241829);
+    }
+    
     return Surface(
       height: heigth,
       width: width,
+      color: color,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
