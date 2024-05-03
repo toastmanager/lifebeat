@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/components/lbtextfield.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
+import 'package:lifebeat/utils/date_funcs.dart';
 import 'package:lifebeat/utils/task_funcs.dart';
 import '../components/surface.dart';
 
@@ -23,7 +24,7 @@ class TaskPropertiesPage extends StatefulWidget {
 
 class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
   late final task = widget.task;
-  late final date = widget.date;
+  late DateTime date = widget.date;
   late final nameController = TextEditingController(text: task?.text);
   late final dateController = TextEditingController(text: task != null ?   TaskFuncs.ymdDate(task!.date) : TaskFuncs.ymdDate(date));
   late String dayTime = task != null ? task!.dayTime : DayTime.morning;
@@ -62,6 +63,11 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                           label: const Text('Дата'),
                           controller: dateController,
                           readOnly: true,
+                          onTap: () async {
+                            date = await chooseDate(date, context);
+                            dateController.text = TaskFuncs.ymdDate(date);
+                            setState(() {});
+                          },
                         ),
                       ],
                     ),

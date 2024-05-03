@@ -29,7 +29,10 @@ class _TaskCheckCircleState extends State<TaskCheckCircle> {
     );
     if (widget.task.status == false &&
       TaskFuncs.isTaskBeforeByDays(widget.task.date, DateTime.now())  ||
-      TaskFuncs.isDateAfterTaskDayTime(widget.task, DateTime.now())
+      (
+        TaskFuncs.isTaskEqualByDays(widget.task.date, DateTime.now()) &&
+        TaskFuncs.isDateAfterTaskDayTime(widget.task, DateTime.now())
+      )
     ) {
         decoration = const BoxDecoration(
           shape: BoxShape.circle,

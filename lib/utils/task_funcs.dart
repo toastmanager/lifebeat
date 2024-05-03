@@ -64,6 +64,16 @@ final class TaskFuncs {
     return false;
   }
 
+  static bool isTaskEqualByDays(DateTime taskDate, DateTime date) {
+    if (taskDate.year == date.year &&
+      taskDate.month == taskDate.month &&
+      taskDate.day == date.day
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   static String timeByMinutes(int minutes) {
     final int hours = minutes ~/ 60;
     final int mins = minutes - (minutes ~/ 60) * 60;

@@ -16,6 +16,9 @@ dependencies:
   flutter_riverpod: ^2.5.1
   equatable: ^2.0.5
   shared_preferences: ^2.2.3
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
