@@ -21,10 +21,12 @@ final class TaskFuncs {
   }
 
   static String dmDate(DateTime date) {
+    // Returns string with DD.MM format
     return "${date.day < 10 ? 0 : ''}${date.day}.${date.month < 10 ? 0 : ''}${date.month}";
   }
   
   static String ymdDate(DateTime date) {
+    // Returns string with YYYY.MM.DD format
     return "${date.year}.${date.month < 10 ? 0 : ''}${date.month}.${date.day < 10 ? 0 : ''}${date.day}";
   }
 

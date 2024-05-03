@@ -4,6 +4,8 @@ import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/main.dart';
 import 'package:lifebeat/utils/task_funcs.dart';
 
+import '../utils/date_funcs.dart';
+
 class GoalPropertiesPage extends StatefulWidget {
   const GoalPropertiesPage({
     super.key,
@@ -90,12 +92,22 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                         controller: beginController,
                         label: const Text('Дата начала'),
                         readOnly: true,
+                        onTap: () async {
+                          beginDate = await chooseDate(beginDate, context);
+                          beginController.text = TaskFuncs.ymdDate(beginDate);
+                          setState(() {});
+                        },
                       ),
                       const SizedBox(height: 15),
                       LBTextField(
                         controller: endController,
                         label: const Text('Дата окончания'),
                         readOnly: true,
+                        onTap: () async {
+                          endDate = await chooseDate(endDate, context);
+                          endController.text = TaskFuncs.ymdDate(endDate);
+                          setState(() {});
+                        },
                       ),
                     ],
                   ),
