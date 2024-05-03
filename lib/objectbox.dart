@@ -100,4 +100,8 @@ class ObjectBox {
     final builder = goalBox.query()..order(Goal_.id, flags: Order.descending);
     return builder.watch(triggerImmediately: true).map((query) => query.find());
   }
+
+  bool deleteGoal(int id) {
+    return goalBox.remove(id);
+  }
 }

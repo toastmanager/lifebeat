@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/entities/goal.dart';
 
+import '../main.dart';
+
 class GoalTile extends StatefulWidget {
   const GoalTile({
     super.key,
@@ -29,10 +31,40 @@ class _GoalTileState extends State<GoalTile> {
       height: heigth,
       width: width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(goal.text)
+          Expanded(
+            child: Text(goal.text)
+          ),
+          GoalPopup(
+            goal: goal,
+          ),
         ],
       ),
+    );
+  }
+}
+
+class GoalPopup extends StatelessWidget {
+  const GoalPopup({
+    super.key,
+    required this.goal,
+  });
+
+  final Goal goal;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          child: Text('Изменить')
+        ),
+        PopupMenuItem(
+          onTap: () => objectbox.deleteGoal(goal.id),
+          child: const Text('Удалить')
+        ),
+      ],
     );
   }
 }
