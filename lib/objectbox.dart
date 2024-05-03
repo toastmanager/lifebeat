@@ -104,4 +104,20 @@ class ObjectBox {
   bool deleteGoal(int id) {
     return goalBox.remove(id);
   }
+
+  int addGoal(
+    String name,
+    String description,
+    DateTime begin,
+    DateTime end,
+  ) {
+    return goalBox.put(
+      Goal(
+        description: description,
+        text: name,
+        begin: begin,
+        deadline: end
+      )
+    );
+  }
 }

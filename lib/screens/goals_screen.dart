@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/goal_tile.dart';
+import 'package:lifebeat/screens/goal_properties_page.dart';
 import '../entities/goal.dart';
 import '../main.dart';
 
@@ -64,6 +66,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
               for (int i = 0; i <  value.length; i++) {
                 widgets.add(
                   Positioned(
+                    key: Key("goal-${value[i].id}"),
                     top: (54 + (goalHeight + 15) * i).toDouble(),
                     left: value[i].begin.day.toDouble() * cellWidth - cellWidth,
                     child: GoalTile(
@@ -77,10 +80,20 @@ class _GoalListScreenState extends State<GoalListScreen> {
             }
           );
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Stack(
-              children: widgets,
+          return Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const GoalPropertiesPage())
+              ),
+              elevation: 0,
+              shape: const CircleBorder(),
+              child: const Icon(CupertinoIcons.add),
+            ),
+            body: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Stack(
+                children: widgets,
+              ),
             ),
           );
         } else {

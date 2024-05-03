@@ -3,7 +3,7 @@ import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/components/task_checkcircle.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
-import 'package:lifebeat/screens/new_task_page.dart';
+import 'package:lifebeat/screens/task_properties_page.dart';
 
 class TaskTile extends StatelessWidget {
   const TaskTile({

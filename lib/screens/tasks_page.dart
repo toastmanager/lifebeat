@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lifebeat/screens/new_task_page.dart';
+import 'package:lifebeat/screens/task_properties_page.dart';
 import 'package:lifebeat/screens/tasks_list_screen.dart';
 import 'package:lifebeat/utils/providers.dart';
 import 'package:lifebeat/utils/task_funcs.dart';
