@@ -15,8 +15,10 @@ class GoalListScreen extends StatefulWidget {
 class _GoalListScreenState extends State<GoalListScreen> {
   final double cellWidth = 200;
   final double goalHeight = 70;
-  // late final List<Widget> days = [for (int i = 1; i <= 30; i++) GoalTable(day: i, width: cellWidth)];
   late final List<int> days = [for (int i = 1; i <= 30; i++) i];
+  late final scrollController = ScrollController(
+    initialScrollOffset: (DateTime.now().day - 1) * cellWidth - (cellWidth~/2)
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
               child: const Icon(CupertinoIcons.add),
             ),
             body: SingleChildScrollView(
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
               child: Stack(
                 children: widgets,
