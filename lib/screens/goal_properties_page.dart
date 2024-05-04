@@ -112,7 +112,12 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                         label: const Text('Дата начала'),
                         readOnly: true,
                         onTap: () async {
-                          beginDate = await chooseDate(beginDate, context);
+                          DateTime newDate = await chooseDate(beginDate, context);
+                          if (isSameDate(beginDate, endDate)) {
+                            endDate = newDate;
+                            endController.text = TaskFuncs.ymdDate(endDate);
+                          }
+                          beginDate = newDate;
                           beginController.text = TaskFuncs.ymdDate(beginDate);
                           setState(() {});
                         },
