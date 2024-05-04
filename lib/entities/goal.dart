@@ -5,6 +5,7 @@ import 'package:objectbox/objectbox.dart';
 class Goal {
   @Id()
   int id;
+  int importance;
   String description;
   String text;
   @Property(type: PropertyType.date)
@@ -15,6 +16,7 @@ class Goal {
 
   Goal({
     this.id = 0,
+    this.importance = 2,
     required this.description,
     required this.text,
     required this.begin,

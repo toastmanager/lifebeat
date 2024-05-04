@@ -29,7 +29,7 @@
     },
     {
       "id": "2:1458145482174392471",
-      "lastPropertyId": "5:1613906021395688499",
+      "lastPropertyId": "7:7471598068197570837",
       "name": "Task",
       "properties": [
         {
@@ -52,6 +52,19 @@
           "id": "5:1613906021395688499",
           "name": "status",
           "type": 1
+        },
+        {
+          "id": "6:7270171260018002348",
+          "name": "dayTime",
+          "type": 9
+        },
+        {
+          "id": "7:7471598068197570837",
+          "name": "parentGoalId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:7435272883056686995",
+          "relationTarget": "Goal"
         }
       ],
       "relations": [
@@ -64,7 +77,7 @@
     },
     {
       "id": "3:5622267691994581109",
-      "lastPropertyId": "5:2697537407064213606",
+      "lastPropertyId": "6:1597712462103899211",
       "name": "Goal",
       "properties": [
         {
@@ -92,6 +105,11 @@
           "id": "5:2697537407064213606",
           "name": "deadline",
           "type": 10
+        },
+        {
+          "id": "6:1597712462103899211",
+          "name": "importance",
+          "type": 6
         }
       ],
       "relations": [
@@ -104,7 +122,7 @@
     }
   ],
   "lastEntityId": "3:5622267691994581109",
-  "lastIndexId": "0:0",
+  "lastIndexId": "1:7435272883056686995",
   "lastRelationId": "2:8603767106778413392",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

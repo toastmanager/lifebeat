@@ -21,9 +21,9 @@ class ObjectBox {
   }
 
   void _putDemoData() {
-    Task task1 = Task(text: 'task 1', status: false, date: DateTime(2025));
-    Task task2 = Task(text: 'task 2', status: true, date: DateTime(2025));
-    Task task3 = Task(text: 'task 3', status: false, date: DateTime(2024));
+    Task task1 = Task(text: 'task 1', status: false, date: DateTime.now(), dayTime: DayTime.morning);
+    Task task2 = Task(text: 'task 2', status: true, date: DateTime.now(), dayTime: DayTime.evening);
+    Task task3 = Task(text: 'task 3', status: false, date: DateTime.now().add(const Duration(days: 2)), dayTime: DayTime.afternoon);
 
     Goal goal1 = Goal(description: 'description 1', text: 'text 1', begin: DateTime(2025), deadline: DateTime(2026));
     Goal goal2 = Goal(description: 'description 2', text: 'text 2', begin: DateTime(2025), deadline: DateTime(2026));
@@ -53,23 +53,33 @@ class ObjectBox {
 
   int addTask(
     String text,
-    bool finished,
     DateTime date,
+    String dayTime,
   ) {
     Task newTask = Task(
       text: text,
-      status: finished,
-      date: date
+      status: false,
+      date: date,
+      dayTime: dayTime,
     );
     int newTaskId = taskBox.put(newTask);
     
     return newTaskId;
   }
 
+  int updateTask(Task task) {
+    return taskBox.put(task);
+  }
+
+  bool deleteTask(int id) {
+    return taskBox.remove(id);
+  }
+
   Stream<List<Task>> getDayTasks(DateTime date) {
     final builder = taskBox.query(
-      Task_.date.equalsDate(
+      Task_.date.betweenDate(
         DateTime(date.year, date.month, date.day, 0, 0, 0),
+        DateTime(date.year, date.month, date.day, 23, 59, 59),
       )
     );
     return builder.watch(triggerImmediately: true).map((query) => query.find());
@@ -89,5 +99,31 @@ class ObjectBox {
   Stream<List<Goal>> getGoals() {
     final builder = goalBox.query()..order(Goal_.id, flags: Order.descending);
     return builder.watch(triggerImmediately: true).map((query) => query.find());
+  }
+
+  bool deleteGoal(int id) {
+    return goalBox.remove(id);
+  }
+
+  int updateGoal(Goal goal) {
+    return goalBox.put(goal);
+  }
+
+  int addGoal(
+    String name,
+    String description,
+    DateTime begin,
+    DateTime end,
+    int importance,
+  ) {
+    return goalBox.put(
+      Goal(
+        description: description,
+        text: name,
+        begin: begin,
+        deadline: end,
+        importance: importance,
+      )
+    );
   }
 }
