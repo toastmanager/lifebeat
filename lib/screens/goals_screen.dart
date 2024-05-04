@@ -14,8 +14,10 @@ class GoalListScreen extends StatefulWidget {
 }
 
 class _GoalListScreenState extends State<GoalListScreen> {
-  final double cellWidth = 200;
-  final double goalHeight = 70;
+  static const double cellWidth = 200;
+  static const double goalHeight = 70;
+  static const double topBarHeight = 54;
+  static const double gap = 10;
   late final List<int> days = [for (int i = 1; i <= 30; i++) i];
   late final scrollController = ScrollController(
     initialScrollOffset: (DateTime.now().day - 1) * cellWidth - (cellWidth~/2)
@@ -27,19 +29,18 @@ class _GoalListScreenState extends State<GoalListScreen> {
       stream: objectbox.getGoals(),
       builder: (context, snapshot) {
         if (snapshot.data?.isNotEmpty ?? false) {
-          List<Goal> goalList = snapshot.data ?? [];
-          Map<int, List<Goal>> sameHeight = GoalFuncs.sameDayGoals(goalList);
+          Map<int, List<Goal>> sameHeight = GoalFuncs.sameDayGoals(snapshot.data ?? []);
           List<int> addedIdList = [];
 
           List<Widget> widgets = [
             Column(
               children: [
                 Row(
-                  children: days.map((e) => GoalTable(day: e, width: 200, height: 54)).toList(),
+                  children: days.map((e) => GoalTable(day: e, width: cellWidth, height: topBarHeight)).toList(),
                 ),
                 Expanded(
                   child: Row(
-                    children: days.map((e) => const GoalTable(width: 200)).toList(),
+                    children: days.map((e) => const GoalTable(width: cellWidth)).toList(),
                   ),
                 ),
               ],
@@ -54,12 +55,12 @@ class _GoalListScreenState extends State<GoalListScreen> {
                   widgets.add(
                     Positioned(
                       key: Key("goal-${value[i].id}"),
-                      top: (54 + (goalHeight + 10) * (i + extraHeight)).toDouble(),
+                      top: (topBarHeight + (goalHeight + gap) * (i + extraHeight)).toDouble(),
                       left: value[i].begin.day.toDouble() * cellWidth - cellWidth,
                       child: GoalTile(
                         goal: value[i],
                         height: goalHeight,
-                        width: ((value[i].deadline.day - value[i].begin.day + 1) * cellWidth),
+                        width: (value[i].deadline.day - value[i].begin.day + 1) * cellWidth,
                       ),
                     )
                   );

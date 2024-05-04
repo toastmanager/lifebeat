@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:lifebeat/components/lbtextfield.dart';
-import 'package:lifebeat/components/surface.dart';
-import 'package:lifebeat/main.dart';
-import 'package:lifebeat/utils/task_funcs.dart';
-
+import '../components/lbtextfield.dart';
+import '../components/surface.dart';
+import '../main.dart';
+import '../utils/task_funcs.dart';
+import '../entities/goal.dart';
 import '../utils/date_funcs.dart';
 
 class GoalPropertiesPage extends StatefulWidget {
+  // Update Goal if goal property provided
+  // Create new Goal if goal property not provided
   const GoalPropertiesPage({
     super.key,
+    this.goal,
+    this.initDate,
   });
+
+  final Goal? goal;
+  final DateTime? initDate;
 
   @override
   State<GoalPropertiesPage> createState() => _GoalPropertiesPageState();
 }
 
 class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
-  DateTime beginDate = DateTime.now();
-  DateTime endDate = DateTime.now();
-  int importance = 2;
+  late Goal? goal = widget.goal;
+  late DateTime beginDate = goal?.begin ?? widget.initDate ?? DateTime.now();
+  late DateTime endDate = goal?.deadline ?? widget.initDate ?? DateTime.now();
+  late int importance = goal?.importance ?? 2;
 
-  final nameController = TextEditingController();
-  final descController = TextEditingController();
+  late final nameController = TextEditingController(text: goal?.text);
+  late final descController = TextEditingController(text: goal?.description);
   late final beginController = TextEditingController(text: TaskFuncs.ymdDate(beginDate));
   late final endController = TextEditingController(text: TaskFuncs.ymdDate(endDate));
 
@@ -49,13 +57,22 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    objectbox.addGoal(
-                      nameController.text, 
-                      descController.text, 
-                      beginDate, 
-                      endDate,
-                      importance,
-                    );
+                    if (goal != null) {
+                      goal!.text = nameController.text;
+                      goal!.description = descController.text;
+                      goal!.begin = beginDate;
+                      goal!.deadline = endDate;
+                      goal!.importance = importance;
+                      objectbox.updateGoal(goal!);
+                    } else {
+                      objectbox.addGoal(
+                        nameController.text, 
+                        descController.text, 
+                        beginDate, 
+                        endDate,
+                        importance,
+                      );
+                    }
                     Navigator.of(context).pop();
                   },
                   child: const Text('Продолжить'),

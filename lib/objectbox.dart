@@ -67,8 +67,8 @@ class ObjectBox {
     return newTaskId;
   }
 
-  void updateTask(Task task) {
-    taskBox.put(task);
+  int updateTask(Task task) {
+    return taskBox.put(task);
   }
 
   bool deleteTask(int id) {
@@ -103,6 +103,10 @@ class ObjectBox {
 
   bool deleteGoal(int id) {
     return goalBox.remove(id);
+  }
+
+  int updateGoal(Goal goal) {
+    return goalBox.put(goal);
   }
 
   int addGoal(

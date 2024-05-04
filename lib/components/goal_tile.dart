@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/entities/goal.dart';
-
+import 'package:lifebeat/screens/goal_properties_page.dart';
 import '../main.dart';
 
 class GoalTile extends StatefulWidget {
@@ -21,13 +21,15 @@ class GoalTile extends StatefulWidget {
 }
 
 class _GoalTileState extends State<GoalTile> {
-  late final width = widget.width;
-  late final heigth = widget.height;
   late final goal = widget.goal;
   Color? color;
 
   @override
   Widget build(BuildContext context) {
+    double width = widget.width;
+    double? height = widget.height;
+
+
     if (goal.importance == 1) {
       color = const Color(0xFF272918);
     }
@@ -36,7 +38,7 @@ class _GoalTileState extends State<GoalTile> {
     }
     
     return Surface(
-      height: heigth,
+      height: height,
       width: width,
       color: color,
       child: Row(
@@ -66,12 +68,17 @@ class GoalPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       itemBuilder: (context) => [
-        const PopupMenuItem(
-          child: Text('Изменить')
+        PopupMenuItem(
+          child: const Text('Изменить'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => GoalPropertiesPage(goal: goal),
+            )
+          ),
         ),
         PopupMenuItem(
+          child: const Text('Удалить'), 
           onTap: () => objectbox.deleteGoal(goal.id),
-          child: const Text('Удалить')
         ),
       ],
     );
