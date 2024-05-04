@@ -19,6 +19,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +27,18 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.4.9
   objectbox_generator: any
+
+flutter_launcher_icons:
+  ios: true
+  android: true
+  image_path: "assets/icon/icon_with_background.png"
+  background_color_ios: "#12171A"
+  adaptive_icon_background: "#12171A"
+  adaptive_icon_foreground: "assets/icon/icon.png"
+  windows:
+    generate: true
+    image_path: "assets/icon/icon_with_background.png"
+    icon_size: 128
 
 flutter:
   uses-material-design: true
