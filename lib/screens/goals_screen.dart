@@ -46,13 +46,10 @@ class _GoalListScreenState extends State<GoalListScreen> {
             ),
           ];
 
-          // print(sameHeight);
           sameHeight.forEach(
             (key, value) {
-              print("$key : $value");
               int extraHeight = 0;
               for (int i = 0; i <  value.length; i++) {
-                print(value[i].id);
                 if (!(addedIdList.contains(value[i].id))) {
                   widgets.add(
                     Positioned(
@@ -73,7 +70,6 @@ class _GoalListScreenState extends State<GoalListScreen> {
               }
             }
           );
-          print("----------------");
 
           return Scaffold(
             floatingActionButton: FloatingActionButton(
