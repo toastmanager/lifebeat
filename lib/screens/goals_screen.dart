@@ -28,7 +28,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
     return StreamBuilder<List<Goal>>(
       stream: objectbox.getGoals(),
       builder: (context, snapshot) {
-        if (snapshot.data?.isNotEmpty ?? false) {
+        if (snapshot.data != null && snapshot.connectionState == ConnectionState.active) {
           Map<int, List<Goal>> sameHeight = GoalFuncs.sameDayGoals(snapshot.data ?? []);
           List<int> addedIdList = [];
 
@@ -90,7 +90,9 @@ class _GoalListScreenState extends State<GoalListScreen> {
             ),
           );
         } else {
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator()
+          );
         }
       },
     );
