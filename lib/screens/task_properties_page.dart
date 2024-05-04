@@ -113,8 +113,7 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                           Task updatedTask = task!;
                           task!.text = nameController.text;
                           task!.dayTime = dayTime;
-                          // TODO: add date change
-                          // task.date = efsdf
+                          task!.date = date;
                           objectbox.updateTask(updatedTask);
                         }
                         Navigator.of(context).pop();
