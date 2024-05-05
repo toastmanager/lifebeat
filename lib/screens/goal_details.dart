@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lifebeat/components/lbtextfield.dart';
 import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/entities/checkpoint.dart';
 import 'package:lifebeat/main.dart';
@@ -35,13 +36,39 @@ class _GoalDetailsState extends State<GoalDetails> {
                   return Row(
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            goal.checkpoints.add(
-                              Checkpoint(text: 'Тест')
-                            );
-                          });
-                          objectbox.updateGoal(goal);
+                        onPressed: () async {
+                          final newCheckpointname = TextEditingController();
+                          await showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Новая задача'),
+                              content: LBTextField(
+                                controller: newCheckpointname,
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    newCheckpointname.text = '';
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Отменить')
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Добавить')
+                                ),
+                              ],
+                            ),
+                          );
+                          if (newCheckpointname.text != '') {
+                            setState(() {
+                              goal.checkpoints.add(
+                                Checkpoint(text: newCheckpointname.text)
+                              );
+                            });
+                            objectbox.updateGoal(goal);
+                          }
                         },
                         child: const Icon(CupertinoIcons.add),
                       )
