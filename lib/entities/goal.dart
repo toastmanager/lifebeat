@@ -14,6 +14,13 @@ class Goal {
   DateTime deadline;
   final checkpoints = ToMany<Checkpoint>();
 
+  double doneCheckpoints() {
+    if (checkpoints.isEmpty) {
+      return 0;
+    }
+    return checkpoints.where((e) => e.finished).length / checkpoints.length;
+  }
+
   Goal({
     this.id = 0,
     this.importance = 2,

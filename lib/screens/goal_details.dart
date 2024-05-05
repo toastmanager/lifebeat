@@ -104,10 +104,12 @@ class _GoalDetailsState extends State<GoalDetails> {
                               child: CircularProgressIndicator(
                                 strokeWidth: 5,
                                 strokeAlign: -1,
-                                value: 1,
+                                value: goal.doneCheckpoints(),
+                                backgroundColor: Theme.of(context)
+                                  .colorScheme.primary.withAlpha(127)
                               ),
                             ),
-                            Text('100%'),
+                            Text("${(goal.doneCheckpoints() * 100).toInt()}%"),
                           ],
                         ),
                         const SizedBox(width: 10),
@@ -183,7 +185,7 @@ class _GoalDetailsState extends State<GoalDetails> {
                   ],
                 );
               } else {
-                return const Center(child: Text("Цели не существует"));
+                return const Center(child: CircularProgressIndicator());
               }
             }
           ),
