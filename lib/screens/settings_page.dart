@@ -2,7 +2,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifebeat/components/surface.dart';
-import 'package:lifebeat/main.dart';
 import 'package:lifebeat/utils/providers.dart';
 import 'package:lifebeat/utils/settings.dart';
 import 'package:lifebeat/utils/task_funcs.dart';
