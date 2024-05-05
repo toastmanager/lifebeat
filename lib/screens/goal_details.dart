@@ -147,7 +147,7 @@ class _GoalDetailsState extends State<GoalDetails> {
                               children: [
                                 const Icon(Icons.timer_rounded),
                                 const SizedBox(width: 3),
-                                Text("${DateTime.now().difference(goal.deadline).inDays} дней")
+                                Text("${goal.deadline.difference(DateTime.now()).inDays} дней")
                               ],
                             ),
                             const SizedBox(height: 5),
