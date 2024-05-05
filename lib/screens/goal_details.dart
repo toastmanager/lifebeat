@@ -5,6 +5,7 @@ import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/entities/checkpoint.dart';
 import 'package:lifebeat/main.dart';
 import 'package:lifebeat/utils/task_funcs.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../entities/goal.dart';
 
 class GoalDetails extends StatefulWidget {
@@ -42,7 +43,7 @@ class _GoalDetailsState extends State<GoalDetails> {
                             context: context,
                             barrierDismissible: false,
                             builder: (_) => AlertDialog(
-                              title: const Text('Новая задача'),
+                              title: Text(AppLocalizations.of(context)!.new_task),
                               content: LBTextField(
                                 controller: newCheckpointname,
                               ),
@@ -52,11 +53,11 @@ class _GoalDetailsState extends State<GoalDetails> {
                                     newCheckpointname.text = '';
                                     Navigator.pop(context);
                                   },
-                                  child: const Text('Отменить')
+                                  child: Text(AppLocalizations.of(context)!.discard)
                                 ),
                                 ElevatedButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: const Text('Добавить')
+                                  child: Text(AppLocalizations.of(context)!.confirm)
                                 ),
                               ],
                             ),
@@ -99,7 +100,7 @@ class _GoalDetailsState extends State<GoalDetails> {
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 onTap: () {},
-                                child: const Text('Изменить'),
+                                child: Text(AppLocalizations.of(context)!.edit),
                               ),
                               PopupMenuItem(
                                 onTap: () => setState(() =>
@@ -107,7 +108,7 @@ class _GoalDetailsState extends State<GoalDetails> {
                                     goal.checkpoints[index].id
                                   )
                                 ),
-                                child: const Text('Удалить'),
+                                child: Text(AppLocalizations.of(context)!.delete),
                               ),
                             ],
                           ),
@@ -147,7 +148,7 @@ class _GoalDetailsState extends State<GoalDetails> {
                               children: [
                                 const Icon(Icons.timer_rounded),
                                 const SizedBox(width: 3),
-                                Text("${goal.deadline.difference(DateTime.now()).inDays} дней")
+                                Text("${goal.deadline.difference(DateTime.now()).inDays} ${AppLocalizations.of(context)!.days}")
                               ],
                             ),
                             const SizedBox(height: 5),
@@ -176,11 +177,11 @@ class _GoalDetailsState extends State<GoalDetails> {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             onTap: () {},
-                            child: const Text('Изменить'),
+                            child: Text(AppLocalizations.of(context)!.edit),
                           ),
                           PopupMenuItem(
                             onTap: () {},
-                            child: const Text('Удалить'),
+                            child: Text(AppLocalizations.of(context)!.delete),
                           ),
                         ],
                       )

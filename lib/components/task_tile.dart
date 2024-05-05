@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/components/task_checkcircle.dart';
@@ -63,11 +64,11 @@ class TaskPopup extends StatelessWidget {
               task: task,
             ))
           ),
-          child: const Text('Изменить')
+          child: Text(AppLocalizations.of(context)!.edit)
         ),
         PopupMenuItem(
           onTap: () => objectbox.deleteTask(task.id),
-          child: const Text('Удалить')
+          child: Text(AppLocalizations.of(context)!.delete)
         ),
       ],
     );

@@ -208,12 +208,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          final textParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
           final finishedParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 8, false);
+          final textParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
           final object =
-              Checkpoint(id: idParam, text: textParam, finished: finishedParam);
+              Checkpoint(id: idParam, finished: finishedParam, text: textParam);
 
           return object;
         }),

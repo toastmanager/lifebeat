@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/lbtextfield.dart';
 import 'package:lifebeat/entities/task.dart';
@@ -55,12 +56,12 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                     child: Column(
                       children: [
                         LBTextField(
-                          label: const Text('Название'),
+                          label: Text(AppLocalizations.of(context)!.name),
                           controller: nameController,
                         ),
                         const SizedBox(height: 15),
                         LBTextField(
-                          label: const Text('Дата'),
+                          label: Text(AppLocalizations.of(context)!.date),
                           controller: dateController,
                           readOnly: true,
                           onTap: () async {
@@ -77,13 +78,13 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Время суток'),
+                        Text(AppLocalizations.of(context)!.day_time),
                         DropdownButton(
                           value: dayTime,
-                          items: const [
-                            DropdownMenuItem<String>(value: DayTime.morning, child: Text('Утро')),
-                            DropdownMenuItem<String>(value: DayTime.afternoon, child: Text('День')),
-                            DropdownMenuItem<String>(value: DayTime.evening, child: Text('Вечер')),
+                          items: [
+                            DropdownMenuItem<String>(value: DayTime.morning, child: Text(AppLocalizations.of(context)!.morning)),
+                            DropdownMenuItem<String>(value: DayTime.afternoon, child: Text(AppLocalizations.of(context)!.afternoon)),
+                            DropdownMenuItem<String>(value: DayTime.evening, child: Text(AppLocalizations.of(context)!.evening)),
                           ],
                           onChanged: (value) => setState(() => dayTime = value!),
                         )
@@ -97,7 +98,7 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Отмена')
+                      child: Text(AppLocalizations.of(context)!.discard)
                     ),
                   ),
                   Expanded(
@@ -118,7 +119,7 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                         }
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Подтвердить')
+                      child: Text(AppLocalizations.of(context)!.confirm)
                     )
                   ),
                 ],

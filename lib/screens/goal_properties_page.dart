@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../components/lbtextfield.dart';
 import '../components/surface.dart';
@@ -50,7 +51,7 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Отмена'),
+                  child: Text(AppLocalizations.of(context)!.delete),
                 )
               ),
               const SizedBox(height: 15),
@@ -75,7 +76,7 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                     }
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Продолжить'),
+                  child: Text(AppLocalizations.of(context)!.confirm),
                 )
               ),
             ],
@@ -98,18 +99,18 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                     children: [
                       LBTextField(
                         controller: nameController,
-                        label: const Text('Название'),
+                        label: Text(AppLocalizations.of(context)!.name),
                       ),
                       const SizedBox(height: 15),
                       LBTextField(
                         keyboardType: TextInputType.multiline,
                         controller: descController,
-                        label: const Text('Описание'),
+                        label: Text(AppLocalizations.of(context)!.description),
                       ),
                       const SizedBox(height: 15),
                       LBTextField(
                         controller: beginController,
-                        label: const Text('Дата начала'),
+                        label: Text(AppLocalizations.of(context)!.begin_date),
                         readOnly: true,
                         onTap: () async {
                           DateTime newDate = await chooseDate(beginDate, context);
@@ -125,7 +126,7 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                       const SizedBox(height: 15),
                       LBTextField(
                         controller: endController,
-                        label: const Text('Дата окончания'),
+                        label: Text(AppLocalizations.of(context)!.end_date),
                         readOnly: true,
                         onTap: () async {
                           endDate = await chooseDate(endDate, context);
@@ -141,15 +142,15 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Важность'
+                      Text(
+                        AppLocalizations.of(context)!.importance
                       ),
                       DropdownButton(
                         value: importance,
-                        items: const [
-                          DropdownMenuItem(value: 1, child: Text('Низкая')),
-                          DropdownMenuItem(value: 2, child: Text('Средняя')),
-                          DropdownMenuItem(value: 3, child: Text('Высокая')),
+                        items: [
+                          DropdownMenuItem(value: 1, child: Text(AppLocalizations.of(context)!.low_importance)),
+                          DropdownMenuItem(value: 2, child: Text(AppLocalizations.of(context)!.average_importance)),
+                          DropdownMenuItem(value: 3, child: Text(AppLocalizations.of(context)!.high_importance)),
                         ],
                         onChanged: (value) => setState(() =>
                           importance = value ?? importance

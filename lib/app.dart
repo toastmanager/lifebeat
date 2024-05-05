@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lifebeat/l10n/l10n.dart';
 import 'package:lifebeat/screens/main_wrapper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lifebeat/utils/providers.dart';
 
-class MainApp extends StatefulWidget {
+class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
-  State<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       localizationsDelegates: const [
+        AppLocalizations.delegate, 
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('ru')
-      ],
+      supportedLocales: L10n.all,
+      locale: Locale(ref.watch(languageCode)),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: const ColorScheme.dark(

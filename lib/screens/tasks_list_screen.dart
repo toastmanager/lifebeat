@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lifebeat/components/task_tile.dart';
@@ -24,7 +25,7 @@ class TaskListScreen extends ConsumerWidget {
             if (i == 0 && groupedTaskList[i].isNotEmpty) {
               widgets.add(
                 Text(
-                  'Утро',
+                  AppLocalizations.of(context)!.morning,
                   style: Theme.of(context).textTheme.headlineSmall,
                 )
               );
@@ -33,7 +34,7 @@ class TaskListScreen extends ConsumerWidget {
             if (i == 1 && groupedTaskList[i].isNotEmpty) {
               widgets.add(
                 Text(
-                  'День',
+                  AppLocalizations.of(context)!.afternoon,
                   style: Theme.of(context).textTheme.headlineSmall,
                 )
               );
@@ -42,7 +43,7 @@ class TaskListScreen extends ConsumerWidget {
             if (i == 2 && groupedTaskList[i].isNotEmpty) {
               widgets.add(
                 Text(
-                  'Вечер',
+                  AppLocalizations.of(context)!.evening,
                   style: Theme.of(context).textTheme.headlineSmall,
                 )
               );
@@ -69,7 +70,7 @@ class TaskListScreen extends ConsumerWidget {
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else {
-          return const Text('Задачи на этот день отсутствуют');
+          return Text(AppLocalizations.of(context)!.no_tasks_for_day);
         }
       },
     );

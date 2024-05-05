@@ -41,6 +41,7 @@ flutter_launcher_icons:
     icon_size: 128
 
 flutter:
+  generate: true
   uses-material-design: true
 
   fonts:

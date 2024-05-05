@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/entities/goal.dart';
@@ -74,7 +75,7 @@ class GoalPopup extends StatelessWidget {
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
-          child: const Text('Изменить'),
+          child: Text(AppLocalizations.of(context)!.edit),
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => GoalPropertiesPage(goal: goal),
@@ -82,7 +83,7 @@ class GoalPopup extends StatelessWidget {
           ),
         ),
         PopupMenuItem(
-          child: const Text('Удалить'), 
+          child: Text(AppLocalizations.of(context)!.delete), 
           onTap: () => objectbox.deleteGoal(goal.id),
         ),
       ],
