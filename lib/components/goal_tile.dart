@@ -9,12 +9,14 @@ class GoalTile extends StatefulWidget {
     super.key,
     this.width = 200,
     this.height,
+    this.onTap,
     required this.goal,
   });
 
   final double? height;
   final double width;
   final Goal goal;
+  final void Function()? onTap;
 
   @override
   State<GoalTile> createState() => _GoalTileState();
@@ -37,20 +39,23 @@ class _GoalTileState extends State<GoalTile> {
       color = const Color(0xFF241829);
     }
     
-    return Surface(
-      height: height,
-      width: width,
-      color: color,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(goal.text)
-          ),
-          GoalPopup(
-            goal: goal,
-          ),
-        ],
+    return InkWell(
+      onTap: widget.onTap,
+      child: Surface(
+        height: height,
+        width: width,
+        color: color,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(goal.text)
+            ),
+            GoalPopup(
+              goal: goal,
+            ),
+          ],
+        ),
       ),
     );
   }

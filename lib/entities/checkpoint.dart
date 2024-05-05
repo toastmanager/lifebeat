@@ -9,7 +9,7 @@ class Checkpoint {
 
   Checkpoint({
     this.id = 0,
+    this.finished = false,
     required this.text,
-    required this.finished,
   });
 }

@@ -126,4 +126,17 @@ class ObjectBox {
       )
     );
   }
+
+  Stream<Goal> getGoal(int id) {
+    final builder = goalBox.query(Goal_.id.equals(id)).build();
+    return builder.stream();
+  }
+
+  int updateCheckpoint(Checkpoint checkpoint) {
+    return checkpointBox.put(checkpoint);
+  }
+
+  bool deleteCheckpoint(int id) {
+    return checkpointBox.remove(id);
+  }
 }

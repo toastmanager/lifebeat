@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/goal_tile.dart';
+import 'package:lifebeat/screens/goal_details.dart';
 import 'package:lifebeat/screens/goal_properties_page.dart';
 import 'package:lifebeat/utils/goal_funcs.dart';
 import '../entities/goal.dart';
@@ -61,6 +62,11 @@ class _GoalListScreenState extends State<GoalListScreen> {
                         goal: value[i],
                         height: goalHeight,
                         width: (value[i].deadline.day - value[i].begin.day + 1) * cellWidth,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => GoalDetails(goalId: value[i].id),
+                          )
+                        ),
                       ),
                     )
                   );
