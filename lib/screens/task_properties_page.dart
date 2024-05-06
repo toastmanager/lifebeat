@@ -28,7 +28,7 @@ class TaskPropertiesPage extends StatefulWidget {
 
 class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
   late final task = widget.task;
-  late final parentGoal = widget.parentGoal;
+  late final Goal? parentGoal = widget.parentGoal ?? task?.parentGoal.target;
   late DateTime date = widget.date;
   late final nameController = TextEditingController(text: task?.text);
   late final dateController = TextEditingController(text: task != null ?   TaskFuncs.ymdDate(task!.date) : TaskFuncs.ymdDate(date));
