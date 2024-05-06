@@ -4,6 +4,7 @@ import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/entities/goal.dart';
 import 'package:lifebeat/screens/goal_properties_page.dart';
 import '../main.dart';
+import '../screens/task_properties_page.dart';
 
 class GoalTile extends StatefulWidget {
   const GoalTile({
@@ -42,6 +43,14 @@ class _GoalTileState extends State<GoalTile> {
     
     return InkWell(
       onTap: widget.onTap,
+      onDoubleTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TaskPropertiesPage(
+            parentGoal: goal,
+            date: DateTime.now()
+          ),
+        )
+      ),
       child: Surface(
         height: height,
         width: width,

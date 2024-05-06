@@ -24,5 +24,6 @@
     "afternoon_begin": "Afternoon begin",
     "evening_begin": "Evening begin",
     "schedule": "Schedule",
-    "no_tasks_for_day": "There are no tasks for this day"
+    "no_tasks_for_day": "There are no tasks for this day",
+    "parent_goal": "Parent goal"
 }

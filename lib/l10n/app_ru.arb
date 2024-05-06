@@ -24,5 +24,6 @@
     "afternoon_begin": "Начало дня",
     "evening_begin": "Начало вечера",
     "schedule": "Расписание",
-    "no_tasks_for_day": "Задачи на этот день отсутствуют"
+    "no_tasks_for_day": "Задачи на этот день отсутствуют",
+    "parent_goal": "Родительская цель"
 }

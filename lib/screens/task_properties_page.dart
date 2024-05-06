@@ -1,6 +1,7 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:lifebeat/components/lbtextfield.dart';
+import 'package:lifebeat/entities/goal.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
 import 'package:lifebeat/utils/date_funcs.dart';
@@ -13,10 +14,12 @@ class TaskPropertiesPage extends StatefulWidget {
   const TaskPropertiesPage({
     super.key,
     this.task,
+    this.parentGoal,
     required this.date,
   });
 
   final Task? task;
+  final Goal? parentGoal;
   final DateTime date;
 
   @override
@@ -25,6 +28,7 @@ class TaskPropertiesPage extends StatefulWidget {
 
 class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
   late final task = widget.task;
+  late final parentGoal = widget.parentGoal;
   late DateTime date = widget.date;
   late final nameController = TextEditingController(text: task?.text);
   late final dateController = TextEditingController(text: task != null ?   TaskFuncs.ymdDate(task!.date) : TaskFuncs.ymdDate(date));
@@ -73,12 +77,33 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                       ],
                     ),
                   ),
+                  if (parentGoal != null)
+                    const SizedBox(height: 20),
+                  if (parentGoal != null)
+                    Surface(
+                      padding: const EdgeInsets.only(
+                        left: 12,
+                        right: 12,
+                        bottom: 12,
+                        top: 15,
+                      ),
+                      child: LBTextField(
+                        readOnly: true,
+                        label: Text(AppLocalizations.of(context)!.parent_goal),
+                        controller: TextEditingController(
+                          text: parentGoal!.text
+                        ),
+                      )
+                    ),
                   const SizedBox(height: 20),
                   Surface(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(AppLocalizations.of(context)!.day_time),
+                        Text(
+                          AppLocalizations.of(context)!.day_time,
+                          style: Theme.of(context).textTheme.labelMedium
+                        ),
                         DropdownButton(
                           value: dayTime,
                           items: [
@@ -109,6 +134,7 @@ class _TaskPropertiesPageState extends State<TaskPropertiesPage> {
                             nameController.text.trim(),
                             date,
                             dayTime,
+                            parentGoal: parentGoal
                           );
                         } else {
                           Task updatedTask = task!;

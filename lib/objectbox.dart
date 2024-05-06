@@ -55,6 +55,9 @@ class ObjectBox {
     String text,
     DateTime date,
     String dayTime,
+    {
+      Goal? parentGoal,
+    }
   ) {
     Task newTask = Task(
       text: text,
@@ -62,6 +65,7 @@ class ObjectBox {
       date: date,
       dayTime: dayTime,
     );
+    newTask.parentGoal.target = parentGoal;
     int newTaskId = taskBox.put(newTask);
     
     return newTaskId;
