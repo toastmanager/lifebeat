@@ -51,7 +51,7 @@ class _GoalPropertiesPageState extends State<GoalPropertiesPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(AppLocalizations.of(context)!.delete),
+                  child: Text(AppLocalizations.of(context)!.discard),
                 )
               ),
               const SizedBox(height: 15),
