@@ -4,6 +4,7 @@ import 'package:lifebeat/components/lbtextfield.dart';
 import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/entities/checkpoint.dart';
 import 'package:lifebeat/main.dart';
+import 'package:lifebeat/screens/goal_properties_page.dart';
 import 'package:lifebeat/utils/task_funcs.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../entities/goal.dart';
@@ -176,11 +177,23 @@ class _GoalDetailsState extends State<GoalDetails> {
                       PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                            onTap: () {},
+                            onTap: () async {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => GoalPropertiesPage(
+                                    goal: goal,
+                                  ),
+                                )
+                              );
+                              setState(() {});
+                            },
                             child: Text(AppLocalizations.of(context)!.edit),
                           ),
                           PopupMenuItem(
-                            onTap: () {},
+                            onTap: () {
+                              objectbox.deleteGoal(goal.id);
+                              Navigator.of(context).pop();
+                            },
                             child: Text(AppLocalizations.of(context)!.delete),
                           ),
                         ],
