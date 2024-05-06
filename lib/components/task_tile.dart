@@ -4,6 +4,7 @@ import 'package:lifebeat/components/surface.dart';
 import 'package:lifebeat/components/task_checkcircle.dart';
 import 'package:lifebeat/entities/task.dart';
 import 'package:lifebeat/main.dart';
+import 'package:lifebeat/screens/goal_details.dart';
 import 'package:lifebeat/screens/task_properties_page.dart';
 
 class TaskTile extends StatelessWidget {
@@ -16,30 +17,36 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Surface(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                TaskCheckCircle(
-                  task: task,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    task.text,
-                    style: Theme.of(context).textTheme.labelLarge,
+    return InkWell(
+      onTap: task.parentGoal.target != null ? () =>
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => GoalDetails(goalId: task.parentGoal.target!.id),
+        )) : null,
+      child: Surface(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  TaskCheckCircle(
+                    task: task,
                   ),
-                )
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      task.text,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          TaskPopup(
-            task: task,
-          )
-        ],
+            TaskPopup(
+              task: task,
+            )
+          ],
+        ),
       ),
     );
   }
